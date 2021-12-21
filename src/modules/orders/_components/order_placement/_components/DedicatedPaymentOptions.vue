@@ -92,57 +92,68 @@
                     @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
-                    <div v-if="deletedCardIndex === ''">
-                      <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
-                      <div
-                        v-for="(cards, index) in get_saved_cards"
-                        :key="index"
-                        class="payment-options-saved-cards-row"
-                      >
-                        <input
-                          v-model="activeSavedCard"
-                          :value="index"
-                          type="radio"
-                          class="payment-options-saved-card-radio"
-                        >
-                        {{ formatCardNumber(cards.pay_method_details) }}
-                        <font-awesome-icon
-                          icon="trash-alt"
-                          class="payment-options-delete-card-icon"
-                          @click="deletedCardIndex = index"
-                        />
-                      </div>
-                      <div
-                        class="payment-options-add-card-holder"
-                        @click="addCardStatus = !addCardStatus"
-                      >
-                        <span>
-                          <font-awesome-icon
-                            icon="plus-circle"
-                            class="payment-options-add-card-icon"
-                          />
-                        </span>
-                        <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
-                      </div>
-                    </div>
-                    <div
-                      v-else
-                      class="delete-saved-card-dialogue"
+                    <button
+                      type="button"
+                      class="button-primary paymentbody--input-button"
+                      style="margin-top: auto;"
+                      @click="init3DS"
+                      v-if="is3DS"
                     >
-                      <p class="delete-saved-card-dialogue-label">
-                        {{$t('general.sure_delete_card')}}
-                        <strong>{{ get_saved_cards[deletedCardIndex].pay_method_details }}</strong>?
-                      </p>
-                      <p class="delete-saved-card-dialogue-label">
-                        <span
-                          class="delete-saved-card-dialogue-buttons"
-                          @click="deleteSavedCard(deletedCardIndex)"
-                        >{{$t('general.yes')}}</span>
-                        <span
-                          class="delete-saved-card-dialogue-buttons"
-                          @click="deletedCardIndex = ''"
-                        >{{$t('general.no')}}</span>
-                      </p>
+                      Kindly click  here to proceed >>
+                    </button>
+                    <div v-else>
+                      <div v-if="deletedCardIndex === ''">
+                        <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
+                        <div
+                          v-for="(cards, index) in get_saved_cards"
+                          :key="index"
+                          class="payment-options-saved-cards-row"
+                        >
+                          <input
+                            v-model="activeSavedCard"
+                            :value="index"
+                            type="radio"
+                            class="payment-options-saved-card-radio"
+                          >
+                          {{ formatCardNumber(cards.pay_method_details) }}
+                          <font-awesome-icon
+                            icon="trash-alt"
+                            class="payment-options-delete-card-icon"
+                            @click="deletedCardIndex = index"
+                          />
+                        </div>
+                        <div
+                          class="payment-options-add-card-holder"
+                          @click="addCardStatus = !addCardStatus"
+                        >
+                          <span>
+                            <font-awesome-icon
+                              icon="plus-circle"
+                              class="payment-options-add-card-icon"
+                            />
+                          </span>
+                          <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
+                        </div>
+                      </div>
+                      <div
+                        v-else
+                        class="delete-saved-card-dialogue"
+                      >
+                        <p class="delete-saved-card-dialogue-label">
+                          {{$t('general.sure_delete_card')}}
+                          <strong>{{ get_saved_cards[deletedCardIndex].pay_method_details }}</strong>?
+                        </p>
+                        <p class="delete-saved-card-dialogue-label">
+                          <span
+                            class="delete-saved-card-dialogue-buttons"
+                            @click="deleteSavedCard(deletedCardIndex)"
+                          >{{$t('general.yes')}}</span>
+                          <span
+                            class="delete-saved-card-dialogue-buttons"
+                            @click="deletedCardIndex = ''"
+                          >{{$t('general.no')}}</span>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -159,7 +170,17 @@
                     @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
-                    <span
+                    <button
+                      type="button"
+                      class="button-primary paymentbody--input-button"
+                      style="margin-top: auto;"
+                      @click="init3DS"
+                      v-if="is3DS"
+                    >
+                      Kindly click  here to proceed >>
+                    </button>
+                    <div v-else>
+                      <span
                       v-if="get_saved_cards.length > 0"
                       class="payment-options-cards-title back-option"
                       @click="addCardStatus = !addCardStatus"
@@ -209,6 +230,7 @@
                         <span
                           class="fake-checkbox-label-1"
                         >{{$t('general.save_card_for_future_orders')}}</span>
+                      </div>
                       </div>
                     </div>
                   </div>
@@ -805,9 +827,9 @@ export default {
 
                   if(res.additional_data) {
                     this.additionalData = res.additional_data;
-                    this.is3DS = res.tds;
                     if (res.tds) {
-                      this.init3DS(res.additional_data);
+                      this.loading = false;
+                      this.is3DS = res.tds;
                       return;
                     }
                     this.showAdditionalCardFields = true;
@@ -897,9 +919,9 @@ export default {
 
                 if(response.additional_data) {
                   this.additionalData = response.additional_data;
-                  this.is3DS = response.tds;
                   if (response.tds) {
-                    this.init3DS(response.additional_data);
+                    this.loading = false;
+                    this.is3DS = response.tds;
                     return;
                   }
                   this.showAdditionalCardFields = true;
@@ -1046,14 +1068,16 @@ export default {
     handleContinue3DS(val) {
       this.showAdditionalCardFields = false;
       const data = val.additionalData.filter(element => element.field_id === 'url');
-      this.init3DS(data);
+      this.additionalData = data;
+      this.loading = false;
+      this.is3DS = true;
     },
     
-    init3DS(additionalData) {
-      const res = additionalData[0];
+    init3DS() {
+      const res = this.additionalData[0];
       const url = res.field;
       const urlWindow = window.open(url, '');
-
+      this.is3DS = false;
       const timer = setInterval(() => {
 			  if (urlWindow.closed) {
           this.init3dsPoll();

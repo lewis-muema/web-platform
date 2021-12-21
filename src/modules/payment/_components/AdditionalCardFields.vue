@@ -58,10 +58,9 @@
           class="form-group text-field"
         >
           <div class="form-control-static">
-            <span class="fake-input" />
+            <span  class="fake-input" />
           </div>
         </div>
-
         <button
           type="submit"
           name="button"
@@ -307,5 +306,14 @@ export default {
 #cc-cvc {
   width: 100% !important;
   padding-left: 0px !important;
+}
+
+.fake-input iframe {
+  width: -webkit-fill-available;
+  border-radius: 4px;
+  padding-left: 20px;
+  color: #606266;
+  margin-top: 20px;
+  border: 1px solid #909399;
 }
 </style>
