@@ -48,70 +48,81 @@
           @continue3DS="handleContinue3DS"
         />
         <div v-else>
-          <p class="card-payment-saved-cards-title">
-            {{$t('general.cards')}}
-          </p>
-          <p class="card-payment-saved-cards-label">
-            {{$t('general.select_card')}}
-          </p>
-          <div
-            v-for="(cards, index) in get_saved_cards"
-            :key="index"
-            class="card-payment-saved-cards-row"
+          <button
+            type="button"
+            class="button-primary paymentbody--input-button"
+            style="margin-top: auto;"
+            @click="init3DS"
+            v-if="is3DS"
           >
-            <span class="card-payment-saved-cards-icon">
-              <font-awesome-icon icon="credit-card" />
-            </span>
-            <input
-              v-model="selectedSavedCard"
-              type="radio"
-              class="card-payment-saved-card-radio"
-              :value="index"
+            Kindly click  here to proceed >>
+          </button>
+          <div v-else>
+            <p class="card-payment-saved-cards-title">
+              {{$t('general.cards')}}
+            </p>
+            <p class="card-payment-saved-cards-label">
+              {{$t('general.select_card')}}
+            </p>
+            <div
+              v-for="(cards, index) in get_saved_cards"
+              :key="index"
+              class="card-payment-saved-cards-row"
             >
-            {{ formatCardNumber(cards.pay_method_details) }}
-            <span
-              class="card-payment-remove-cards-icon"
-              @click="deleteCardIndex = index"
+              <span class="card-payment-saved-cards-icon">
+                <font-awesome-icon icon="credit-card" />
+              </span>
+              <input
+                v-model="selectedSavedCard"
+                type="radio"
+                class="card-payment-saved-card-radio"
+                :value="index"
+              >
+              {{ formatCardNumber(cards.pay_method_details) }}
+              <span
+                class="card-payment-remove-cards-icon"
+                @click="deleteCardIndex = index"
+              >
+                <font-awesome-icon icon="trash-alt" />
+              </span>
+            </div>
+            <div class="card-payment-add-card-holder">
+              <span>
+                <font-awesome-icon
+                  icon="plus-circle"
+                  class="card-payment-add-card-icon"
+                />
+              </span>
+              <span
+                class="card-payment-add-card"
+                @click="addCardStatus = !addCardStatus"
+              >{{$t('general.add_a_new_card')}}</span>
+            </div>
+            <div class="card-payment-flex">
+              <span class="prepend-currency">{{ getActiveCurrency }}</span>
+              <input
+                v-model="savedCardAmount"
+                type="number"
+                class="card-payment-amount-input"
+              >
+            </div>
+            <div
+              v-loading="loadingStatus"
+              class="orders-loading-container orders-loading-container--completion loader-height-override"
+              :element-loading-text="transactionText"
+              element-loading-spinner="el-icon-loading"
             >
-              <font-awesome-icon icon="trash-alt" />
-            </span>
-          </div>
-          <div class="card-payment-add-card-holder">
-            <span>
-              <font-awesome-icon
-                icon="plus-circle"
-                class="card-payment-add-card-icon"
-              />
-            </span>
-            <span
-              class="card-payment-add-card"
-              @click="addCardStatus = !addCardStatus"
-            >{{$t('general.add_a_new_card')}}</span>
-          </div>
-          <div class="card-payment-flex">
-            <span class="prepend-currency">{{ getActiveCurrency }}</span>
-            <input
-              v-model="savedCardAmount"
-              type="number"
-              class="card-payment-amount-input"
-            >
-          </div>
-          <div
-            v-loading="loadingStatus"
-            class="orders-loading-container orders-loading-container--completion loader-height-override"
-            :element-loading-text="transactionText"
-            element-loading-spinner="el-icon-loading"
-          >
-            <button
-              :class="
-                valid_saved_vgs_payment && !loadingStatus
-                  ? 'button-primary paymentbody--input-button'
-                  : 'paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
-              "
-              @click="chargeSavedCard()"
-            >
-              {{$t('general.make_payment')}}
-            </button>
+              <button
+                :class="
+                  valid_saved_vgs_payment && !loadingStatus
+                    ? 'button-primary paymentbody--input-button'
+                    : 'paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
+                "
+                @click="chargeSavedCard()"
+              >
+                {{$t('general.make_payment')}}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -121,6 +132,8 @@
       v-if="addCardStatus"
       @submit.prevent="onSubmit"
     > 
+
+
       <PaymentLoading 
         payMethod="card" 
         :transactionText="transactionText" 
@@ -133,92 +146,103 @@
         v-if="!loadingStatus && showAdditionalCardFields" 
         @continue="handleContinue"
       />
-
+      
       <div v-if="!loadingStatus && !showAdditionalCardFields" >
-        <div
-          v-if="get_saved_cards.length > 0"
-          class="card-payment-back-arrow"
-          @click="addCardStatus = !addCardStatus"
+        <button
+          type="button"
+          class="button-primary paymentbody--input-button"
+          style="margin-top: auto;"
+          @click="init3DS"
+          v-if="is3DS"
         >
-          <span>
-            <font-awesome-icon
-              icon="arrow-left"
-              class="card-payment-add-card-icon"
-            />
-          </span>
-          <span class="card-payment-back-option">
-          {{$t('general.back')}}
-          </span>
-        </div>
-
-        <div
-          id="cc-number"
-          class="form-group"
-        >
-          <div class="form-control-static">
-            <span class="fake-input" />
-          </div>
-        </div>
-
-        <div class="cvv-expire-fields">
+          Kindly click  here to proceed >>
+        </button>
+        <div v-else>
           <div
-            id="cc-expiration-date"
+            v-if="get_saved_cards.length > 0"
+            class="card-payment-back-arrow"
+            @click="addCardStatus = !addCardStatus"
+          >
+            <span>
+              <font-awesome-icon
+                icon="arrow-left"
+                class="card-payment-add-card-icon"
+              />
+            </span>
+            <span class="card-payment-back-option">
+            {{$t('general.back')}}
+            </span>
+          </div>
+
+          <div
+            id="cc-number"
             class="form-group"
           >
             <div class="form-control-static">
               <span class="fake-input" />
             </div>
           </div>
-          <div
-            id="cc-cvc"
-            class="form-group"
-          >
-            <div class="form-control-static">
-              <span class="fake-input" />
-            </div>
-          </div>
-        </div>
 
-        <div
-          id="cc-save-card"
-          class="form-group"
-        >
-          <div class="form-control-static">
-            <input
-              v-model="saveCardState"
-              type="checkbox"
+          <div class="cvv-expire-fields">
+            <div
+              id="cc-expiration-date"
+              class="form-group"
             >
-            <span
-              class="fake-checkbox-label"
-            >{{$t('general.save_card_details')}}</span>
+              <div class="form-control-static">
+                <span class="fake-input" />
+              </div>
+            </div>
+            <div
+              id="cc-cvc"
+              class="form-group"
+            >
+              <div class="form-control-static">
+                <span class="fake-input" />
+              </div>
+            </div>
           </div>
-        </div>
-        <div
-          id="cc-amount"
-          class="form-group"
-        >
-          <div class="form-control-static amount-input">
-            <span class="prepend-currency">{{ getActiveCurrency }}</span>
-            <span class="fake-input" />
-          </div>
-        </div>
 
-        <div
-          v-loading="loading"
-          class="orders-loading-container orders-loading-container--completion loader-height-override"
-          :element-loading-text="transactionText"
-          element-loading-spinner="el-icon-loading"
-        >
-          <button
-            type="submit"
-            :class="
-              vgs_valid_payment && !loadingStatus
-                ? 'button-primary paymentbody--input-button'
-                : '.paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
-            "
+          <div
+            id="cc-save-card"
+            class="form-group"
           >
-            {{$t('general.make_payment_capital')}}
-          </button>
+            <div class="form-control-static">
+              <input
+                v-model="saveCardState"
+                type="checkbox"
+              >
+              <span
+                class="fake-checkbox-label"
+              >{{$t('general.save_card_details')}}</span>
+            </div>
+          </div>
+          <div
+            id="cc-amount"
+            class="form-group"
+          >
+            <div class="form-control-static amount-input">
+              <span class="prepend-currency">{{ getActiveCurrency }}</span>
+              <span class="fake-input" />
+            </div>
+          </div>
+
+          <div
+            v-loading="loading"
+            class="orders-loading-container orders-loading-container--completion loader-height-override"
+            :element-loading-text="transactionText"
+            element-loading-spinner="el-icon-loading"
+          >
+            <button
+              type="submit"
+              :class="
+                vgs_valid_payment && !loadingStatus
+                  ? 'button-primary paymentbody--input-button'
+                  : '.paymentbody--input-button card--input button--primary-inactive inactive-payment-button'
+              "
+            >
+              {{$t('general.make_payment_capital')}}
+            </button>
+          </div>
         </div>
       </div>
     </form>
@@ -494,9 +518,9 @@ export default {
 
                   if(res.additional_data) {
                     this.additionalData = res.additional_data;
-                    this.is3DS = res.tds;
                     if (res.tds) {
-                      this.init3DS(res.additional_data);
+                      this.loadingStatus = false;
+                      this.is3DS = res.tds;
                       return;
                     }
                     this.showAdditionalCardFields = true;
@@ -585,7 +609,9 @@ export default {
     handleContinue3DS(val) {
       this.showAdditionalCardFields = false;
       const data = val.additionalData.filter(element => element.field_id === 'url');
-      this.init3DS(data);
+      this.additionalData = data;
+      this.loadingStatus = false;
+      this.is3DS = true;
     },
 
     chargeSavedCard() {
@@ -822,11 +848,11 @@ export default {
       );
     },
 
-    init3DS(additionalData) {
-      const res = additionalData[0];
+    init3DS() {
+      const res = this.additionalData[0];
       const url = res.field;
       const urlWindow = window.open(url, '');
-
+      this.is3DS = false;
       const timer = setInterval(() => {
 			  if (urlWindow.closed) {
           this.init3dsPoll();
@@ -877,9 +903,9 @@ export default {
         this.loadingStatus = false;
         this.clearInputs();
         const notification = {
-        title: this.$t('general.failed_to_charge_card'),
-        level: 2,
-        message: res.message,
+          title: this.$t('general.failed_to_charge_card'),
+          level: 2,
+          message: res.message,
         };
         this.displayNotification(notification);
       });
