@@ -215,6 +215,7 @@ export default {
       })
     },
     submitCvv() {
+      this.loading = true;
       this.form.submit(
         '/customers/collect_card_details',
         {
@@ -263,6 +264,9 @@ export default {
               this.loading = false;
               this.$emit('continue', false);
             }).catch(err => {
+              this.loading = false;
+              this.$emit('continue', false);
+            }).catch((err) => {
               this.loading = false;
               this.$emit('continue', false);
             })
