@@ -62,7 +62,6 @@ export default {
       resolve(true);
     });
   },
-
   requestMpesaPayment({ dispatch, commit }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
@@ -199,6 +198,34 @@ export default {
   requestPaymentOptions({ dispatch }, payload) {
     return new Promise((resolve, reject) => {
       dispatch('requestAxiosPost', payload, { root: true }).then(
+        (response) => {
+          resolve(response.data);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+  paymentAxiosPost({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosPost', payload, {
+        root: true,
+      }).then(
+        (response) => {
+          resolve(response.data);
+        },
+        (error) => {
+          reject(error);
+        },
+      );
+    });
+  },
+  paymentAxiosGet({ dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('requestAxiosGet', payload, {
+        root: true,
+      }).then(
         (response) => {
           resolve(response.data);
         },
