@@ -766,8 +766,17 @@ export default {
         };
         this.clearInputs();
         this.displayNotification(notification);
+      }).catch(error => {
+        this.loadingStatus = false;
+        this.poll_count = this.poll_limit;
+        const notification = {
+          title: this.$t('general.failed_to_charge_card'),
+          level: 2,
+          message: this.$t('general.failed_to_charge_card_text')
+        };
+        this.clearInputs();
+        this.displayNotification(notification);
       })
-        
     },
     clearInputs() {
       this.addCardStatus = false;
