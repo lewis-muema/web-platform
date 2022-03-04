@@ -1,9 +1,18 @@
-image: node:12.22.0
+image: node:14.18.1-alpine
 
 stages:
-  # also create a tests stage
-  - test
   - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  STAGING_DOCKER_IMAGE: '${CI_REGISTRY}/vue-webplatform:latest_${CI_COMMIT_SHORT_SHA}'
+  STAGING_DOCKER_IMAGE_LATEST: '${CI_REGISTRY}/vue-webplatform:latest'
+
+cache:
+  paths:
+    - node_modules/
 
 # Lets name our Job eslint, because that's what it's doing.
 eslint:
@@ -32,3 +41,24 @@ unitTest:
     - npm i mocha-webpack
     # Run tests
     - npm run test
+
+build:staging:
+  stage: build
+  tags:
+    - shell
+  before_script:
+    - echo "$STAGING_DOCKER_IMAGE"
+  script:
+    - docker build --build-arg DOCKER_ENV="testing" -t "$STAGING_DOCKER_IMAGE" .
+    - docker push "$STAGING_DOCKER_IMAGE"
+  only:
+    - dev
+
+deploy:staging:
+  stage: deploy
+  tags:
+    - shell
+  script:
+    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy cc-redesign cc-redesign=${STAGING_DOCKER_IMAGE}"
+  only:
+    - dev
