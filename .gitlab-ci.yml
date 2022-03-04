@@ -1,14 +1,28 @@
-image: node:14.18.1-alpine
+image: node:12.22.0
 
 stages:
-  - lint
   - test
+  - lint
   - build
   - deploy
 
 variables:
   STAGING_DOCKER_IMAGE: '${CI_REGISTRY}/vue-webplatform:latest_${CI_COMMIT_SHORT_SHA}'
   STAGING_DOCKER_IMAGE_LATEST: '${CI_REGISTRY}/vue-webplatform:latest'
+
+# Lets name our Job eslint, because that's what it's doing.
+eslint:
+  # tell eslint what stage it is. (This could also be build or test for example)
+  stage: lint
+  tags:
+    - docker
+
+  # What scripts do we want to run?
+  script:
+    # install eslint
+    - npm i eslint
+    # Run eslint
+    - npm run lint
 
 # Lets name our Job unitTest, because that's what it's doing.
 unitTest:
