@@ -70,7 +70,7 @@ build:prod:
     - docker build --build-arg APP_ENV="production" -t "$PROD_DOCKER_IMAGE" .
     - docker push "$PROD_DOCKER_IMAGE"
   only:
-    - master
+    - production
 
 build:preview_env:
   stage: build
