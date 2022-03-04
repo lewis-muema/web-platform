@@ -55,6 +55,6 @@ deploy:staging:
   tags:
     - shell
   script:
-    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy cc-redesign cc-redesign=${STAGING_DOCKER_IMAGE}"
+    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue-web-platform vue-web-platform=${STAGING_DOCKER_IMAGE}"
   only:
     - dev
