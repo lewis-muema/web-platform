@@ -9,6 +9,7 @@ stages:
 variables:
   STAGING_DOCKER_IMAGE: '${CI_REGISTRY}/vue-webplatform:latest_${CI_COMMIT_SHORT_SHA}'
   STAGING_DOCKER_IMAGE_LATEST: '${CI_REGISTRY}/vue-webplatform:latest'
+  BETA_DOCKER_IMAGE: '${CI_REGISTRY}/vue_web_platform:beta'
 
 # Lets name our Job eslint, because that's what it's doing.
 eslint:
@@ -49,7 +50,7 @@ build:staging:
     - docker push "$STAGING_DOCKER_IMAGE"
     - docker push "$STAGING_DOCKER_IMAGE_LATEST"
   only:
-    - master
+    - staging
 
 deploy:staging:
   stage: deploy
@@ -57,6 +58,27 @@ deploy:staging:
     - shell
   script:
     - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue-web-platform vue-web-platform=${STAGING_DOCKER_IMAGE}"
+  only:
+    - staging
+
+build:beta:
+  stage: build
+  tags:
+    - shell
+  before_script:
+    - echo "$STAGING_DOCKER_IMAGE"
+  script:
+    - docker build --build-arg DOCKER_ENV="production" -t "$BETA_DOCKER_IMAGE" .
+    - docker push "$BETA_DOCKER_IMAGE"
+  only:
+    - master
+
+deploy:beta:
+  stage: deploy
+  tags:
+    - shell
+  script:
+    - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue_webplatform_beta vue_webplatform_beta=${STAGING_DOCKER_IMAGE}"
   only:
     - master
 
