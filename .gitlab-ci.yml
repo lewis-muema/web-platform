@@ -45,10 +45,11 @@ build:staging:
   before_script:
     - echo "$STAGING_DOCKER_IMAGE"
   script:
-    - docker build --build-arg DOCKER_ENV="testing" -t "$STAGING_DOCKER_IMAGE" .
+    - docker build --build-arg DOCKER_ENV="testing" -t "$STAGING_DOCKER_IMAGE"  -t "$STAGING_DOCKER_IMAGE_LATEST" .
     - docker push "$STAGING_DOCKER_IMAGE"
+    - docker push "$STAGING_DOCKER_IMAGE_LATEST"
   only:
-    - dev
+    - master
 
 deploy:staging:
   stage: deploy
@@ -57,7 +58,7 @@ deploy:staging:
   script:
     - ssh -i ~/keys/id_rsa -f -o StrictHostKeyChecking=no -l admin kubetest-master.sendyit.com "kubectl set image deploy vue-web-platform vue-web-platform=${STAGING_DOCKER_IMAGE}"
   only:
-    - dev
+    - master
 
 build:prod:
   stage: build
@@ -65,12 +66,13 @@ build:prod:
     - shell
   before_script:
     - export PROD_DOCKER_IMAGE="${CI_REGISTRY}/vue_web_platform:prod_$(date +%Y-%m-%d-%H-%M)"
+    - export PROD_DOCKER_IMAGE="${CI_REGISTRY}/vue_web_platform:prod"
     - echo "$PROD_DOCKER_IMAGE"
   script:
-    - docker build --build-arg APP_ENV="production" -t "$PROD_DOCKER_IMAGE" .
+    - docker build --build-arg DOCKER_ENV="production" -t "$PROD_DOCKER_IMAGE" .
     - docker push "$PROD_DOCKER_IMAGE"
   only:
-    - master
+    - production
 
 build:preview_env:
   stage: build
