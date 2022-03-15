@@ -2,4 +2,3 @@
 import * as en from './linkComponent.json';
 
 export default en.default;
-

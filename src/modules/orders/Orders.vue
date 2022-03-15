@@ -783,7 +783,7 @@ export default {
       focusedInput: '',
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
+          country: ['ke', 'ug', 'tz', 'ng'],
         },
         bounds: {
           north: 35.6,
