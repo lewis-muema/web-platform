@@ -401,7 +401,7 @@ export default {
       activeSuggestionList: false,
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz', 'ci' ],
+          country: ['ke', 'ug', 'tz', 'ng'],
         },
         bounds: {
           north: 35.6,
