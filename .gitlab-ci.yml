@@ -45,7 +45,7 @@ build:staging:
     - shell
   before_script:
     - echo "$STAGING_DOCKER_IMAGE"
-     - export FLUX_STAGING_DOCKER_IMAGE="${CI_REGISTRY}/vue_web_platform:dev_$(date +%Y-%m-%d-%H-%M)"
+    - export FLUX_STAGING_DOCKER_IMAGE="${CI_REGISTRY}/vue_web_platform:dev_$(date +%Y-%m-%d-%H-%M)"
   script:
     - docker build --build-arg DOCKER_ENV="testing" -t "$STAGING_DOCKER_IMAGE"  -t "$FLUX_STAGING_DOCKER_IMAGE" .
     - docker push "$STAGING_DOCKER_IMAGE"
