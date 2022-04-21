@@ -21,7 +21,6 @@ function loadLocaleMessages() {
   return messages;
 }
 
-
 const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',
@@ -33,7 +32,9 @@ function fetchCountry() {
   axios(`https://extreme-ip-lookup.com/json/?key=${EXTREME_IP_KEY}`)
     .then((response) => {
       i18n.locale = response.data.countryCode === 'FR' || response.data.countryCode === 'CI' ? 'fr' : 'en';
-      const lang = response.data.countryCode === 'FR' || response.data.countryCode === 'CI' ? `fr-${response.data.countryCode}` : 'en-US,en;q=0.9';
+      const lang = response.data.countryCode === 'FR' || response.data.countryCode === 'CI'
+        ? `fr-${response.data.countryCode}`
+        : 'en-US,en;q=0.9';
       const locale = response.data.countryCode === 'FR' || response.data.countryCode === 'CI' ? 'fr' : 'en';
       store.commit('setLanguage', locale);
       localStorage.setItem('timeLocale', locale);
