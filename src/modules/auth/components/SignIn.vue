@@ -189,24 +189,23 @@ export default {
                       email: acc.user_email,
                     });
                     if (analyticsEnv === 'production') {
-                      mixpanel.people.set_once({
+                      this.$mixpanel.people.set_once(acc.default === 'peer' ? `${acc.user_id}_0` : `0_${acc.user_id}`, {
                         $email: acc.user_email,
                         $phone: acc.user_phone,
                         'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                         $name: acc.user_name,
                         'Client Type': 'Web Platform',
-                        $distinctID: acc.default === 'peer' ? `${acc.user_id}_0` : `0_${acc.user_id}`,
                       });
 
                       // login identify
-                      mixpanel.identify(acc.user_email);
+                      this.$mixpanel.identify(acc.user_email);
                       analytics.identify(`${sessionData.default}_${acc.user_id}`, {
                         name: `${acc.user_name}`,
                         email: `${acc.user_email}`,
                       });
 
                       // track login
-                      mixpanel.track('User Login', {
+                      this.$mixpanel.track('User Login', {
                         'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                         'Last Login': new Date(),
                         'Client Type': 'Web Platform',
@@ -238,7 +237,7 @@ export default {
           },
           (error) => {
             this.login_text = this.$t('signIn.login');
-            this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.login_failed_text')); 
+            this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.login_failed_text'));
           },
         );
       } else {

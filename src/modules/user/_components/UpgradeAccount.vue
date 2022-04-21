@@ -472,9 +472,9 @@ export default {
             if (analyticsEnv === 'production') {
               const identityEmail = this.radio === '2' ? this.cop_email : session.peer.user_email;
 
-              mixpanel.alias(identityEmail);
+              this.$mixpanel.alias(identityEmail);
 
-              mixpanel.people.set_once({
+              this.$mixpanel.people.set_once({
                 $email: identityEmail,
                 $phone: session.peer.user_phone,
                 'Account Type': 'Business',
@@ -485,10 +485,10 @@ export default {
               });
 
               // login identify
-              mixpanel.identify(identityEmail);
+              this.$mixpanel.identify(identityEmail);
 
               // track New Account
-              mixpanel.track('New Account Created - Upgrade', {
+              this.$mixpanel.track('New Account Created - Upgrade', {
                 'Account Type': 'Business',
                 'Last Login': new Date(),
                 'Client Type': 'Web Platform',
