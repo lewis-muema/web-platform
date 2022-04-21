@@ -126,9 +126,9 @@ export default {
             if ('default' in sessionData && analyticsEnv === 'production') {
               const acc = sessionData[sessionData.default];
 
-              mixpanel.alias(acc.user_email);
+              this.$mixpanel.alias(acc.user_email);
 
-              mixpanel.people.set_once({
+              this.$mixpanel.people.set_once({
                 $email: acc.user_email,
                 $phone: acc.user_phone,
                 'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
@@ -139,14 +139,14 @@ export default {
               });
 
               // login identify
-              mixpanel.identify(acc.user_email);
+              this.$mixpanel.identify(acc.user_email);
               analytics.identify(`${sessionData.default}_${acc.user_id}`, {
                 name: `${acc.user_name}`,
                 email: `${acc.user_email}`,
               });
 
               // track new Account
-              mixpanel.track('New Account Created', {
+              this.$mixpanel.track('New Account Created', {
                 'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                 'Last Login': new Date(),
                 'Client Type': 'Web Platform',
@@ -204,9 +204,9 @@ export default {
               if ('default' in sessionData && analyticsEnv === 'production') {
                 const acc = sessionData[sessionData.default];
 
-                mixpanel.alias(acc.user_email);
+                this.$mixpanel.alias(acc.user_email);
 
-                mixpanel.people.set_once({
+                this.$mixpanel.people.set_once({
                   $email: acc.user_email,
                   $phone: acc.user_phone,
                   'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
@@ -217,14 +217,14 @@ export default {
                 });
 
                 // login identify
-                mixpanel.identify(acc.user_email);
+                this.$mixpanel.identify(acc.user_email);
                 analytics.identify(`${sessionData.default}_${acc.user_id}`, {
                   name: `${acc.user_name}`,
                   email: `${acc.user_email}`,
                 });
 
                 // track New Account
-                mixpanel.track('New Account Created', {
+                this.$mixpanel.track('New Account Created', {
                   'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                   'Last Login': new Date(),
                   'Client Type': 'Web Platform',
@@ -308,7 +308,7 @@ export default {
                 if ('default' in sessionData && analyticsEnv === 'production') {
                   const acc = sessionData[sessionData.default];
 
-                  mixpanel.people.set_once({
+                  this.$mixpanel.people.set_once({
                     $email: acc.user_email,
                     $phone: acc.user_phone,
                     'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
@@ -317,14 +317,14 @@ export default {
                   });
 
                   // login identify
-                  mixpanel.identify(acc.user_email);
+                  this.$mixpanel.identify(acc.user_email);
                   analytics.identify(`${sessionData.default}_${acc.user_id}`, {
                     name: `${acc.user_name}`,
                     email: `${acc.user_email}`,
                   });
 
                   // track login
-                  mixpanel.track('User Login', {
+                  this.$mixpanel.track('User Login', {
                     'Account Type': acc.default === 'peer' ? 'Personal' : 'Business',
                     'Last Login': new Date(),
                     'Client Type': 'Web Platform',

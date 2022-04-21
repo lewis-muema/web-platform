@@ -1,5 +1,4 @@
 /* eslint no-restricted-syntax: ["error", "WithStatement"] */
-/* global mixpanel  */
 /* eslint no-undef: "error" */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_sessionSnack"] }] */
 /* eslint-disable import/prefer-default-export */
@@ -43,7 +42,7 @@ function guard(to, from, next) {
           }
           if ('default' in session && analyticsEnv === 'production') {
             const acc = session[session.default];
-            mixpanel.identify(acc.user_email);
+            this.$mixpanel.identify(acc.user_email);
             analytics.identify(`${session.default}_${acc.user_id}`, {
               name: `${acc.user_name}`,
               email: `${acc.user_email}`,
@@ -66,7 +65,7 @@ function guard(to, from, next) {
         if ('innerTrack' in to.meta) {
           const details = to.meta.innerTrack;
           if (details !== 'undefined') {
-            mixpanel.track(details, {
+            this.$mixpanel.track(details, {
               'Client Type': 'Web Platform',
               'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
             });
@@ -102,7 +101,7 @@ function loginGuard(to, from, next) {
               }
               // let path = window.location.href;
               if (analyticsEnv === 'production') {
-                mixpanel.track(details, {
+                this.$mixpanel.track(details, {
                   'Client Type': 'Web Platform',
                 });
               }
@@ -149,7 +148,7 @@ function freightGuard(to, from, next) {
           }
           if ('default' in session && analyticsEnv === 'production') {
             const acc = session[session.default];
-            mixpanel.identify(acc.user_email);
+            this.$mixpanel.identify(acc.user_email);
             analytics.identify(`${session.default}_${acc.user_id}`, {
               name: `${acc.user_name}`,
               email: `${acc.user_email}`,
@@ -179,7 +178,7 @@ function freightGuard(to, from, next) {
         if ('innerTrack' in to.meta) {
           const details = to.meta.innerTrack;
           if (details !== 'undefined') {
-            mixpanel.track(details, {
+            this.$mixpanel.track(details, {
               'Client Type': 'Web Platform',
               'Account Type': session.default === 'peer' ? 'Personal' : 'Business',
             });
@@ -217,7 +216,7 @@ function freightLoginGuard(to, from, next) {
               }
               // let path = window.location.href;
               if (analyticsEnv === 'production') {
-                mixpanel.track(details, {
+                this.$mixpanel.track(details, {
                   'Client Type': 'Web Platform',
                 });
               }

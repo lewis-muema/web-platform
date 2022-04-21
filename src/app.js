@@ -94,6 +94,10 @@ Vue.use(vueCountryRegionSelect);
 Vue.use(CheckboxGroup);
 Vue.use(Progress);
 
+const mixpanel = require('mixpanel-browser');
+
+mixpanel.init(process.env.CONFIGS_ENV.MIXPANEL_KEY);
+
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
@@ -101,6 +105,7 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
+Vue.prototype.$mixpanel = mixpanel;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 require('./views');
