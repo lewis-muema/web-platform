@@ -44,9 +44,10 @@ const getTrackingData = function getTrackingData({ commit, dispatch, state }, da
 };
 
 const cancelOrder = function cancelOrder({ dispatch }, data) {
+  // use ADONIS PRIVATE API to perform cancellation
   const payload = {
-    app: 'PRIVATE_API',
-    endpoint: 'cancel_order',
+    app: 'ADONIS_PRIVATE_API',
+    endpoint: 'orders/cancel-order',
     values: data,
   };
 
