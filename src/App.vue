@@ -74,26 +74,6 @@ export default {
     },
   },
   mounted() {
-    // beacon click listener
-    window.Beacon('on', 'open', () => {
-      let analyticsEnv = '';
-      try {
-        analyticsEnv = process.env.CONFIGS_ENV.ENVIRONMENT;
-      } catch (er) {
-        // ...
-      }
-      try {
-        if (analyticsEnv === 'production') {
-          window.ga('send', 'event', {
-            eventCategory: 'Beacon Chat',
-            eventAction: 'Click',
-            eventLabel: 'Chat Icon - Beacon',
-          });
-        }
-      } catch (er) {
-        // ...
-      }
-    });
     if (this.getLanguage === 'fr') {
       Validator.localize('fr', fr);
     }
@@ -116,9 +96,6 @@ export default {
       // initilize firebase on load
       this.initializeFirebase();
       this.loadFCMListeners();
-      if (document.querySelector('.body').id.includes('beacon-active')) {
-        this.autoPopBeacon(1);
-      }
       this.initializeFreshChat();
     }
   },
@@ -372,41 +349,6 @@ export default {
         setTimeout(() => {
           window.location = 'itms://itunes.apple.com/us/app/sendy-delivery-app/id1088688361?mt=8';
         }, 10000);
-      }
-    },
-    autoPopBeacon(id) {
-      if (id === 1) {
-        window.Beacon('on', 'ready', () => {
-          this.beaconActions();
-        });
-      }
-      if (id === 2) {
-        this.beaconActions();
-      }
-    },
-    beaconActions() {
-      if (this.$route.path === '/auth' || this.$route.path === '/auth/sign_in') {
-        window.Beacon('close');
-        window.Beacon('open');
-        window.Beacon('navigate', '/answers/');
-        setTimeout(() => {
-          window.Beacon('suggest', ['59d5bc412c7d3a40f0ed346c']);
-        }, 2000);
-      }
-      if (this.$route.path === '/orders' && !this.getPickUpFilledStatus) {
-        const session = this.$store.getters.getSession;
-        window.Beacon('close');
-        window.Beacon('open');
-        window.Beacon('navigate', '/answers/');
-
-        setTimeout(() => {
-          window.Beacon('suggest', ['59d5e11f2c7d3a40f0ed34fe']);
-          this.trackMixpanelEvent('Auto pop up helpscout beacon for order placement', {
-            'user name': session[session.default].user_name,
-            'user email': session[session.default].user_email,
-            'user phone': session[session.default].user_phone,
-          });
-        }, 2000);
       }
     },
     initializeFreshChat() {
