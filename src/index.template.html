@@ -128,38 +128,6 @@
       gtag('config', 'G-5CN51T7B9C');
     </script>
     <!--vue-ssr-outlet-->
-    <script type="text/javascript">
-      !(function(e, t, n) {
-        function a() {
-          let e = t.getElementsByTagName('script')[0],
-            n = t.createElement('script');
-          (n.type = 'text/javascript'),
-            (n.async = !0),
-            (n.src = 'https://beacon-v2.helpscout.net'),
-            e.parentNode.insertBefore(n, e);
-        }
-        if (
-          ((e.Beacon = n = function(t, n, a) {
-            e.Beacon.readyQueue.push({ method: t, options: n, data: a });
-          }),
-          (n.readyQueue = []),
-          'complete' === t.readyState)
-        )
-          return a();
-        e.attachEvent ? e.attachEvent('onload', a) : e.addEventListener('load', a, !1);
-      })(window, document, window.Beacon || function() {
-      });
-    </script>
-    <!--Disabling mixpanel to replace it with freshchat-->
-    <!-- <script type="text/javascript">
-      window.Beacon('init', 'bfdc6b7d-be53-41ea-9f6a-ac15569db113');
-    </script>
-    <script type="text/javascript">
-      Beacon('config', {
-        color: '#1782c5',
-        showPrefilledCustomFields: true,
-      });
-    </script> -->
     <!-- start Mixpanel --><script type="text/javascript">
       (function(c, a) {
         if (!a.__SV) {
