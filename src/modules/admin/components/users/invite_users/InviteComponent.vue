@@ -246,7 +246,7 @@ export default {
         if (analyticsEnv === 'production') {
           // track invitees
 
-          mixpanel.track('User Invite', {
+          this.$mixpanel.track('User Invite', {
             'Account Type': 'Business',
             'Last Login': new Date(),
             'Client Type': 'Web Platform',

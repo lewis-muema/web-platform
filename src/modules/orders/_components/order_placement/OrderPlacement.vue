@@ -656,7 +656,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          this.$mixpanel.track(name);
         }
       } catch (er) {
         // ...
@@ -806,7 +806,7 @@ export default {
       }
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(eventName, eventData);
+          this.$mixpanel.track(eventName, eventData);
         }
       } catch (er) {
         // ...
