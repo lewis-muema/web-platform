@@ -87,6 +87,13 @@ export default {
             Vue,
           }),
         ],
+        beforeSend(event) {
+          if (event.request.url.includes('reset_password')) {
+          // eslint-disable-next-line no-param-reassign
+            event.request.url = `${process.env.CONFIGS_ENV.DOMAIN}/auth/reset_password`;
+          }
+          return event;
+        },
       });
     }
   },
