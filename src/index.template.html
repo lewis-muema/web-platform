@@ -73,9 +73,11 @@
         'app.sendyit.com',
       ]);
       ga('require', 'ecommerce', 'ecommerce.js');
-      ga('send', 'pageview');
-      let PageLoadTime = Math.round(performance.now());
-      ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
+      if (!window.location.href.includes("reset_password")) {
+        ga('send', 'pageview');
+        let PageLoadTime = Math.round(performance.now());
+        ga('send', 'timing', 'JS Dependencies', 'Website Load', PageLoadTime);
+      }
 
       if(_sessionSnack !== null) {
         _sessionSnack = JSON.parse(_sessionSnack);
