@@ -355,6 +355,7 @@ import {
   faHistory,
 } from '@fortawesome/free-solid-svg-icons';
 import orderPlacementStore from './_store';
+import orderStore from '../../_store';
 import paymentsModuleStore from '../../../payment/_store';
 import VendorComponent from './_components/VendorComponent.vue';
 import SessionMxn from '../../../../mixins/session_mixin';
@@ -400,7 +401,7 @@ export default {
       activeSuggestionList: false,
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz', 'ci' ],
+          country: ['ke', 'ug', 'tz', 'ng'],
         },
         bounds: {
           north: 35.6,
@@ -655,7 +656,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          this.$mixpanel.track(name);
         }
       } catch (er) {
         // ...
@@ -805,7 +806,7 @@ export default {
       }
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(eventName, eventData);
+          this.$mixpanel.track(eventName, eventData);
         }
       } catch (er) {
         // ...
@@ -1076,6 +1077,7 @@ export default {
       }
 
       if (!moduleIsRegistered) {
+        this.$store.registerModule('$_orders', orderStore);
         this.$store.registerModule(['$_orders', '$_home'], orderPlacementStore);
       }
     },

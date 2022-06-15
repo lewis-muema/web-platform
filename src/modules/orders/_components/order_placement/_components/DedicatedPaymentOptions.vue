@@ -1687,7 +1687,7 @@ export default {
       try {
         if (analyticsEnv === 'production') {
           // eslint-disable-next-line no-undef
-          mixpanel.identify(email);
+          this.$mixpanel.identify(email);
         }
       } catch (er) {
         this.doNotification('3', this.$t('general.something_went_wrong'), '');
@@ -1707,7 +1707,7 @@ export default {
       }
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name, event);
+          this.$mixpanel.track(name, event);
         }
       } catch (er) {
         // ...

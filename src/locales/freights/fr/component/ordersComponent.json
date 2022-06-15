@@ -1,0 +1,23 @@
+{
+  "amount": "Montant",
+  "create_order": "Créer une commande",
+  "date": "Montant",
+  "destination": "Destination",
+  "freight_shipments": "Recherche des expéditions de fret",
+  "jumper": "Sauteur",
+  "next": "Suivant",
+  "not_available": "Aucun cargaisons disponibles",
+  "pager": "bipeur",
+  "pickup_date": "Date de récupération",
+  "pickup_location": "Lieu de collection ",
+  "place_order": "Passer une commande",
+  "prev": "précédent",
+  "search": "Chercher",
+  "sizes": "Tailles",
+  "status": "état",
+  "total": "Total",
+  "tranporter": "Transporteur",
+  "type_of_load": "Type de charge",
+  "type_of_truck": "Type de camion",
+  "view": "Afficher la page - Connexion - Plateforme Web "
+}

@@ -1,7 +1,3 @@
-const en = {
-  verify: 'Verifying Super User Details',
+import * as en from './loadingComponent.json';
 
-};
-
-
-export default en;
+export default en.default;

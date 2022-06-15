@@ -642,6 +642,7 @@ import {
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import { resolve } from 'path';
 
 library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
@@ -713,7 +714,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -838,7 +839,7 @@ export default {
     '$route.params.order_no': function trackedOrder(from) {
       this.order_number = from;
       this.loading = true;
-      this.$store.commit('$_orders/$_tracking/setTrackedOrder', from);
+      this.setTrackedOrder(from);
       this.poll(from);
       this.initiateOrderData();
     },
@@ -880,7 +881,7 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
+    this.setTrackedOrder(this.$route.params.order_no);
     this.poll(this.$route.params.order_no);
     this.checkRunningBalance();
     this.initiateOrderData();
@@ -896,11 +897,14 @@ export default {
       requestMpesaPaymentAction: '$_payment/requestMpesaPayment',
       completeMpesaPaymentRequest: '$_payment/completeMpesaPaymentRequest',
       requestCancellationReasons: '$_orders/$_tracking/requestCancellationReasons',
+      getTrackingData: '$_orders/$_tracking/getTrackingData',
+      runningBalance: '$_orders/$_tracking/runningBalance',
     }),
     ...mapMutations({
       hide_vendors: '$_orders/hideVendors',
       clearVendorMarkers: '$_orders/clearVendorMarkers',
       change_page: '$_orders/setPage',
+      setTrackedOrder: '$_orders/$_tracking/setTrackedOrder',
     }),
     moment() {
       return moment();
@@ -957,8 +961,7 @@ export default {
     poll(from) {
       if (this.tracking_data !== undefined) {
         const that = this;
-        this.$store
-          .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
+        this.getTrackingData({ order_no: from })
           .then((response) => {
             if (response) {
               if (this.tracking_data.delivery_status === 3) {
@@ -1162,7 +1165,7 @@ export default {
           cop_id: session[session.default].cop_id,
           user_phone: session[session.default].user_phone,
         };
-        this.$store.dispatch('$_orders/$_tracking/runningBalance', payload).then((response) => {
+        this.runningBalance(payload).then((response) => {
           if (response.status) {
             this.myRb = response.running_balance;
             this.accType = response.payment_plan;
@@ -1293,7 +1296,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          this.$mixpanel.track(name);
         }
       } catch (er) {
         // ...
@@ -1678,8 +1681,7 @@ export default {
     checkOrderStatus(from) {
       if (this.tracking_data !== undefined) {
         const that = this;
-        this.$store
-          .dispatch('$_orders/$_tracking/getTrackingData', { order_no: from })
+        this.getTrackingData({ order_no: from })
           .then((response) => {
             if (response) {
               if (!that.mpesa_payment_state) {

@@ -37,9 +37,14 @@
           </label>
           <input
             v-model="contact_email"
+            v-validate="'required|email'"
             class="input-control cop-edit-form"
             type="text"
+            name="email"
           >
+          <p class="edit-cop-data-error">
+            {{ errors.first('email') }}
+          </p>
         </div>
 
         <div class="cop-edit-holder">
@@ -77,12 +82,13 @@
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+import InputValidationMixin from '../../../mixins/fields_validations_mixin';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default {
   name: 'CompanyDetails',
-  mixins: [SessionMxn, NotificationMxn],
+  mixins: [SessionMxn, NotificationMxn, InputValidationMixin],
   data() {
     return {
       cop_name: '',
@@ -139,6 +145,8 @@ export default {
         && this.phone !== ''
         && this.contact_email !== ''
         && this.contact_name !== ''
+        && this.fieldValidations('user_name', this.contact_name)
+        && this.fieldValidations('biz_name', this.cop_name)
       ) {
         const phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.phone));
 
@@ -212,11 +220,18 @@ export default {
         }
       } else {
         const level = 3;
-        this.message = this.$t('companyDetails.all_details');
+        let errorDescription = this.$t('companyDetails.all_details');
+
+        if (!this.fieldValidations('user_name', this.contact_name)) {
+          errorDescription = this.fieldValidationsError('user_name');
+        } else if (!this.fieldValidations('biz_name', this.cop_name)) {
+          errorDescription = this.fieldValidationsError('biz_name');
+        }
+
         const notification = {
           title: '',
           level,
-          message: this.message,
+          message: errorDescription,
         };
         this.displayNotification(notification);
       }
@@ -278,5 +293,13 @@ export default {
  width: 326px;
  margin-top: 8px;
  margin-left: -15px;
+}
+.edit-cop-data-error{
+  margin-right: 3%;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: #e08445;
+  text-align: left;
+  width: 112% !important;
 }
 </style>

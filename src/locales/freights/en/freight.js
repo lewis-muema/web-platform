@@ -1,34 +1,3 @@
-const en = {
-  finish_freight: 'Finish freight account set up',
-  industry: 'What industry is your business in?',
-  id_no: 'Your ID Number',
-  id_no_placeholder: 'Enter your ID number',
-  pin_biz_label: 'Your business',
-  pin_peer_label: 'Your',
-  valid_tin_no: 'Please enter a valid TIN number',
-  valid_kra: 'Please enter a valid KRA PIN',
-  valid_ci_pin: 'Please enter a valid NCC number',
-  session_expired: 'Your session has expired!',
-  redirected: 'You will be redirected to the login page within 5 seconds.',
-  final_setup_error: 'Final set up error !',
-  select_industry: 'Please select industry preference',
-  please_enter_biz_regno: 'Please enter a valid business registration number',
-  please_enter_ci_no: 'Please enter a valid RCC',
-  enter_id_no: 'Please enter your ID number',
-  info_accepted: 'Account information accepted!',
-  something_wrong: 'Something went wrong.',
-  tin_no: 'TIN number',
-  tin_no_placeholder: 'Enter your TIN number',
-  kra_pin: 'KRA PIN',
-  kra_pin_placeholder: 'Enter your KRA pin',
-  ncc_no: 'NCC',
-  ncc_placeholder: 'Enter number',
-  default_biz_reg_label: 'Business registration number',
-  ci_biz_reg_label: 'RCC',
-  default_biz_reg_placeholder: 'Enter your business registration number',
-  ci_biz_reg_placeholder: 'Enter your trade register number',
-  enter_valid_kraname: 'Please enter valid {kraName}',
-  loading_data: 'Loading Data',
-};
+import * as en from './freight.json';
 
-export default en;
+export default en.default;

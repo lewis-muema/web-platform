@@ -374,7 +374,7 @@ export default {
       }
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name, event);
+          this.$mixpanel.track(name, event);
         }
       } catch (er) {
         // ...

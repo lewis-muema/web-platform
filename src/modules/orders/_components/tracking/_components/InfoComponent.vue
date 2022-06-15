@@ -1035,7 +1035,7 @@ export default {
       fileUploadStatus: false,
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
+          country: ['ke', 'ug', 'tz', 'ng'],
         },
         bounds: {
           north: 35.6,
@@ -1123,7 +1123,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      tracking_data: '$_orders/$_tracking/getTrackingData',
+      tracking_data: '$_orders/$_tracking/trackingData',
       tracked_order: '$_orders/$_tracking/getTrackedOrder',
       isMQTTConnected: '$_orders/$_tracking/getIsMQTTConnected',
       vendors: '$_orders/getVendors',
@@ -1349,6 +1349,7 @@ export default {
     cancel_reason(value) {
       if (value !== '') {
         this.cancelChange(value);
+        this.calculateCancellationFee(value);
       }
     },
     getShareOption(value) {
@@ -1832,7 +1833,7 @@ export default {
       const payload = {
         order_no: this.tracking_data.order_no,
       };
-      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+      this.computeCancellationFee(payload).then(
         (response) => {
           if (response.data.cancellation_fee === 0) {
             this.cancellation_fee = false;
@@ -1859,7 +1860,7 @@ export default {
         order_no: this.tracking_data.order_no,
         cancellation_reason_id: reason,
       };
-      this.$store.dispatch('$_orders/$_tracking/computeCancellationFee', payload).then(
+      this.computeCancellationFee(payload).then(
         (response) => {
           if (response.data.cancellation_fee) {
             this.doNotification(2, this.$t('general.cancellation_fee'), this.$t('general.You_may_be_charged_a_cancellation_fee', {fee:`${response.data.currency} ${response.data.cancellation_fee}`}));
@@ -1994,7 +1995,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          this.$mixpanel.track(name);
           // this.$ga.event({
           //   eventCategory: 'Orders',
           //   eventAction: 'Price Request',

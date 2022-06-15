@@ -1,10 +1,3 @@
-const en = {
-  dashboard: 'Dashboard',
-  transporters: 'Transporters',
-  orders: 'Orders',
-  settings: 'Settings',
-  shipment: 'Shipments',
-  activity_log: 'Activity Log',
-};
+import * as en from './mainComponent.json';
 
-export default en;
+export default en.default;

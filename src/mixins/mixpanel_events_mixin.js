@@ -1,6 +1,5 @@
 const MixpanelEventsMixin = {
   methods: {
-    /* global mixpanel */
     trackMixpanelEvent(name, event) {
       let analyticsEnv = '';
       try {
@@ -10,7 +9,7 @@ const MixpanelEventsMixin = {
       }
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name, event);
+          this.$mixpanel.track(name, event);
         }
       } catch (er) {
         // ...

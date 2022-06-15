@@ -1,10 +1,3 @@
-const fr = {
-  dashboard: 'tableau de bord',
-  transporters: 'transporteurs',
-  orders: 'Les commandes',
-  settings: 'Parametres',
-  shipment: 'Les expéditions',
-  activity_log: "Journal d'activité",
-};
+import * as fr from './mainComponent.json';
 
-export default fr;
+export default fr.default;

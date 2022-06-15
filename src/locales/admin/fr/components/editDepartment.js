@@ -1,11 +1,4 @@
 
-const fr = {
-  edit_department_details: 'Département',
-  update: 'Mettre à jour ',
-  something_went_wrong: 'Mettre à jour ',
-  updated_successfully: 'Détails mis à jour avec succès ',
-  edit_department: 'Département',
-};
+import * as fr from './editDepartment.json';
 
-
-export default fr;
+export default fr.default;

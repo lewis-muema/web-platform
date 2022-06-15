@@ -35,5 +35,6 @@ module.exports = merge(prodEnv, {
   EXTREME_IP_KEY: '"dmmw1HciGEhld0FiG2ID"',
   PUBLICAPI: '"https://apitest.sendyit.com/v2/"',
   APIENV: '"sandbox"',
-  PAYMENT_GATEWAY: '"https://authtest.sendyit.com/payment-gateway"'
+  PAYMENT_GATEWAY: '"https://authtest.sendyit.com/payment-gateway"',
+  MIXPANEL_KEY: "'44f45c8f1e756ba049e6284def96ac7f'",
 });

@@ -1,0 +1,23 @@
+{
+  "action": "Action",
+  "active": "Actif",
+  "add_approver": "Ajouter approbateur",
+  "approve": "Approuver ",
+  "approver_removed": "L'approbateur retiré avec succes",
+  "approver_updated": "Approbateur mis à jour!",
+  "approver_updated_successfully": "Approbateur mis à jour avec succès ",
+  "email": "vous@adressee-mail.com",
+  "failed_add_approver": "Échoue d’ajouter des approbateurs!",
+  "failed_add_approver_single": "Échec de l'ajout d'approbateurs. Veuillez sélectionner un seul utilisateur",
+  "failed_add_approver_text": "Échec de l'ajout d'approbateurs. Veuillez réessayer ou contacter le service client",
+  "failed_remove_approver": "Échec de la suppression de l'approbateur!",
+  "failed_remove_approver_text": "Échoue à supprimer l’approbateur, veuillez réessayer ou contacter le support client",
+  "fetch_approvers": "Récupération de la liste des approbateurs",
+  "manage_approvers": "Gérer les approbateurs",
+  "name": "Nom",
+  "no_approvers": "Aucun approbateur disponible",
+  "phone": "Le numéro de téléphone n’est pas valide",
+  "remove": "Retirer",
+  "select_user": "Sélectionnez l’utilisateur pour approuver les commandes de fret.",
+  "status": "état"
+}

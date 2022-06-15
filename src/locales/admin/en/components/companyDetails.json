@@ -1,0 +1,13 @@
+{
+    "edit": "Edit Company Details.",
+    "company_name": "Company Name",
+    "contact_person": "Name of contact person",
+    "email_contact_person": "Email of Contact person",
+    "phone_contact_person": "Phone number of Contact person",
+    "save": "Save",
+    "phone": "Enter a phone number",
+    "detail_saved": "Details Saved!",
+    "somthing_went_wrong": "Something went wrong.",
+    "invalid_phone": "Invalid Phone Number",
+    "all_details": "Provide all details"
+  }

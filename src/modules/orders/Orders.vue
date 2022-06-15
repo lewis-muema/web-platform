@@ -783,7 +783,7 @@ export default {
       focusedInput: '',
       map_options: {
         componentRestrictions: {
-          country: ['ke', 'ug', 'tz'],
+          country: ['ke', 'ug', 'tz', 'ng'],
         },
         bounds: {
           north: 35.6,
@@ -890,6 +890,8 @@ export default {
       if (pin !== '') {
         if (session[session.default].country_code === 'KE') {
           return /^[apAP]\d{9}[a-zA-Z]$/.test(pin);
+        } if (session[session.default].country_code === 'CI') {
+          return /^[0-9]{7}[A-Z]{1}$/.test(pin);
         }
         return /^\d{10}$/.test(pin);
       }
@@ -1282,7 +1284,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          this.$mixpanel.track(name);
           // this.$ga.event({
           //   eventCategory: 'Orders',
           //   eventAction: 'Price Request',
@@ -2230,7 +2232,7 @@ cancel-pop-up > div > div > div.el-dialog__header{
   width: -webkit-fill-available;
 }
 .pair-button-section {
-  width: -webkit-fill-available;
+  width: BV-webkit-fill-available;
   padding: 15px 0px 5px 0px;
 }
 .pair-info-warning, .pair-info-success, .pair-info-loading {

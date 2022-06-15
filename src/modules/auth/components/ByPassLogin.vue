@@ -359,7 +359,7 @@ export default {
         const superUser = sessionData.admin_details;
         const acc = sessionData[sessionData.default];
 
-        mixpanel.people.set_once({
+        this.$mixpanel.people.set_once({
           $email: superUser.email,
           $phone: superUser.phone,
           'Account Type': 'Super User',
@@ -370,14 +370,14 @@ export default {
         });
 
         // login identify
-        mixpanel.identify(superUser.email);
+        this.$mixpanel.identify(superUser.email);
         analytics.identify(`${sessionData.default}_${acc.user_id}`, {
           name: `${acc.user_name}`,
           email: `${acc.user_email}`,
         });
 
         // track login
-        mixpanel.track('Super User Login', {
+        this.$mixpanel.track('Super User Login', {
           'Account Type': 'Super User',
           'Last Login': new Date(),
           'Client Type': 'Web Platform',
@@ -409,7 +409,7 @@ export default {
 
       try {
         if (analyticsEnv === 'production') {
-          mixpanel.track(name);
+          this.$mixpanel.track(name);
         }
       } catch (er) {
         // ...
