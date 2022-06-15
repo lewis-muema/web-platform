@@ -26,8 +26,8 @@ unit_tests:
 
 docker_build:
   stage: docker
-  tags: 
-    - shell 
+  tags:
+    - shell
   script:
     - |
       if [ "$CI_COMMIT_REF_NAME" == "production" ]
@@ -41,6 +41,6 @@ docker_build:
         docker build --build-arg DOCKER_ENV="testing" -t $IMAGE_NAME .
       fi
       docker push $IMAGE_NAME
-  only: 
+  only:
     - staging
     - production
