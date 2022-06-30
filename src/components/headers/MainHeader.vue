@@ -36,7 +36,7 @@
         >
           <a
             class="segmentation-tab"
-            @click="linkRoute('/freight/transporters')"
+            @click="redirectFreightUser()"
           >{{
             $t('mainHeader.freight')
           }}</a>
@@ -144,6 +144,8 @@ import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
+
+const ENV = process.env.CONFIGS_ENV;
 
 export default {
   name: 'MainHeader',
@@ -391,6 +393,9 @@ export default {
 
       this.enabledFreightCountry = this.freightPrefferedCountries.includes(country);
     },
+    redirectFreightUser() {
+      window.open(ENV.FREIGHT_NEW_APP, '_blank');
+    }
   },
 };
 </script>

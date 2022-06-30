@@ -114,7 +114,7 @@
   "scripts": {
     "predev": "eslint ./src --ext .js --fix",
     "dev": "NODE_ENV=development node server",
-    "start": "cross-env NODE_ENV=production node server",
+    "start": "cross-env NODE_ENV=production node --max-old-space-size=1536 server",
     "lint": "eslint ./src --ext .js --fix",
     "build": "rimraf dist && npm run build:client && npm run build:server",
     "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
