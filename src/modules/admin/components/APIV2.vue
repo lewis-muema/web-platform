@@ -297,7 +297,8 @@ export default {
       }
     },
     createAPIDetailsTxt() {
-      const blob = new Blob([`SENDY TOKEN\r\n\r\nAPI Token: ${this.apiToken}\r\nDate Created: ${this.apiDateCreated}\r\nEnvironment: ${this.apiEnvironment}`],
+      const session = this.$store.getters.getSession;
+      const blob = new Blob([`SENDY TOKEN\r\n\r\nAPI Token: ${this.apiToken}\r\nDate Created: ${this.apiDateCreated}\r\nEnvironment: ${this.apiEnvironment}\r\nCop Id: ${session[session.default].cop_id}\r\nCop User Id: ${session[session.default].user_id}`],
         { type: 'text/plain;charset=utf-8' });
       // eslint-disable-next-line no-undef
       saveAs(blob, 'Sendy_API_token.txt');
