@@ -512,12 +512,36 @@ export default {
             }, 5000);
           } else {
             this.doNotification(2, this.$t('general.upgrade_account_error'), response.message);
+            const session = this.$store.getters.getSession;
+            mixpanel.track('New Account Upgrade : Failure', {
+              'Account Type': 'Business',
+              'Last Login': new Date(),
+              'Client Type': 'Web Platform',
+              'Business Name': this.cop_name,
+              'User Email': this.radio === '2' ? this.cop_email : session.peer.user_email,
+              'User Phone': session.peer.user_phone,
+              'User ID': session.peer.user_id,
+              'VAT Compliant': this.tax_compliance,
+              'Error Message': response.message,
+            });
           }
         },
         (error) => {
           const msg = error.response.data.message;
+          const session = this.$store.getters.getSession;
           this.doNotification(2, this.$t('general.upgrade_account_error'), msg);
-        },
+          mixpanel.track('New Account Upgrade : Failure', {
+            'Account Type': 'Business',
+            'Last Login': new Date(),
+            'Client Type': 'Web Platform',
+            'Business Name': this.cop_name,
+            'User Email': this.radio === '2' ? this.cop_email : session.peer.user_email,
+            'User Phone': session.peer.user_phone,
+            'User ID': session.peer.user_id,
+            'VAT Compliant': this.tax_compliance,
+            'Failure Reason': msg,
+          });
+        }
       );
     },
     getVendorIcon(id) {
