@@ -5,12 +5,12 @@
   >
     <div class="sign-up-verification-inner">
       <div class="sign-up-verification-top">
-        {{$t('signUpVerification.work_for_business') }}
+        {{ $t('signUpVerification.work_for_business') }}
       </div>
 
       <div class="sign-up-verification-text">
-        {{$t('signUpVerification.offer_best_experience')}} <br>
-        {{$t('signUpVerification.dedicated_account')}}
+        {{ $t('signUpVerification.offer_best_experience') }} <br>
+        {{ $t('signUpVerification.dedicated_account') }}
       </div>
 
       <p class="sign-up-error">

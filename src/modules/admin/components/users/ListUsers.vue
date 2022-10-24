@@ -32,24 +32,45 @@
           :disabled="active_filter == true ? false : true"
           @click="filterUserTableData"
         >
-          {{$t('listUsers.search')}}
+          {{ $t('listUsers.search') }}
         </button>
       </div>
       <div class="section--filter-action-wrap">
-        <button class="button-primary section--filter-action btn-users" @click="addUser">
-          {{$t('listUsers.add_user')}} 
+        <button
+          class="button-primary section--filter-action btn-users"
+          @click="addUser"
+        >
+          {{ $t('listUsers.add_user') }}
         </button>
       </div>
     </div>
 
-    <el-table :data="user_data" style="width: 100%" :border="true" :stripe="true">
+    <el-table
+      :data="user_data"
+      style="width: 100%"
+      :border="true"
+      :stripe="true"
+    >
       <template slot="empty">
         {{ empty_users_state }}
       </template>
-      <el-table-column :label="$t('listUsers.name')" prop="name" />
-      <el-table-column :label="$t('listUsers.phone')" prop="phone" />
-      <el-table-column :label="$t('listUsers.email')" prop="email" width="250" />
-      <el-table-column :label="$t('listUsers.department')" prop="department_name" />
+      <el-table-column
+        :label="$t('listUsers.name')"
+        prop="name"
+      />
+      <el-table-column
+        :label="$t('listUsers.phone')"
+        prop="phone"
+      />
+      <el-table-column
+        :label="$t('listUsers.email')"
+        prop="email"
+        width="250"
+      />
+      <el-table-column
+        :label="$t('listUsers.department')"
+        prop="department_name"
+      />
       <el-table-column :label="$t('listUsers.type')">
         <template slot-scope="scope">
           <span>{{ get_user_type(scope.$index) }}</span>
@@ -62,9 +83,10 @@
       </el-table-column>
       <el-table-column :label="$t('listUsers.action')">
         <template slot-scope="scope">
-          <a class="btn-edit-user" @click="edit_user(user_data[scope.$index]['cop_user_id'])"
-            >{{ $t('listUsers.edit_user') }}</a
-          >
+          <a
+            class="btn-edit-user"
+            @click="edit_user(user_data[scope.$index]['cop_user_id'])"
+          >{{ $t('listUsers.edit_user') }}</a>
         </template>
       </el-table-column>
     </el-table>
@@ -226,7 +248,7 @@ export default {
         // user filter
         const vm = this;
         this.filteredUserData = this.filteredUserData.filter(
-          user => user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0
+          user => user.name.toLowerCase().indexOf(vm.filterData.user.toLowerCase()) >= 0,
         );
         this.filterState = true;
       } else {

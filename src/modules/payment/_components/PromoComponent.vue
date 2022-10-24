@@ -5,7 +5,7 @@
       class="paymentbody--list"
     >
       <div class="promocodestitle main-header">
-        {{$t('general.valid_promo_codes')}}
+        {{ $t('general.valid_promo_codes') }}
       </div>
       <div
         v-for="(promocode, index) in promoCodes"
@@ -26,14 +26,14 @@
           v-else
           class="promocode-value"
         >
-          {{ promocode.couponBalance * 100 }}% {{$t('genral.off')}} ({{$t('genral.max')}}. {{ promocode.currency }}
+          {{ promocode.couponBalance * 100 }}% {{ $t('genral.off') }} ({{ $t('genral.max') }}. {{ promocode.currency }}
           {{ formatNumber(promocode.maxDiscountAmount) }})
         </div>
         <div
           class="promocode-date"
           :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } "
         >
-          {{$t('general.expiry')}}: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}
+          {{ $t('general.expiry') }}: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}
         </div>
       </div>
     </div>
@@ -56,8 +56,8 @@
         :class="{ 'paymentbody--input-button button--primary-inactive' : !valid_payment || processing }"
         @click="redeem_coupon"
       >
-       {{$t('general.redeem')}}
-       <i
+        {{ $t('general.redeem') }}
+        <i
           v-if="processing"
           class="el-icon-loading tracking-loading-spinner promocode-spinner"
         />

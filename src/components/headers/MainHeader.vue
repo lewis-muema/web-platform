@@ -57,69 +57,72 @@
             <a> {{ $t('mainHeader.helpline') }} : {{ helpline_contact }}</a>
           </li>
           <li class="nav--menu-inactive account-type">
-            <a> {{ $t('mainHeader.hi')}} {{ logged_user }}</a>
+            <a> {{ $t('mainHeader.hi') }} {{ logged_user }}</a>
           </li>
           <li class="nav--menu-dropdown">
-            <a class="nav--menu-dropdown-link" @mouseover="sendGA4Events('select_menu')">
-              {{$t('mainHeader.menu')}}
+            <a
+              class="nav--menu-dropdown-link"
+              @mouseover="sendGA4Events('select_menu')"
+            >
+              {{ $t('mainHeader.menu') }}
               <i class="el-icon-arrow-down" />
             </a>
             <ul class="nav--menu-dropdown-list">
               <div v-if="!admin_details">
                 <li v-show="switchValid">
                   <a @click="switchAccount()">
-                    {{$t('mainHeader.switch_to')}}
-                    <span v-if="this.$store.getters.getSession.default === 'peer'"> {{$t('mainHeader.business' )}} </span>
+                    {{ $t('mainHeader.switch_to') }}
+                    <span v-if="$store.getters.getSession.default === 'peer'"> {{ $t('mainHeader.business' ) }} </span>
                     <span v-else>
-                      {{$t('mainHeader.personal')}}
+                      {{ $t('mainHeader.personal') }}
                     </span>
-                    {{$t('mainHeader.account')}}
+                    {{ $t('mainHeader.account') }}
                   </a>
                 </li>
                 <li v-show="isUpgradeValid">
                   <a @click="linkRoute('/user/upgrade_acc')">
-                    {{$t('mainHeader.create_business_account' )}}
+                    {{ $t('mainHeader.create_business_account' ) }}
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/orders')">
-                    {{$t('mainHeader.new_delivery')}}
+                    {{ $t('mainHeader.new_delivery') }}
                   </a>
                 </li>
                 <li>
                   <a @click="linkPayments()">
-                    {{$t('mainHeader.payment')}}
+                    {{ $t('mainHeader.payment') }}
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/transactions/order_history')">
-                    {{$t('mainHeader.orders')}}
+                    {{ $t('mainHeader.orders') }}
                   </a>
                 </li>
                 <li v-if="enabledFreightCountry">
                   <a @click="linkRoute('/orders/freight')">
-                    {{$t('mainHeader.freight_small')}}
+                    {{ $t('mainHeader.freight_small') }}
                   </a>
                 </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/admin/users')">
-                    {{$t('mainHeader.settings')}}
+                    {{ $t('mainHeader.settings') }}
                   </a>
                 </li>
                 <li v-if="admin_user">
                   <a @click="linkRoute('/analytics/report')">
-                    {{ $t('mainHeader.analytics' )}}
+                    {{ $t('mainHeader.analytics' ) }}
                   </a>
                 </li>
                 <li>
                   <a @click="linkRoute('/user/profile/personal_information')">
-                    {{$t('mainHeader.profile')}}
+                    {{ $t('mainHeader.profile') }}
                   </a>
                 </li>
               </div>
               <li v-if="admin_details">
                 <a @click="linkRoute('/orders/freight')">
-                  {{$t('mainHeader.freight' )}}
+                  {{ $t('mainHeader.freight' ) }}
                 </a>
               </li>
               <li class="menu--last-child">
@@ -127,7 +130,7 @@
                   class="menu--last-child-link"
                   @click="logOut"
                 >
-                  {{$t('mainHeader.logout')}}
+                  {{ $t('mainHeader.logout') }}
                 </a>
               </li>
             </ul>
@@ -395,7 +398,7 @@ export default {
     },
     redirectFreightUser() {
       window.open(ENV.FREIGHT_NEW_APP, '_blank');
-    }
+    },
   },
 };
 </script>

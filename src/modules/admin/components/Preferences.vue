@@ -7,7 +7,7 @@
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.group_staff')}}
+            {{ $t('preferences.group_staff') }}
           </p>
         </div>
         <div class="card__action">
@@ -39,7 +39,7 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title card__image--bg">{{$t('preferences.order_history')}}</span>
+          <span class="card__image--title card__image--bg">{{ $t('preferences.order_history') }}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
@@ -57,11 +57,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{$t('preferences.order_breakdown')}}</span>
+          <span class="card__image--title">{{ $t('preferences.order_breakdown') }}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.pick_through')}}
+            {{ $t('preferences.pick_through') }}
           </p>
         </div>
         <div class="card__action">
@@ -75,11 +75,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{$t('preferences.insuarence')}}</span>
+          <span class="card__image--title">{{ $t('preferences.insuarence') }}</span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.third_party')}}
+            {{ $t('preferences.third_party') }}
           </p>
         </div>
         <div class="card__action">
@@ -93,11 +93,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-          <span class="card__image--title">{{$t('preferences.sms_password')}} </span>
+          <span class="card__image--title">{{ $t('preferences.sms_password') }} </span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.recieve_password')}}
+            {{ $t('preferences.recieve_password') }}
           </p>
         </div>
         <div class="card__action">
@@ -111,11 +111,11 @@
     <div class="preferences__item">
       <div class="card">
         <div class="card__image">
-            <span class="card__image--title">{{$t('preferences.delivery_picture')}} </span>
+          <span class="card__image--title">{{ $t('preferences.delivery_picture') }} </span>
         </div>
         <div class="card__content">
           <p class="card__paragraph">
-            {{$t('preferences.delivery_request')}}
+            {{ $t('preferences.delivery_request') }}
           </p>
         </div>
         <div class="card__action">

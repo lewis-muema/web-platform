@@ -4,17 +4,21 @@
   >
     <div v-if="setUpState === 1">
       <el-row>
-        <el-select v-model="locale" placeholder="Select" class="float-right">
+        <el-select
+          v-model="locale"
+          placeholder="Select"
+          class="float-right"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
       </el-row>
       <p class="sign-up--extra">
-        {{$t('signUpDetails.signup_sendy')}}
+        {{ $t('signUpDetails.signup_sendy') }}
       </p>
       <div class="account-type--selector">
         <el-radio
@@ -23,7 +27,7 @@
           border
           @change="sendGA4Events('select_account_type', {account_type: account})"
         >
-          {{$t('signUpDetails.business')}}
+          {{ $t('signUpDetails.business') }}
         </el-radio>
         <el-radio
           v-model="account"
@@ -31,13 +35,13 @@
           border
           @change="sendGA4Events('select_account_type', {account_type: account})"
         >
-          {{$t('signUpDetails.personal')}}
+          {{ $t('signUpDetails.personal') }}
         </el-radio>
       </div>
       <div class="account-details--wrapper">
         <div class="">
           <p class="input--label">
-            {{$t('signUpDetails.your_name')}}
+            {{ $t('signUpDetails.your_name') }}
           </p>
           <input
             v-model="name"
@@ -53,7 +57,7 @@
           class=""
         >
           <p class="input--label">
-            {{$t('signUpDetails.business_name')}}
+            {{ $t('signUpDetails.business_name') }}
           </p>
           <input
             v-model="cop_name"
@@ -66,7 +70,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.email')}}
+            {{ $t('signUpDetails.email') }}
           </p>
           <input
             v-model="email"
@@ -83,7 +87,7 @@
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.phone_number')}}
+            {{ $t('signUpDetails.phone_number') }}
           </p>
           <vue-tel-input
             v-model.trim="phone"
@@ -99,12 +103,12 @@
             @country-changed="checkCountryCode"
           />
           <p class="sign-up-data-error">
-              {{ countryNotSupported }}
+            {{ countryNotSupported }}
           </p>
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.order_type')}}
+            {{ $t('signUpDetails.order_type') }}
           </p>
           <div class="sign-up-order-type">
             <label class="input--label radio--label"><input
@@ -118,12 +122,12 @@
               type="radio"
               class="radio--label"
               value="USD"
-            >{{$t('signUpDetails.usd')}}</label>
+            >{{ $t('signUpDetails.usd') }}</label>
           </div>
         </div>
         <div class=" ">
           <p class="input--label">
-            {{$t('signUpDetails.password')}}
+            {{ $t('signUpDetails.password') }}
           </p>
           <input
             v-model="password"
@@ -147,12 +151,12 @@
             class="hiddeny"
           >
           <span class="sign-holder__smaller">
-            {{$t('signUpDetails.by_creating')}}
+            {{ $t('signUpDetails.by_creating') }}
             <a
               class="signup-holder__link"
               href="https://sendyit.com/terms"
             >
-             {{$t('signUpDetails.terms')}}
+              {{ $t('signUpDetails.terms') }}
             </a>
           </span>
         </div>
@@ -174,21 +178,21 @@
       </div>
       <div class="sign-up--info">
         <div class="sign-up-text-inner">
-          {{$t('signUpDetails.have_account')}}
+          {{ $t('signUpDetails.have_account') }}
           <router-link
             class="signup-holder__link"
             to="/auth/sign_in"
           >
-            {{$t('signUpDetails.login')}}
+            {{ $t('signUpDetails.login') }}
           </router-link>
         </div>
         <div class="sign-up-text-inner">
-          {{$t('signUpDetails.drive_for_sendy')}}
+          {{ $t('signUpDetails.drive_for_sendy') }}
           <a
             class="signup-holder__link"
             href="https://partner.sendyit.com/onboarding_portal/"
           >
-            {{$t('signUpDetails.click_here')}}
+            {{ $t('signUpDetails.click_here') }}
           </a>
         </div>
       </div>
@@ -201,19 +205,19 @@
         />
       </div>
       <p class="sign-up--extra">
-        {{$t('signUpDetails.verification')}}
+        {{ $t('signUpDetails.verification') }}
       </p>
 
       <div class="account-details--wrapper">
         <div class=" ">
           <p class="verification-code-info">
-            {{$t('signUpDetails.sendy_sms')}}
+            {{ $t('signUpDetails.sendy_sms') }}
             <a class="verification-code-recepient">{{ phone }}</a>
           </p>
         </div>
         <div class="">
           <p class="input--label verify-code-header">
-            {{$t('signUpDetails.verification_code')}}
+            {{ $t('signUpDetails.verification_code') }}
           </p>
           <input
             v-model="code"
@@ -301,11 +305,11 @@ export default {
       options: [
         {
           value: 'en',
-          label: 'English (EN)'
+          label: 'English (EN)',
         },
         {
           value: 'fr',
-          label: 'Francais (FR)'
+          label: 'Francais (FR)',
         },
       ],
       locale: 'en',
@@ -338,7 +342,7 @@ export default {
       this.setLanguage(val);
       localStorage.setItem('timeLocale', val);
       localStorage.setItem('language', acceptLanguage);
-    }
+    },
   },
   mounted() {
     this.locale = localStorage.getItem('timeLocale');
@@ -353,7 +357,7 @@ export default {
       authSignIn: '$_auth/requestSignIn',
       performGetActions: '$_auth/performGetActions',
     }),
-    ...mapMutations({setLanguage: 'setLanguage'}),
+    ...mapMutations({ setLanguage: 'setLanguage' }),
     validate_phone() {
       this.$validator.validate();
       this.sendGA4Events('add_phone_number');
@@ -379,7 +383,7 @@ export default {
           this.next_step = false;
           break;
       }
-      this.sendGA4Events('signup_select_country', {location: country.name});
+      this.sendGA4Events('signup_select_country', { location: country.name });
     },
     validateDetails() {
       let valid = false;
@@ -441,13 +445,15 @@ export default {
             const phone = this.phone.replace(/[()\-\s]+/g, '');
             this.phone = phone;
             this.sendGA4Events('select_sign_up');
-            this.sendGA4Events('signup_page',
+            this.sendGA4Events(
+              'signup_page',
               {
                 name: this.name,
                 email: this.email,
                 phone_number: this.phone,
                 cop_name: this.cop_name,
-              });
+              },
+            );
             const values = {};
             values.phone = phone;
             values.email = this.email;
@@ -483,7 +489,7 @@ export default {
               },
             );
           } else {
-            this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.agree_terms'))
+            this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.agree_terms'));
           }
         } else {
           this.doNotification(2, this.$t('signUpDetails.signup_failed'), this.$t('signUpDetails.invalid_details'));
@@ -676,7 +682,7 @@ export default {
           } else {
             // failed to login
             // show some sort of error
-            this.doNotification(2, this.$t('signUpDetails.signup_error') , response.message);
+            this.doNotification(2, this.$t('signUpDetails.signup_error'), response.message);
           }
         },
         (error) => {
@@ -693,7 +699,7 @@ export default {
       const patt = new RegExp('^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9@#$%^&+=]*$');
       const res = patt.test(this.password);
       if (!res) {
-        this.pass_msg = this.$t('signUpDetails.password_error')
+        this.pass_msg = this.$t('signUpDetails.password_error');
       } else {
         this.pass_msg = '';
         this.pass_validation = true;
@@ -818,7 +824,7 @@ export default {
       const fullPayload = {
         app: 'AUTH',
         endpoint: 'currency/get_supported_countries',
-      }
+      };
 
       this.sendyPhoneProps.preferredCountries = [];
 
@@ -829,8 +835,8 @@ export default {
             response.countries.forEach((country) => {
               preferredCountries.push(country.country_code.toLowerCase());
             });
-            this.sendyPhoneProps.preferredCountries = preferredCountries ;
-            this.vueTelInputProps.preferredCountries = preferredCountries ;
+            this.sendyPhoneProps.preferredCountries = preferredCountries;
+            this.vueTelInputProps.preferredCountries = preferredCountries;
             this.preferredCountries = preferredCountries;
           } else {
             this.sendyPhoneProps.preferredCountries = ['ke', 'tz', 'ug'];

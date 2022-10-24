@@ -20,7 +20,7 @@ export default {
   computed: {
     payment_loading_title() {
       return this.$t('successComponent.verify_success');
-      }
+    },
   },
   mounted() {
   },

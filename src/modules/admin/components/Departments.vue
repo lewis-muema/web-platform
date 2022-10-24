@@ -21,7 +21,7 @@
           :disabled="active_filter == true ? false : true"
           @click="filterUserTableData"
         >
-          {{this.$t('departments.search')}}
+          {{ $t('departments.search') }}
         </button>
       </div>
       <div class="section--filter-action-wrap">
@@ -29,7 +29,7 @@
           class="button-primary section--filter-action btn-dprts"
           @click="addDepartment"
         >
-          {{this.$t('departments.add_department')}}
+          {{ $t('departments.add_department') }}
         </button>
       </div>
     </div>
@@ -55,7 +55,7 @@
           <a
             class="btn-dpt-edit"
             @click="edit_department(departments_data[scope.$index]['department_id'])"
-          >{{$t('departments.edit')}}</a>
+          >{{ $t('departments.edit') }}</a>
         </template>
       </el-table-column>
     </el-table>
