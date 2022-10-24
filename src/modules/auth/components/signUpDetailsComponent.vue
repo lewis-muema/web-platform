@@ -29,14 +29,14 @@
         >
           {{ $t('signUpDetails.business') }}
         </el-radio>
-        <el-radio
+        <!-- <el-radio
           v-model="account"
           label="peer"
           border
           @change="sendGA4Events('select_account_type', {account_type: account})"
         >
-          {{ $t('signUpDetails.personal') }}
-        </el-radio>
+          {{$t('signUpDetails.personal')}}
+        </el-radio> -->
       </div>
       <div class="account-details--wrapper">
         <div class="">
