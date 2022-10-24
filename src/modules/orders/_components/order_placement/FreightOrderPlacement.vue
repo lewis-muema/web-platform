@@ -9,7 +9,7 @@
         class="homeview--input-products block"
       >
         <div class="homeview--input-categories">
-          {{$t('general.goods_type')}}
+          {{ $t('general.goods_type') }}
         </div>
         <select
           v-model="productCategoryId"

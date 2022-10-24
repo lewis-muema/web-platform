@@ -7,7 +7,7 @@
       class="ongoing--count"
       @click="toggle_ongoing()"
     >
-      <span>{{ num_ongoing }} {{$t('general.num_ongoing_orders')}}</span>
+      <span>{{ num_ongoing }} {{ $t('general.num_ongoing_orders') }}</span>
       <font-awesome-icon
         icon="chevron-up"
         :class="classObject"

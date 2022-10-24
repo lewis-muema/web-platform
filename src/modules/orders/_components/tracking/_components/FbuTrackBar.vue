@@ -12,20 +12,20 @@
         <div class="homeview--childinfo-card-left">
           <div class="">
             <p class="homeview--childinfo-order-status">
-              {{$t('general.order_status')}}: {{ statusName(orderData.freight_order_details.freight_status) }}
+              {{ $t('general.order_status') }}: {{ statusName(orderData.freight_order_details.freight_status) }}
             </p>
           </div>
           <div class="childinfo-container">
             <div class="full-width">
               <div>
                 <p class="homeview--childinfo-order-details">
-                  {{$t('general.order_details')}}
+                  {{ $t('general.order_details') }}
                 </p>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    {{$t('general.pickup_solo')}}
+                    {{ $t('general.pickup_solo') }}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[0].name }}
@@ -33,17 +33,17 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    {{$t('general.order_type')}}
+                    {{ $t('general.order_type') }}
                   </p>
                   <p class="no-margin homeview--field">
-                    {{$t('general.container_order')}}, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft {{$t('general.container_capital')}}, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
+                    {{ $t('general.container_order') }}, {{ orderData.freight_order_details.containers.container_details[0].container_size_feet }}ft {{ $t('general.container_capital') }}, {{ orderData.freight_order_details.containers.container_details[0].container_weight_tonnes }}T
                   </p>
                 </div>
               </div>
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    {{$t('general.drop_off')}}
+                    {{ $t('general.drop_off') }}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[1].name }}
@@ -51,7 +51,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    {{$t('general.container_number')}}
+                    {{ $t('general.container_number') }}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.freight_order_details.containers.container_details[0].container_number }}
@@ -61,7 +61,7 @@
               <div class="homeview--childinfo-row">
                 <div class="homeview--childinfo-col-1">
                   <p class="no-margin">
-                    {{$t('general.empty_container_destination')}}
+                    {{ $t('general.empty_container_destination') }}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.path[2].name }}
@@ -69,7 +69,7 @@
                 </div>
                 <div class="homeview--childinfo-col-2">
                   <p class="no-margin">
-                    {{$t('general.consignee')}}
+                    {{ $t('general.consignee') }}
                   </p>
                   <p class="no-margin homeview--field">
                     {{ orderData.freight_order_details.containers.container_details[0].consignee }}
@@ -86,7 +86,7 @@
               class="button-primary"
               @click="$emit('clicked', true)"
             >
-              {{$t('general.cancel_order_capital')}}
+              {{ $t('general.cancel_order_capital') }}
             </button>
           </div>
           <div
@@ -124,7 +124,7 @@
           <div class="" />
           <div class="">
             <p class="homeview--childinfo-order-details">
-             {{$t('general.order_timeline')}}
+              {{ $t('general.order_timeline') }}
             </p>
           </div>
           <div
@@ -354,7 +354,7 @@ export default {
             this.orderData = response.data;
             this.actions[3].actionText = this.$t('general.cargo_on_the_way') + this.orderData.path[1].name;
             this.actions[4].actionText = this.$t('general.cargo_arrived_at') + this.orderData.path[1].name;
-            this.actions[6].actionText = this.$t('general.empty_container_in_transit')+ this.orderData.path[2].name;
+            this.actions[6].actionText = this.$t('general.empty_container_in_transit') + this.orderData.path[2].name;
             this.set_tracked_order(this.$route.params.order_no);
             this.set_tracking_data(response.data);
             this.set_polyline(response.data.polyline);

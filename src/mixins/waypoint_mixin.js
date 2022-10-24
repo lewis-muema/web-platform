@@ -1,4 +1,3 @@
-
 function generateRandomId(
   {
     length = 20,

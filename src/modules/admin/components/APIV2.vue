@@ -144,13 +144,13 @@
     <div class="api--help-content">
       <p>
         <span class="content--bold">
-          {{$t('api.ready_to_start')}}
+          {{ $t('api.ready_to_start') }}
         </span>
-        {{$t('api.head_over')}}
+        {{ $t('api.head_over') }}
         <a
           href="https://api.sendyit.com/v2/documentation"
           target="_blank"
-        > {{$t('api.developer_site') }} </a>&nbsp;{{$t('api.complete_doc')}}
+        > {{ $t('api.developer_site') }} </a>&nbsp;{{ $t('api.complete_doc') }}
       </p>
     </div>
   </div>
@@ -298,8 +298,10 @@ export default {
     },
     createAPIDetailsTxt() {
       const session = this.$store.getters.getSession;
-      const blob = new Blob([`SENDY TOKEN\r\n\r\nAPI Token: ${this.apiToken}\r\nDate Created: ${this.apiDateCreated}\r\nEnvironment: ${this.apiEnvironment}\r\nCop Id: ${session[session.default].cop_id}\r\nCop User Id: ${session[session.default].user_id}`],
-        { type: 'text/plain;charset=utf-8' });
+      const blob = new Blob(
+        [`SENDY TOKEN\r\n\r\nAPI Token: ${this.apiToken}\r\nDate Created: ${this.apiDateCreated}\r\nEnvironment: ${this.apiEnvironment}\r\nCop Id: ${session[session.default].cop_id}\r\nCop User Id: ${session[session.default].user_id}`],
+        { type: 'text/plain;charset=utf-8' },
+      );
       // eslint-disable-next-line no-undef
       saveAs(blob, 'Sendy_API_token.txt');
     },

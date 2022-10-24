@@ -12,7 +12,7 @@
         />
       </div>
       <div class="admin-edit2-details position--details">
-        {{$t('editDepartment.edit_department_details')}}
+        {{ $t('editDepartment.edit_department_details') }}
       </div>
       <div class="edit-position">
         <div class="edit-holder edit-dimen">
@@ -46,7 +46,7 @@
             type="submit"
             @click="update_department"
           >
-            {{$t('editDepartment.update')}}
+            {{ $t('editDepartment.update') }}
           </button>
         </div>
       </div>
