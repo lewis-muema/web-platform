@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['airbnb-base', 'plugin:vue/recommended'],
+  extends: ['plugin:vue/recommended', 'airbnb'],
   rules: {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'import/no-unresolved': [
@@ -9,6 +9,7 @@ module.exports = {
       },
     ],
     'no-plusplus': 'off',
+    'import/extensions': 'off',
   },
   parserOptions: {
     ecmaVersion: 2018,
