@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('eslint') {
             agent {
-            docker {
+            any {
                 image 'node:14.18.1'
             }
             }
@@ -30,7 +30,7 @@ pipeline {
 
         stage('Test') {
             agent {
-            docker {
+            any {
                 image 'node:14.18.1'
             }
             }
