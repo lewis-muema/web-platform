@@ -13,6 +13,11 @@ pipeline {
 
     stages {
         stage('eslint') {
+            agent {
+            docker {
+                image 'node:14.18.1'
+            }
+            }
             steps {
                   script {                  
                         sh '''
@@ -24,8 +29,12 @@ pipeline {
         }
 
         stage('Test') {
+            agent {
+            docker {
+                image 'node:14.18.1'
+            }
+            }
             steps {
-
                sh '''
                     npm i mocha-webpack
                     npm run test
