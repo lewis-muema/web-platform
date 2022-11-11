@@ -1,17 +1,15 @@
 pipeline {
+
     agent any
     parameters {
         string(name: 'ENV_TAG', defaultValue: 'dev')
     }
+
     environment {
            npm_config_cache = 'npm-cache'
            APP_NAME = "vue_web_platform"
-           MAVEN_CLI_OPTS = "-e -s .m2/settings.xml --batch-mode -U dependency:resolve"
            IMAGE_BASE_NAME = "${CI_REGISTRY}/${APP_NAME}"
-
     }
-
-
 
     stages {
         stage('eslint') {
@@ -47,7 +45,7 @@ pipeline {
                 }
 
                 sh '''
-                    IMAGE_TAG="$ENV_TAG_$(date +%Y-%m-%d-%H-%M)"
+                    IMAGE_TAG="${ENV_TAG}_$(date +%Y-%m-%d-%H-%M)"
                     IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
                     docker build -f Dockerfile -t $IMAGE_NAME .
                     docker push $IMAGE_NAME
