@@ -4,7 +4,7 @@ pipeline {
         string(name: 'ENV_TAG', defaultValue: '')
     }
     environment {
-
+           npm_config_cache = 'npm-cache'
            APP_NAME = "vue_web_platform"
            MAVEN_CLI_OPTS = "-e -s .m2/settings.xml --batch-mode -U dependency:resolve"
            IMAGE_BASE_NAME = "${CI_REGISTRY}/${APP_NAME}"
@@ -15,7 +15,7 @@ pipeline {
 
     stages {
         stage('eslint') {
-            agent { docker { image 'node:16.13.1-alpine' } }
+            agent { docker { image 'node:14.18.1' } }
             steps {
                 sh '''
                     node --version
