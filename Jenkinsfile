@@ -38,12 +38,12 @@ pipeline {
         stage('Test') {
             agent { docker { image 'node:14.18.1' } }
             steps {
-                docker.image('node:14.18.1').inside("--env MY_PARAMETER ${env.MY_PARAMETER}") {
-                    '''
-                            npm i eslint
-                            npm run lint
-'                      '''
-                }
+//                 docker.image('node:14.18.1').inside("--env MY_PARAMETER ${env.MY_PARAMETER}") {
+//                     '''
+//                             npm i eslint
+//                             npm run lint
+// '                      '''
+//                 }
                sh '''
                     npm i mocha-webpack
                     npm run test
