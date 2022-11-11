@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     parameters {
         string(name: 'ENV_TAG', defaultValue: '')
     }
@@ -13,22 +13,26 @@ pipeline {
 
     stages {
         stage('eslint') {
-            agent { label 'docker' }
-            
-            steps {
-                docker.image('node:14.18.1').inside("--env MY_PARAMETER ${env.MY_PARAMETER}") {
-                    '''
-                            npm i eslint
-                            npm run lint
-'                      '''
+             agent {
+                docker {
+                    image 'node:14.18.1'
+                    // TODO some cache to avoid npm sintall on every execution?
                 }
-//                   script {                  
-//                         sh '''
+                }
+                steps {
+                    sh 'npm i eslint;npm run lint'
+
+                }
+            
+//             steps {
+//                 docker.image('node:14.18.1').inside("--env MY_PARAMETER ${env.MY_PARAMETER}") {
+//                     '''
 //                             npm i eslint
 //                             npm run lint
 // '                      '''
-//                   }                 
-            }            
+//                 }
+             
+//             }            
         }
 
         stage('Test') {
