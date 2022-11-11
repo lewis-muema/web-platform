@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'npm_config_cache = 'npm-cache'', defaultValue: 'dev')
+        string(name: 'ENV_TAG', defaultValue: 'dev')
     }
     environment {
            npm_config_cache = 'npm-cache'
