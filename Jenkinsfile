@@ -11,28 +11,25 @@ pipeline {
 
     }
 
-    stages {
-        stage('eslint') {
-             agent {
-                docker {
-                    image 'node:14.18.1'
-                    // TODO some cache to avoid npm sintall on every execution?
-                }
-                }
-                steps {
-                    sh 'npm i eslint;npm run lint'
 
-                }
-            
-//             steps {
-//                 docker.image('node:14.18.1').inside("--env MY_PARAMETER ${env.MY_PARAMETER}") {
-//                     '''
-//                             npm i eslint
-//                             npm run lint
-// '                      '''
-//                 }
-             
-//             }            
+
+    stages {
+
+        stage('Build image') {
+        /* This builds the actual image; synonymous to
+         * docker build on the command line */
+
+        app = docker.build("$IMAGE_BASE_NAME")
+        }
+
+
+        stage('eslint') {
+            app.inside {
+                sh '''
+                    npm i eslint
+                    npm run lint
+               '''
+            } 
         }
 
         stage('Test') {
