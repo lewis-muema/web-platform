@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'ENV_TAG', defaultValue: '')
+        string(name: 'npm_config_cache = 'npm-cache'', defaultValue: 'dev')
     }
     environment {
            npm_config_cache = 'npm-cache'
@@ -28,12 +28,6 @@ pipeline {
         stage('Test') {
             agent { docker { image 'node:14.18.1' } }
             steps {
-//                 docker.image('node:14.18.1').inside("--env MY_PARAMETER ${env.MY_PARAMETER}") {
-//                     '''
-//                             npm i eslint
-//                             npm run lint
-// '                      '''
-//                 }
                sh '''
                     npm i mocha-webpack
                     npm run test
