@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     parameters {
         string(name: 'ENV_TAG', defaultValue: '')
     }
@@ -14,22 +14,18 @@ pipeline {
 
 
     stages {
-
-        stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        app = docker.build("$IMAGE_BASE_NAME")
+       agent {
+        docker { image 'node:16.13.1-alpine' }
         }
 
-
         stage('eslint') {
-            app.inside {
+            steps {
                 sh '''
+                    node --version
                     npm i eslint
                     npm run lint
-               '''
-            } 
+                '''
+            }
         }
 
         stage('Test') {
