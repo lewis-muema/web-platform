@@ -1,4 +1,4 @@
-# Web Platform
+# Vue Web Platform
 
 > Built on the Vue.js framework.
 
