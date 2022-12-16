@@ -1,14 +1,17 @@
 <template lang="html">
   <div class="help-panel-outer">
     <div class="row">
-      <div class="col s9 m11" style="padding-top:35%;">
+      <div
+        class="col s9 m11"
+        style="padding-top:35%;"
+      >
         <div class="card-panel">
           <p class="card-head">
             <img
               src="https://s3-eu-west-1.amazonaws.com/sendy-promo-images/frontend_apps/bulb_blue.png"
               alt="Help"
               style="width:25px;"
-            />
+            >
           </p>
           <p class="card-title">
             {{ current_help[0] }}

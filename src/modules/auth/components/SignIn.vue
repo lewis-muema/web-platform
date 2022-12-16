@@ -5,7 +5,7 @@
   >
     <div class="sign-inner">
       <div class="sign-top">
-        {{$t('signIn.login_sendy') }}
+        {{ $t('signIn.login_sendy') }}
       </div>
 
       <p class="sign-in-error">
@@ -56,12 +56,12 @@
           </router-link>
         </div>
         <div class="sign-holder sign-sign-up sign-smaller">
-          {{$t('signIn.have_account')}}
+          {{ $t('signIn.have_account') }}
           <router-link
             class="sign-holder__link"
             to="/auth/sign_up"
           >
-            {{$t('signIn.sign_up')}}
+            {{ $t('signIn.sign_up') }}
           </router-link>
         </div>
       </div>
@@ -137,8 +137,8 @@ export default {
                 this.login_text = this.$t('signIn.login');
                 this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.wrong_password'));
               } else {
-                this.login_text =  this.$t('signIn.login');
-                this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.account_deactivated') );
+                this.login_text = this.$t('signIn.login');
+                this.doNotification(2, this.$t('signIn.login_failed'), this.$t('signIn.account_deactivated'));
               }
             } else {
               try {
@@ -170,7 +170,7 @@ export default {
                   const countryCode = sessionData[sessionData.default].country_code === null ? 'KE' : sessionData[sessionData.default].country_code;
                   localStorage.setItem('countryCode', countryCode);
                   this.$i18n.locale = locale;
-                  const acceptLanguageHeader = `${locale}-${countryCode}`
+                  const acceptLanguageHeader = `${locale}-${countryCode}`;
                   localStorage.setItem('language', acceptLanguageHeader);
                   const jsonSession = JSON.stringify(sessionData);
                   this.setSession(jsonSession);

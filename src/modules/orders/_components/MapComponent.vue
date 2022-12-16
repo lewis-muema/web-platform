@@ -251,7 +251,6 @@ export default {
       } else {
         this.infoWinOpen = false;
       }
-      
     },
     orderStatus(data) {
       this.checkRiderPosition();
@@ -305,8 +304,8 @@ export default {
         } else if (data.delivery_status === 2) {
           // return 'In Transit';
           if (!riderLocations) {
-            this.infoHeader = this.$t('general.delivery_still_inprogress',{vendor_name:this.vendor_name});
-            
+            this.infoHeader = this.$t('general.delivery_still_inprogress', { vendor_name: this.vendor_name });
+
             this.infoDescription = '';
             this.iconLabel = 'destination';
             this.vendor_icon_id = 'location';
@@ -321,24 +320,24 @@ export default {
           && waiting !== undefined
         ) {
           // return 'Waiting at pick up location';
-          this.infoHeader = this.$t('general.order_arrived', {vendor_name:this.vendor_name});
+          this.infoHeader = this.$t('general.order_arrived', { vendor_name: this.vendor_name });
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         } else if (data.delivery_status === 0 && data.confirm_status === 1) {
           // return 'Confirmed';
           if (!riderLocations) {
-            this.infoHeader = this.$t('general.order_still_on_the_way', {vendor_name:this.vendor_name});
+            this.infoHeader = this.$t('general.order_still_on_the_way', { vendor_name: this.vendor_name });
             this.infoDescription = '';
             this.iconLabel = 'pickup';
             this.vendor_icon_id = 'location';
           } else {
-            this.infoHeader = this.$t('general.your_driver_on_the_way', {vendor_name:this.vendor_name});
-            this.infoDescription = this.$t('general.order_pickup_time', {pickUpEta:this.pickUpEta});
+            this.infoHeader = this.$t('general.your_driver_on_the_way', { vendor_name: this.vendor_name });
+            this.infoDescription = this.$t('general.order_pickup_time', { pickUpEta: this.pickUpEta });
             this.iconLabel = 'pickup';
           }
         } else {
           // return 'Pending';
-          this.infoHeader = this.$t('general.matching_order_with', {vendor_name:this.vendor_name});
+          this.infoHeader = this.$t('general.matching_order_with', { vendor_name: this.vendor_name });
           this.infoDescription = '';
           this.iconLabel = 'pickup';
         }

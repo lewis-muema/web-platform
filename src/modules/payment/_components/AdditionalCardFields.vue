@@ -2,37 +2,48 @@
   <div class="paymentbody--form">
     <div v-if="!isCVV">
       <form @submit.prevent="submit">
-        <div v-for="(item, index) in fields" :key="index">
-          <div class="textfield mt-5" v-if="item.type === 'phone'" >
-            <vue-tel-input 
-              autoFormat 
-              :defaultCountry="getBupayload.country_code"
-              :dropdownOptions="dropdownOptions"
+        <div
+          v-for="(item, index) in fields"
+          :key="index"
+        >
+          <div
+            v-if="item.type === 'phone'"
+            class="textfield mt-5"
+          >
+            <vue-tel-input
+              auto-format
+              :default-country="getBupayload.country_code"
+              :dropdown-options="dropdownOptions"
               mode="national"
-              invalidMsg="Phone number is Invalid"
-              @validate="validatePhone"
+              invalid-msg="Phone number is Invalid"
               required
-            >
-            </vue-tel-input>
+              @validate="validatePhone"
+            />
           </div>
-          <div class="paymentbody--input-wrap mt-5" v-if="item.type === 'date'" >
+          <div
+            v-if="item.type === 'date'"
+            class="paymentbody--input-wrap mt-5"
+          >
             <input
+              v-model="form[item.field_id]"
               type="text"
               :placeholder="`${item.field}`"
               required
-              v-model="form[item.field_id]"
               class="input-control paymentbody--input"
             >
           </div>
 
-          <div class="paymentbody--input-wrap mt-5" v-if="item.type === 'text'" >
+          <div
+            v-if="item.type === 'text'"
+            class="paymentbody--input-wrap mt-5"
+          >
             <input
+              v-model="form[item.field_id]"
               type="text"
               :placeholder="`${item.field}`"
               required
-              v-model="form[item.field_id]"
               class="input-control paymentbody--input"
-            />
+            >
           </div>
         </div>
 
@@ -42,7 +53,7 @@
           :disabled="loading"
           class="button-primary paymentbody--input-button"
         >
-          {{$t('general.submit')}}
+          {{ $t('general.submit') }}
           <i
             v-if="loading"
             class="el-icon-loading tracking-loading-spinner promocode-spinner"
@@ -50,7 +61,7 @@
         </button>
       </form>
     </div>
-    
+
     <div v-else>
       <form @submit.prevent="submitCvv">
         <div
@@ -58,7 +69,7 @@
           class="form-group text-field"
         >
           <div class="form-control-static">
-            <span  class="fake-input" />
+            <span class="fake-input" />
           </div>
         </div>
         <button
@@ -67,7 +78,7 @@
           :disabled="loading"
           class="button-primary paymentbody--input-button"
         >
-          {{$t('general.submit')}}
+          {{ $t('general.submit') }}
           <i
             v-if="loading"
             class="el-icon-loading tracking-loading-spinner promocode-spinner"
@@ -75,8 +86,7 @@
         </button>
       </form>
     </div>
-  
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -100,7 +110,7 @@ export default {
       phone: '',
       dropdownOptions: {
         showFlags: true,
-        showDialCodeInSelection: true
+        showDialCodeInSelection: true,
       },
       formattedPhone: null,
       form: {},
@@ -108,12 +118,12 @@ export default {
       errors: {},
       isCVV: false,
       updateFields: false,
-    }
+    };
   },
   computed: {
     ...mapGetters({
       getSavedPayMethods: '$_payment/getSavedCards',
-    })
+    }),
   },
   watch: {
     additionalData(val) {
@@ -129,10 +139,9 @@ export default {
         const cvv = this.additionalData.filter(element => element.field_id === 'cvv');
         if (cvv.length) {
           this.initCVV();
-          return;
         }
       }
-    }
+    },
   },
   mounted() {
     this.fields = this.additionalData ? this.additionalData : [];
@@ -148,7 +157,7 @@ export default {
       paymentAxiosPost: '$_payment/paymentAxiosPost',
     }),
     initCVV() {
-      this.isCVV = true
+      this.isCVV = true;
       setTimeout(() => {
         this.setForm();
       }, 500);
@@ -174,45 +183,42 @@ export default {
         placeholder: 'CVV',
         validations: ['required', 'validCardSecurityCode'],
       });
-
     },
     validatePhone(val) {
       this.formattedPhone = val.valid ? val.number : null;
-      this.form['phone'] = this.formattedPhone;
-      return;
+      this.form.phone = this.formattedPhone;
     },
     submit() {
       this.loading = true;
-      
+
       const payload = {
         transaction_id: this.transaction_id,
         ...this.form,
-      }
+      };
 
       const fullPayload = {
         values: payload,
         app: 'PAYMENT_GATEWAY',
-        endpoint: '/api/v2/submit_info'
-      }
+        endpoint: '/api/v2/submit_info',
+      };
 
       this.paymentAxiosPost(fullPayload)
-      .then(response => {
-        if (response.status) {
+        .then(response => {
+          if (response.status) {
+            if (response.additional_data) {
+              this.fields = response.additional_data;
+              return;
+            }
 
-          if (response.additional_data) {
-            this.fields = response.additional_data;
+            this.$emit('continue', true);
             return;
           }
-          
-          this.$emit('continue', true);
-          return;
-        } 
-        this.loading = false;
-        this.$emit('continue', false);
-      }).catch(err => {
-        this.loading = false;
-        this.$emit('continue', false);
-      })
+          this.loading = false;
+          this.$emit('continue', false);
+        }).catch(err => {
+          this.loading = false;
+          this.$emit('continue', false);
+        });
     },
     submitCvv() {
       this.loading = true;
@@ -224,64 +230,60 @@ export default {
           },
         },
         (status, res) => {
-
           if (res.status) {
             const values = res.data;
             delete values.language;
             const payload = {
               transaction_id: this.transaction_id,
               ...values,
-            }
+            };
 
             const fullPayload = {
               values: payload,
               app: 'PAYMENT_GATEWAY',
-              endpoint: '/api/v2/submit_info'
-            }
+              endpoint: '/api/v2/submit_info',
+            };
 
             this.paymentAxiosPost(fullPayload)
-            .then(response => {
-              if (response.status) {
+              .then(response => {
+                if (response.status) {
+                  if (response.additional_data) {
+                    this.updateFields = true;
+                    if (response.tds) {
+                      const responsePayload = {
+                        status: true,
+                        additionalData: response.additional_data,
+                      };
 
-                if (response.additional_data) {
-                  this.updateFields = true;
-                  if (response.tds) {
-                    const responsePayload = {
-                      status: true,
-                      additionalData: response.additional_data,
+                      this.$emit('continue3DS', responsePayload);
+                      return;
                     }
 
-                    this.$emit('continue3DS', responsePayload)
-                    return;
+                    this.fields = response.additional_data;
                   }
 
-                  this.fields = response.additional_data;
+                  this.$emit('continue', true);
+                  return;
                 }
-                
-                this.$emit('continue', true);
-                return;
-              } 
-              this.loading = false;
-              this.$emit('continue', false);
-            }).catch(err => {
-              this.loading = false;
-              this.$emit('continue', false);
-            }).catch((err) => {
-              this.loading = false;
-              this.$emit('continue', false);
-            })
-
+                this.loading = false;
+                this.$emit('continue', false);
+              }).catch(err => {
+                this.loading = false;
+                this.$emit('continue', false);
+              }).catch((err) => {
+                this.loading = false;
+                this.$emit('continue', false);
+              });
           }
-
-        }
-      )
+        },
+      );
     },
     capitalize(str) {
       const result = str.charAt(0).toUpperCase() + str.slice(1);
       return result;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

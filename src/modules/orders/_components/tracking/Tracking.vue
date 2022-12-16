@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <a
-      v-if="this.$route.name != 'tracking_external'"
+      v-if="$route.name != 'tracking_external'"
       class="back--button"
       @click="$router.push('/orders')"
     >

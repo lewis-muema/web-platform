@@ -5,7 +5,6 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import VueTelInput from 'vue-tel-input';
 import { createApp } from './app';
 
-
 // client-specific bootstrapping logic...
 
 const { app, router, store } = createApp();

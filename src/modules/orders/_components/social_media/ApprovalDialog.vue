@@ -16,14 +16,14 @@
             <img src="../../../../assets/img/sendy-biker.png">
           </div>
           <div class="dialog--title-text">
-            {{$t('approvalDialogue.your_application_has_been_recieved')}}
+            {{ $t('approvalDialogue.your_application_has_been_recieved') }}
           </div>
           <div class="dialog--content-text">
             <p>
-              {{$t('approvalDialogue.by_filling_social_commerce_business')}}
+              {{ $t('approvalDialogue.by_filling_social_commerce_business') }}
             </p>
             <p>
-              {{$t('approvalDialogue.enjoy_discounted_prices')}}
+              {{ $t('approvalDialogue.enjoy_discounted_prices') }}
             </p>
           </div>
         </div>
@@ -38,11 +38,11 @@
             >
           </div>
           <div class="dialog--title-text">
-             {{$t('approvalDialogue.your_application_has_been_approved')}}
+            {{ $t('approvalDialogue.your_application_has_been_approved') }}
           </div>
           <div class="dialog--content-text">
             <p>
-            {{$t('approvalDialogue.congrats_your_application_has_been_approved')}}
+              {{ $t('approvalDialogue.congrats_your_application_has_been_approved') }}
             </p>
           </div>
         </div>
@@ -57,11 +57,11 @@
             >
           </div>
           <div class="dialog--title-text">
-            {{$t('approvalDialogue.your_application_has_been_declined')}}
+            {{ $t('approvalDialogue.your_application_has_been_declined') }}
           </div>
           <div class="dialog--content-text">
             <p>
-            {{$t('approvalDialogue.sorry_your_application_declined')}}
+              {{ $t('approvalDialogue.sorry_your_application_declined') }}
             </p>
           </div>
         </div>

@@ -181,7 +181,7 @@ export default {
     onChange(event, score) {
       this.score = score;
       this.heading = this.$t('NPSFooter.like_most');
-      this.sendGA4Events('rate_NPS', {rate_value: this.score});
+      this.sendGA4Events('rate_NPS', { rate_value: this.score });
     },
     dismiss() {
       this.disableClass = 'disabled';
