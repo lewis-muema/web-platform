@@ -40,8 +40,10 @@ pipeline {
                 
                 if(env.BRANCH_NAME == "production") {
                           env.ENV_TAG = "prod"
-                    } else {
-                          env.ENV_TAG = "dev"
+                }else if(env.BRANCH_NAME == "pre-prod") {
+                          env.ENV_TAG = "pre-prod"
+                }else{
+                         env.ENV_TAG = "dev"
                 }
 
                 sh '''
