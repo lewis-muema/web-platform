@@ -584,7 +584,7 @@ export default {
     },
 
     deliveryImagePath(path) {
-      return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/rider_delivery_image/${path}`;
+      return `https://s3-eu-west-1.amazonaws.com/sendy-delivery-signatures/rider_delivery_image//${path}`;
     },
     disputeButton() {
       if (this.disputeImageStatus !== 3) {
