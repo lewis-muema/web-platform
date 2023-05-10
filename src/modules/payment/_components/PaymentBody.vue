@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="paymentbody">
-    <div class="payment-overlay" v-if="defaultCurrency !== getActiveCurrency" />
+    <div
+      v-if="defaultCurrency !== getActiveCurrency"
+      class="payment-overlay"
+    />
     <pay-method />
     <div class="">
       <router-view />
@@ -15,8 +18,8 @@ import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
   name: 'PaymentBody',
-  mixins: [EventsMixin],
   components: { PayMethod },
+  mixins: [EventsMixin],
   computed: {
     ...mapGetters({
       getDefaultCurrency: 'getDefaultCurrency',

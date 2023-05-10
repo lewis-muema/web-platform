@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="screen-one">
     <div class="onboarding-user-header">
-      {{$t('onboardingComponent.join', {getBizName: getBizName})}}
+      {{ $t('onboardingComponent.join', {getBizName: getBizName}) }}
     </div>
 
     <p class="onboard-error">
@@ -12,7 +12,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('onboardingComponent.name')}}</span>
+            <span>{{ $t('onboardingComponent.name') }}</span>
           </label>
           <input
             v-model="name"
@@ -48,7 +48,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('onboardingComponent.phone_no')}}</span>
+            <span>{{ $t('onboardingComponent.phone_no') }}</span>
           </label>
           <vue-tel-input
             v-model="phone"
@@ -74,7 +74,7 @@
     <div class="divide" />
     <div class="form-submits">
       <a class="waves-effect">
-        {{$t('onboardingComponent.back')}}
+        {{ $t('onboardingComponent.back') }}
       </a>
       <button
         id="nextBtn"
@@ -84,7 +84,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        {{$t('onboardingComponent.next')}}
+        {{ $t('onboardingComponent.next') }}
       </button>
     </div>
 
@@ -100,7 +100,7 @@
       </span>
       <div>
         <div class="onboarding-validation-description">
-          {{$t('onboardingComponent.verification_sms')}}
+          {{ $t('onboardingComponent.verification_sms') }}
         </div>
 
         <div class="onboarding-verification-input">
@@ -118,14 +118,14 @@
           class="onboarding-cancel "
           @click="onboardingVerificationCancel"
         >
-          {{$t('onboardingComponent.cancel')}}
+          {{ $t('onboardingComponent.cancel') }}
         </button>
         <button
           type="button"
           class="onboarding-verify"
           @click="onboardingVerificationVerify"
         >
-          {{$t('onboardingComponent.verify')}}
+          {{ $t('onboardingComponent.verify') }}
         </button>
       </div>
     </el-dialog>
@@ -306,7 +306,6 @@ export default {
 </script>
 
 <style lang="css">
-
 
 .form-inputs > div:nth-child(3) > div > div > div > ul {
     z-index: 9;

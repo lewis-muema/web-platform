@@ -106,10 +106,10 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.prototype.$mixpanel = mixpanel;
-Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('FontAwesomeIcon', FontAwesomeIcon);
 
 require('./views');
-const firebase = require('firebase/app');
+const firebase = require('firebase/app').default;
 require('firebase/messaging');
 
 const config = process.env.CONFIGS_ENV.FIREBASE_CONFIG;

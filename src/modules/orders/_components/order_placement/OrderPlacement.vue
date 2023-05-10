@@ -36,7 +36,7 @@
             />
           </no-ssr>
         </div>
-               <div
+        <div
           v-if="activeEl === 'pickup' && hiddenSuggestionsStatus"
           class="homeview--input-suggestions"
           :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
@@ -44,7 +44,7 @@
           @mouseout="activeSuggestionList = false"
         >
           <div class="homeview--input-suggetions-title">
-            {{$t('general.saved_and_frequently_used')}}
+            {{ $t('general.saved_and_frequently_used') }}
           </div>
           <div
             v-for="(suggestion, index) in pickUpSuggestions"
@@ -84,7 +84,7 @@
             class="homeview--input-suggetions-link"
             @click="triggerLocationsManagementPopUp(true, 'PICKUP')"
           >
-            {{$t('general.add_remove_saved_loc')}} >
+            {{ $t('general.add_remove_saved_loc') }} >
           </div>
         </div>
         <div class="homeview--destinations">
@@ -124,7 +124,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              {{$t('general.saved_and_frequently_used')}}
+              {{ $t('general.saved_and_frequently_used') }}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -164,7 +164,7 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{$t('general.add_remove_saved_loc')}} >
+              {{ $t('general.add_remove_saved_loc') }} >
             </div>
           </div>
         </div>
@@ -210,7 +210,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              {{$t('general.saved_and_frequently_used')}}
+              {{ $t('general.saved_and_frequently_used') }}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -250,7 +250,7 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{$t('general.add_remove_saved_loc')}} >
+              {{ $t('general.add_remove_saved_loc') }} >
             </div>
           </div>
         </div>
@@ -270,7 +270,7 @@
           <a
             class="homeview--add"
             @click="addExtraDestinationWrapper()"
-          >{{$t('general.add_destination')}}</a>
+          >{{ $t('general.add_destination') }}</a>
         </div>
       </div>
       <div
@@ -298,18 +298,18 @@
               allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
             "
             @click="addExtraDestinationWrapper()"
-          >{{$t('general.add_destination')}}</a>
+          >{{ $t('general.add_destination') }}</a>
         </div>
       </div>
       <div v-if="$route.path === '/orders/dedicated/multi-destination' && fileUploadStatus">
         <p class="home-view--upload-par">
-          {{$t('general.or')}}
+          {{ $t('general.or') }}
         </p>
         <p
           class="home-view--upload-button"
           @click="initiateUpload()"
         >
-          {{$t('general.upload_file')}}
+          {{ $t('general.upload_file') }}
         </p>
       </div>
       <div
@@ -330,7 +330,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          {{$t('general.confirm_order')}}
+          {{ $t('general.confirm_order') }}
         </button>
       </div>
     </div>
@@ -716,25 +716,25 @@ export default {
       };
       if (this.$route.path === '/orders/dedicated/multi-destination') {
         if (index === 0) {
-          this.sendGA4Events('add_pick_up_location', {multi_destination_pick_up: place.name});
+          this.sendGA4Events('add_pick_up_location', { multi_destination_pick_up: place.name });
         } else if (index === 1) {
-          this.sendGA4Events('add_drop_off_location', {multi_destination_drop_off: place.name});
+          this.sendGA4Events('add_drop_off_location', { multi_destination_drop_off: place.name });
         } else {
-          this.sendGA4Events('add_destination', {multi_destination_drop_off: place.name});
+          this.sendGA4Events('add_destination', { multi_destination_drop_off: place.name });
         }
       } else {
         if (type === 2) {
           this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);
-          this.sendGA4Events('select_saved_location', {pick_up_location: place.name});
+          this.sendGA4Events('select_saved_location', { pick_up_location: place.name });
           this.fireGAEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`);
         }
         if (index === 0) {
-          this.sendGA4Events('add_pickup', {pick_up_location: place.name});
+          this.sendGA4Events('add_pickup', { pick_up_location: place.name });
         } else if (index === 1) {
-          this.sendGA4Events('add_destination', {drop_off_location: place.name});
-          this.sendGA4Events('add_location', {drop_off_location: place.name});
+          this.sendGA4Events('add_destination', { drop_off_location: place.name });
+          this.sendGA4Events('add_location', { drop_off_location: place.name });
         } else {
-          this.sendGA4Events('add_extra_destination', {extra_destination: place.name});
+          this.sendGA4Events('add_extra_destination', { extra_destination: place.name });
         }
       }
       this.hiddenSuggestionsStatus = true;

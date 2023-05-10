@@ -7,10 +7,10 @@ export default {
   data() {
     return {
       codes: {
-        '0': 'success',
-        '1': 'success',
-        '2': 'warning',
-        '3': 'error',
+        0: 'success',
+        1: 'success',
+        2: 'warning',
+        3: 'error',
       },
     };
   },
@@ -23,8 +23,8 @@ export default {
 
   methods: {
     flash(details) {
-      let data = Object.assign({}, details);
-      data['type'] = this.codes[details.type];
+      const data = { ...details };
+      data.type = this.codes[details.type];
       this.$notify(data);
     },
   },

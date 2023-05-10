@@ -35,7 +35,7 @@
               </el-row>
 
               <p class="freight-sign-up-header">
-               {{ $t('freightAuth.welcome') }}
+                {{ $t('freightAuth.welcome') }}
               </p>
               <p class="freight-sign-up-description">
                 {{ $t('freightAuth.final_details') }}
@@ -363,9 +363,7 @@ export default {
       this.$router.push('/freight/login');
     },
     termsAndConditions() {
-      window.open(
-        'https://sendyit.com/terms', '_blank',
-      );
+      window.open('https://sendyit.com/terms', '_blank');
     },
     doNotification(level, title, message) {
       const notification = { title, level, message };

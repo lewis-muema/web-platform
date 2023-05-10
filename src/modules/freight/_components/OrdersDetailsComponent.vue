@@ -381,7 +381,6 @@
           mode="out-in"
         >
           <div class="">
-
             <el-dialog
               :visible.sync="awardDialogVisible"
               class="requestShipmentOptions"
@@ -697,7 +696,6 @@
               </div>
             </el-dialog>
 
-
             <el-dialog
               :visible.sync="showDeclineDialog"
               class="declineDocumentOptions"
@@ -727,7 +725,6 @@
                 </button>
               </div>
             </el-dialog>
-
 
             <el-dialog
               :visible.sync="showRatingDialog"
