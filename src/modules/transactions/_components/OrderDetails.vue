@@ -235,7 +235,7 @@
                         >
                           <img
                             class="delivery-image-content"
-                            :src="deliveryImagePath(val)"
+                            :src="val"
                           >
                         </div>
                       </div>
