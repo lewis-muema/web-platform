@@ -21,7 +21,6 @@
     "country-tz-currency": "^1.0.1",
     "cross-env": "^5.2.1",
     "crypto-js": "^3.3.0",
-    "currency-flags": "git+https://github.com/transferwise/currency-flags.git",
     "date-fns": "^1.30.1",
     "elastic-apm-node": "^3.39.0",
     "element-ui": "^2.15.10",
