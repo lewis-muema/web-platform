@@ -8,13 +8,13 @@
         class="homeview--outer-selections homeview--outer-selections__active"
         @click="switchMode('/orders')"
       >
-        {{$t('general.on_demand')}}
+        {{ $t('general.on_demand') }}
       </div>
       <div
         class="homeview--outer-selections"
         @click="switchMode('/orders/dedicated/no-destination');"
       >
-         {{$t('general.dedicated')}}
+        {{ $t('general.dedicated') }}
         <span class="tour-pointer-1" />
       </div>
     </div>
@@ -35,7 +35,7 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 Vue.use(VeeValidate);
 
 Validator.extend('check_phone', {
-  getMessage: field =>  {{$t('general.phone_number_not_valid')}},
+  getMessage: field => { { $t('general.phone_number_not_valid'); } },
   validate: (value) => {
     let validity = false;
     try {
@@ -49,7 +49,6 @@ Validator.extend('check_phone', {
     return validity;
   },
 });
-
 
 export default {
   name: 'Home',

@@ -6,13 +6,13 @@
         class="apply-discount"
         @click="applyDiscount()"
       >
-        {{$t('promoCodeComponent.apply_discount')}}
+        {{ $t('promoCodeComponent.apply_discount') }}
       </div>
       <div
         v-if="loading"
         class="loading-promo"
       >
-        {{$t('promoCodeComponent.loading')}}
+        {{ $t('promoCodeComponent.loading') }}
       </div>
     </div>
     <div
@@ -24,7 +24,7 @@
         v-if="requested"
         class="promocodestitle"
       >
-        {{$t('promoCodeComponent.apply_discount_promocode')}}
+        {{ $t('promoCodeComponent.apply_discount_promocode') }}
       </div>
       <span v-if="requested && promoCodes !== null && promoCodes.length !== 0">
         <div
@@ -44,12 +44,12 @@
                 v-else
                 class="promocode-value"
               >
-                {{ promocode.couponBalance * 100 }}% {{$t('promoCodeComponent.off')}} ({{$t('promoCodeComponent.max')}}. {{ promocode.currency }} {{ formatNumber(promocode.maxDiscountAmount) }})
+                {{ promocode.couponBalance * 100 }}% {{ $t('promoCodeComponent.off') }} ({{ $t('promoCodeComponent.max') }}. {{ promocode.currency }} {{ formatNumber(promocode.maxDiscountAmount) }})
               </div>
               <div
                 class="promocode-date"
                 :class="{ 'to-expire' : formatExpiryDate(promocode.couponEndDate).status === 'red' } "
-              >{{$t('promoCodeComponent.expiry')}}: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}</div>
+              >{{ $t('promoCodeComponent.expiry') }}: {{ formatExpiryDate(promocode.couponEndDate).expiryDate }}</div>
             </el-col>
             <el-col :span="8">
               <div class="radio-holder">
@@ -70,7 +70,7 @@
             class="apply-discount"
             @click="new_promocode()"
           >
-           {{$t('promoCodeComponent.have_new_promocode')}}
+            {{ $t('promoCodeComponent.have_new_promocode') }}
           </div>
         </div>
 
@@ -79,7 +79,7 @@
         v-if="requested && promoCodes === null || isNewPromo"
         class="promocode-text-holder"
       >
-        <label class="promocode-text-label">{{$t('promoCodeComponent.enter_promocode_below')}}</label>
+        <label class="promocode-text-label">{{ $t('promoCodeComponent.enter_promocode_below') }}</label>
         <div class="promocode-input-holder">
           <el-input
             v-model="coupon"
@@ -93,7 +93,7 @@
             :class="{'button-inactive': processing || coupon === ''}"
             @click="redeem_coupon()"
           >
-            {{$t('promoCodeComponent.apply')}}
+            {{ $t('promoCodeComponent.apply') }}
             <i
               v-if="processing"
               class="el-icon-loading tracking-loading-spinner"
@@ -111,7 +111,6 @@
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import promocodesMxn from '../../../../../mixins/promocodes_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
-
 
 export default {
   name: 'PromoCodesComponent',

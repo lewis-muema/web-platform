@@ -12,7 +12,7 @@
         class="button-primary paymentbody--input-button"
         @click="backToPaymentRequest"
       >
-        {{$t('general.ok')}}
+        {{ $t('general.ok') }}
       </button>
     </div>
   </div>

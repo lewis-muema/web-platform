@@ -46,7 +46,7 @@
               <p
                 class="sign-up--extra extra-text"
               >
-                {{$t('signUp.join')}}
+                {{ $t('signUp.join') }}
                 <a class="partners-brand-text">{{ $t('signUp.customers') }} </a>{{ $t('signUp.trust') }}
               </p>
             </div>

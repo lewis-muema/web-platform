@@ -2,10 +2,19 @@
   <div class="">
     <main-header />
     <div class="tracking-back-button">
-      <i class="el-icon-back edit-back" @click="go_back()" />
+      <i
+        class="el-icon-back edit-back"
+        @click="go_back()"
+      />
     </div>
-    <div id="payment_container" class="container-small">
-      <component :is="currentPageHeader" class="payment--header" />
+    <div
+      id="payment_container"
+      class="container-small"
+    >
+      <component
+        :is="currentPageHeader"
+        class="payment--header"
+      />
       <payment-body />
       <NPSFooter v-if="!nps_status" />
     </div>
@@ -108,7 +117,7 @@ export default {
         },
         error => {
           // ...
-        }
+        },
       );
     },
 

@@ -18,7 +18,6 @@ import Vuex from 'vuex';
 // import PromoComponent from '../../_components/PromoComponent.vue';
 // import SuccessComponent from '../../_components/SuccessComponent.vue';
 
-
 Vue.use(Vuex);
 
 describe('Payment.vue', () => {

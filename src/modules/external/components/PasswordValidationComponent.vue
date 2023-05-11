@@ -1,13 +1,13 @@
 <template lang="html">
   <div class="screen-three">
     <div class="onboarding-user-header">
-      {{$t('passwordValidation.set_password')}}
+      {{ $t('passwordValidation.set_password') }}
     </div>
     <div class="form-inputs">
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('passwordValidation.create_password')}}</span>
+            <span>{{ $t('passwordValidation.create_password') }}</span>
           </label>
           <input
             id="password"
@@ -22,7 +22,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{$t('passwordValidation.confirm_password')}}</span>
+            <span>{{ $t('passwordValidation.confirm_password') }}</span>
           </label>
           <input
             id="password"
@@ -41,7 +41,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        {{$t('passwordValidation.back')}}
+        {{ $t('passwordValidation.back') }}
       </a>
       <button
         class="btn-submit"
@@ -50,7 +50,7 @@
         :disabled="!is_valid"
         @click="next_view"
       >
-        {{$t('passwordValidation.Next')}}
+        {{ $t('passwordValidation.Next') }}
       </button>
     </div>
   </div>
