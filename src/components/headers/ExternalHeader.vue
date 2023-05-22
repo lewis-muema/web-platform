@@ -1,5 +1,17 @@
 <template lang="html">
   <div class="header">
+    <div class="header-top header-outer">
+      <font-awesome-icon
+        icon="exclamation-triangle"
+        width="15px"
+        class="header-exclamation"
+      />
+      {{ $t('mainHeader.Reminder') }} 
+      <a href="https://fulfillment.sendyit.com/auth/sign-in">
+        <span class="header-top-link">here.</span>
+      </a> 
+      {{ $t('mainHeader.pleaseMigrate') }}
+    </div>
     <div class="header--item">
       <div class="external--item__left">
         <img
@@ -14,6 +26,13 @@
 </template>
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+  faExclamationTriangle
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faExclamationTriangle);
+
 export default {
   name: 'ExternalHeader',
 };

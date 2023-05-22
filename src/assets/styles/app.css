@@ -31,8 +31,31 @@ html, .body{
 {
   min-height: 68px;
   flex: 0 1 auto;
+  flex-direction: column;
 }
+.header-bottom {
+  display: flex;
+  height: 68px;
+}
+.header-top {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(155, 16, 28);
+  color: rgb(251, 222, 207);
+  font-weight: 600;
+  font-size: 16px;
 
+}
+.header-top-link {
+  padding: 0px 5px;
+    color: rgb(251, 222, 207);
+    text-decoration: underline;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
 .box .content
 {
   display: flex;
