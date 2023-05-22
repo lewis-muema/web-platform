@@ -18,5 +18,7 @@
   "logout": " Logout",
   "business": "Business",
   "business_acc": "Business Acc",
-  "personal_acc": "Personal Acc"
+  "personal_acc": "Personal Acc",
+  "Reminder": "Dear Customer, We have moved our transport services over to our new Super app (As direct fulfillment), which can be accessed",
+  "pleaseMigrate": "Please move to the new app to continue using our services"
 }

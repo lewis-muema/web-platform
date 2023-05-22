@@ -1,5 +1,18 @@
 <template lang="html">
   <div class="header">
+    <div class="header-top">
+      <font-awesome-icon
+        icon="exclamation-triangle"
+        width="15px"
+        class="header-exclamation"
+      />
+      {{ $t('mainHeader.Reminder') }} 
+      <a href="https://fulfillment.sendyit.com/auth/sign-in">
+        <span class="header-top-link">here.</span>
+      </a> 
+      {{ $t('mainHeader.pleaseMigrate') }}
+    </div>
+    <div class="header-bottom">
     <div class="header--icon">
       <div class="header--item__left">
         <a
@@ -138,6 +151,7 @@
         </ul>
       </nav>
     </div>
+    </div>
   </div>
 </template>
 
@@ -147,8 +161,13 @@ import axios from 'axios';
 import SessionMxn from '../../mixins/session_mixin';
 import EventsMixin from '../../mixins/events_mixin';
 import MixpanelMixin from '../../mixins/mixpanel_events_mixin';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+  faExclamationTriangle
+} from '@fortawesome/free-solid-svg-icons';
 
 const ENV = process.env.CONFIGS_ENV;
+library.add(faExclamationTriangle);
 
 export default {
   name: 'MainHeader',
