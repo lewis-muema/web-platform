@@ -57,12 +57,7 @@
         </div>
         <div class="sign-holder sign-sign-up sign-smaller">
           {{ $t('signIn.have_account') }}
-          <router-link
-            class="sign-holder__link"
-            to="/auth/sign_up"
-          >
-            {{ $t('signIn.sign_up') }}
-          </router-link>
+          <a href="https://fulfillment.sendyit.com/auth/sign-up" class="sign-holder__link">{{ $t('signIn.sign_up') }}</a>
         </div>
       </div>
     </div>
