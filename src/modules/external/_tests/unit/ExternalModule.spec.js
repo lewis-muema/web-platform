@@ -20,12 +20,6 @@ describe('HeaderComponent.vue', () => {
       getters,
     });
   });
-
-  it('calculates progress_width from the store getter', () => {
-    const wrapper = mount(HeaderComponent, {
-      store,
-    });
-  });
   // it('Check text', () => {
   //   const wrapper = mount(HeaderComponent, {
   //     store,
