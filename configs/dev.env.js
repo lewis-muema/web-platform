@@ -1,7 +1,6 @@
 /* eslint import/no-extraneous-dependencies: ["error", {"peerDependencies": true}] */
 const merge = require('webpack-merge');
 const prodEnv = require('./prod.env');
-
 module.exports = merge(prodEnv, {
   ENVIRONMENT: '"development"',
   DEBUG_MODE: true,
