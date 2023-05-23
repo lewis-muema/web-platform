@@ -7,10 +7,6 @@
         class="header-exclamation"
       />
       {{ $t('mainHeader.Reminder') }} 
-      <a href="https://fulfillment.sendyit.com/auth/sign-in">
-        <span class="header-top-link">here.</span>
-      </a> 
-      {{ $t('mainHeader.pleaseMigrate') }}
     </div>
     <div class="header--item">
       <div class="external--item__left">
