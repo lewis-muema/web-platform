@@ -24,6 +24,7 @@
 .header-exclamation {
     padding-right: 13px;
     margin-top: -2px;
+    margin-left: 25px;
 }
 .header-outer {
     height: 55px !important;
