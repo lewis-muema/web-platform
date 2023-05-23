@@ -8,7 +8,6 @@ pipeline {
     environment {
            npm_config_cache = 'npm-cache'
            APP_NAME = "vue_web_platform"
-           DOCKER_ENV = "dev"
            IMAGE_BASE_NAME = "${CI_REGISTRY}/${APP_NAME}"
     }
 
