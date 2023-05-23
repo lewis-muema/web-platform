@@ -8,6 +8,7 @@ pipeline {
     environment {
            npm_config_cache = 'npm-cache'
            APP_NAME = "vue_web_platform"
+           DOCKER_ENV = "dev"
            IMAGE_BASE_NAME = "${CI_REGISTRY}/${APP_NAME}"
     }
 
@@ -40,6 +41,7 @@ pipeline {
                 
                 if(env.BRANCH_NAME == "production" || env.BRANCH_NAME == "master") {
                           env.ENV_TAG = "prod"
+                          env.DOCKER_ENV="production"
                 }else if(env.BRANCH_NAME == "pre-prod") {
                           env.ENV_TAG = "pre-prod"
                 }else{
@@ -49,7 +51,7 @@ pipeline {
                 sh '''
                     IMAGE_TAG="${ENV_TAG}_$(date +%Y-%m-%d-%H-%M)"
                     IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-                    docker build -f Dockerfile -t $IMAGE_NAME .
+                    docker build --build-arg DOCKER_ENV=${DOCKER_ENV} -f Dockerfile -t $IMAGE_NAME .
                     docker push $IMAGE_NAME
                 '''
               }
