@@ -174,7 +174,7 @@
             <no-ssr placeholder="">
               <gmap-autocomplete
                 id="return"
-                v-model="locations[1]"
+                :value="locations[1]"
                 :options="map_options"
                 :placeholder="$t('general.return_location')"
                 :select-first-on-enter="true"
