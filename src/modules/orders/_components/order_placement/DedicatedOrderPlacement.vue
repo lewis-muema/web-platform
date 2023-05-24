@@ -19,7 +19,7 @@
             />
             <gmap-autocomplete
               id="homeview--pick-up-location-input"
-              v-model="locations[0]"
+              :value="locations[0]"
               :options="map_options"
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
@@ -99,7 +99,7 @@
               />
               <gmap-autocomplete
                 id="destination"
-                v-model="dropOffRegion"
+                :value="dropOffRegion"
                 :options="map_options"
                 :placeholder="$t('general.enter_region')"
                 :select-first-on-enter="true"
