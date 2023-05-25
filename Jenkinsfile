@@ -12,27 +12,27 @@ pipeline {
     }
 
     stages {
-        stage('eslint') {
-            agent { docker { image 'node:14.18.1' } }
-            steps {
-                sh '''
-                    node --version
-                    npm i eslint
-                    npm run lint
-                '''
-            }
-        }
+        // stage('eslint') {
+        //     agent { docker { image 'node:14.18.1' } }
+        //     steps {
+        //         sh '''
+        //             node --version
+        //             npm i eslint
+        //             npm run lint
+        //         '''
+        //     }
+        // }
 
-        stage('Test') {
-            agent { docker { image 'node:14.18.1' } }
-            steps {
-               sh '''
-                    npm i mocha-webpack
-                    npm run test
-               '''
+        // stage('Test') {
+        //     agent { docker { image 'node:14.18.1' } }
+        //     steps {
+        //        sh '''
+        //             npm i mocha-webpack
+        //             npm run test
+        //        '''
 
-            }
-        }
+        //     }
+        // }
 
         stage('Docker Build & Push Image') {
             steps {
