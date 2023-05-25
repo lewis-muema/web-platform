@@ -38,7 +38,7 @@ pipeline {
             steps {
               script {
                 
-                if(env.BRANCH_NAME == "production") {
+                if(env.BRANCH_NAME == "clint_config") {
                           env.ENV_TAG = "prod"
                 }else if(env.BRANCH_NAME == "pre-prod") {
                           env.ENV_TAG = "pre-prod"
