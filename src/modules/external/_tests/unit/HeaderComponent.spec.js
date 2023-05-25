@@ -1,5 +1,7 @@
-/* global describe,beforeEach,it */
 /* eslint no-undef: "error" */
+/* eslint-disable no-unused-vars */
+/* global describe,beforeEach,it */
+
 import Vue from 'vue';
 
 import { expect } from 'chai';

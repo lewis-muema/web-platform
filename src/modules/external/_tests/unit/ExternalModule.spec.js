@@ -1,5 +1,8 @@
-/* global describe,beforeEach,it */
 /* eslint no-undef: "error" */
+/* eslint-disable no-unused-vars */
+/* eslint-disable-next-line no-undef */
+/* global describe,beforeEach,it */
+
 import Vue from 'vue';
 // import sinon from 'sinon';
 import { expect } from 'chai';
