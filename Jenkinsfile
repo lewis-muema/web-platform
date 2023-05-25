@@ -1,3 +1,4 @@
+@@ -0,0 +1,59 @@
 pipeline {
 
     agent any
@@ -12,74 +13,61 @@ pipeline {
     }
 
     stages {
-        // stage('eslint') {
-        //     agent { docker { image 'node:14.18.1' } }
-        //     steps {
-        //         sh '''
-        //             node --version
-        //             npm i eslint
-        //             npm run lint
-        //         '''
-        //     }
-        // }
-
-        // stage('Test') {
-        //     agent { docker { image 'node:14.18.1' } }
-        //     steps {
-        //        sh '''
-        //             npm i mocha-webpack
-        //             npm run test
-        //        '''
-
-        //     }
-        // }
-
-        stage('Webpack Build') {
-    steps {
-        script {
-            sh '''
-                # Set the desired environment variables
-                if [ "${env.BRANCH_NAME}" == "master" ]; then
-                    export NODE_ENV="prod"
-                elif [ "${env.BRANCH_NAME}" == "pre-prod" ]; then
-                    export NODE_ENV="pre-prod"
-                else
-                    export NODE_ENV="dev"
-                fi
-
-                export DOCKER_ENV=$NODE_ENV
-
-                # Build the webpack bundle
-                cross-env NODE_ENV=$NODE_ENV webpack --config build/webpack.client.config.js --progress --hide-modules
-            '''
+        stage('eslint') {
+            agent { docker { image 'node:14.18.1' } }
+            steps {
+                sh '''
+                    node --version
+                    npm i eslint
+                    npm run lint
+                '''
+            }
         }
-      }
-    }
 
-  stage('Docker Build & Push Image') {
-      steps {
-          script {
-              sh '''
-                  # Set the desired environment variables
-                  if [ "${env.BRANCH_NAME}" == "master" ]; then
-                      export NODE_ENV="prod"
-                  elif [ "${env.BRANCH_NAME}" == "pre-prod" ]; then
-                      export NODE_ENV="pre-prod"
-                  else
-                      export NODE_ENV="dev"
-                  fi
+        stage('Test') {
+            agent { docker { image 'node:14.18.1' } }
+            steps {
+               sh '''
+                    npm i mocha-webpack
+                    npm run test
+               '''
 
-                  export DOCKER_ENV=$NODE_ENV
-
-                  # Build and push the Docker image
-                  IMAGE_TAG="${NODE_ENV}_$(date +%Y-%m-%d-%H-%M)"
-                  IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-                  docker build -f Dockerfile -t $IMAGE_NAME .
-                  docker push $IMAGE_NAME
-              '''
-          }
+            }
         }
-      }
 
+        stage('Docker Build & Push Image') {
+            steps {
+              script {
+
+                if(env.BRANCH_NAME == "master") {
+                          env.ENV_TAG = "prod"
+                          sh '''
+                              IMAGE_TAG="${ENV_TAG}_$(date +%Y-%m-%d-%H-%M)"
+                              IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                              docker build -f Dockerfile -t $IMAGE_NAME .
+                              docker push $IMAGE_NAME
+                          '''
+                }
+                if(env.BRANCH_NAME == "pre-prod") {
+                          env.ENV_TAG = "pre-prod"
+                          sh '''
+                              IMAGE_TAG="${ENV_TAG}_$(date +%Y-%m-%d-%H-%M)"
+                              IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                              docker build -f Dockerfile -t $IMAGE_NAME .
+                              docker push $IMAGE_NAME
+                          '''
+                }
+                if(env.BRANCH_NAME == "staging"){
+                         env.ENV_TAG = "dev"
+                         sh '''
+                             IMAGE_TAG="${ENV_TAG}_$(date +%Y-%m-%d-%H-%M)"
+                             IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                             docker build -f Dockerfile -t $IMAGE_NAME .
+                             docker push $IMAGE_NAME
+                         '''
+                }
+              }
+            }
+        }
     }
 }
