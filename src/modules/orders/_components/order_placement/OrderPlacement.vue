@@ -19,6 +19,7 @@
             <gmap-autocomplete
               id="pickup"
               :value="locations[0]"
+              @input="setLocationObject($event, 0)"
               :options="map_options"
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
@@ -99,6 +100,7 @@
               <gmap-autocomplete
                 id="destination"
                 :value="locations[1]"
+                @input="setLocationObject($event, 1)"
                 :options="map_options"
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
@@ -169,7 +171,7 @@
           </div>
         </div>
         <div
-          v-for="n in get_extra_destinations"
+          v-for="(n, i) in get_extra_destinations"
           :key="n + 1"
           class="homeview--destinations"
           :data-index="n + 1"
@@ -184,7 +186,8 @@
               />
               <gmap-autocomplete
                 :id="`destination${n}`"
-                :value="locations[n + 1]"
+                :value="locations[i + 2]"
+                @input="setLocationObject($event, i + 2)"
                 :options="map_options"
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
@@ -570,6 +573,10 @@ export default {
       this.$root.$emit('Upload status', true);
     },
 
+    setLocationObject(event, index) {
+      this.locations[index] = event.target.value;
+    },
+
     sendGA4Events(label, params) {
       const eventPayload = {
         name: label,
@@ -826,6 +833,7 @@ export default {
     },
 
     setLocationInModel(index, name) {
+      console.log(index);
       this.locations[index] = name;
       const activeElement = this.activeEl;
       setTimeout(() => {
