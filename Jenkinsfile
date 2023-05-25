@@ -34,26 +34,52 @@ pipeline {
         //     }
         // }
 
-        stage('Docker Build & Push Image') {
-            steps {
-              script {
-                
-                if(env.BRANCH_NAME == "clint_config") {
-                          env.ENV_TAG = "prod"
-                }else if(env.BRANCH_NAME == "pre-prod") {
-                          env.ENV_TAG = "pre-prod"
-                }else{
-                         env.ENV_TAG = "dev"
-                }
+        stage('Webpack Build') {
+    steps {
+        script {
+            sh '''
+                # Set the desired environment variables
+                if [ "${env.BRANCH_NAME}" == "master" ]; then
+                    export NODE_ENV="prod"
+                elif [ "${env.BRANCH_NAME}" == "pre-prod" ]; then
+                    export NODE_ENV="pre-prod"
+                else
+                    export NODE_ENV="dev"
+                fi
 
-                sh '''
-                    IMAGE_TAG="${ENV_TAG}_$(date +%Y-%m-%d-%H-%M)"
-                    IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
-                    docker build -f Dockerfile -t $IMAGE_NAME .
-                    docker push $IMAGE_NAME
-                '''
-              }
-            }
+                export DOCKER_ENV=$NODE_ENV
+
+                # Build the webpack bundle
+                cross-env NODE_ENV=$NODE_ENV webpack --config build/webpack.client.config.js --progress --hide-modules
+            '''
         }
+      }
+    }
+
+  stage('Docker Build & Push Image') {
+      steps {
+          script {
+              sh '''
+                  # Set the desired environment variables
+                  if [ "${env.BRANCH_NAME}" == "master" ]; then
+                      export NODE_ENV="prod"
+                  elif [ "${env.BRANCH_NAME}" == "pre-prod" ]; then
+                      export NODE_ENV="pre-prod"
+                  else
+                      export NODE_ENV="dev"
+                  fi
+
+                  export DOCKER_ENV=$NODE_ENV
+
+                  # Build and push the Docker image
+                  IMAGE_TAG="${NODE_ENV}_$(date +%Y-%m-%d-%H-%M)"
+                  IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+                  docker build -f Dockerfile -t $IMAGE_NAME .
+                  docker push $IMAGE_NAME
+              '''
+          }
+        }
+      }
+
     }
 }
