@@ -19,11 +19,12 @@
             />
             <gmap-autocomplete
               id="homeview--pick-up-location-input"
-              v-model="locations[0]"
+              :value="locations[0]"
               :options="map_options"
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
               class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+              @input="setLocationObject($event, 0)"
               @place_changed="setLocation($event, 0, 1)"
               @keyup="checkChangeEvents($event, 0)"
               @change="checkChangeEvents($event, 0)"
@@ -99,11 +100,12 @@
               />
               <gmap-autocomplete
                 id="destination"
-                v-model="dropOffRegion"
+                :value="dropOffRegion"
                 :options="map_options"
                 :placeholder="$t('general.enter_region')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
+                @input="setDropOffRegion($event)"
                 @place_changed="addRegion($event)"
                 @keyup="checkChangeEvents($event, 0)"
                 @change="checkChangeEvents($event, 0)"
@@ -174,11 +176,12 @@
             <no-ssr placeholder="">
               <gmap-autocomplete
                 id="return"
-                v-model="locations[1]"
+                :value="locations[1]"
                 :options="map_options"
                 :placeholder="$t('general.return_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input homeview--input-return-location"
+                @input="setLocationObject($event, 1)"
                 @place_changed="setLocation($event, 1, 1)"
                 @keyup="checkChangeEvents($event, 1)"
                 @change="checkChangeEvents($event, 1)"
@@ -507,6 +510,14 @@ export default {
       this.trackLocationSelect(place.name, 2);
       this.attemptPriceRequest();
       this.sendGA4Events('add_region', { drop_off_region: place.name });
+    },
+
+    setLocationObject(event, index) {
+      this.locations[index] = event.target.value;
+    },
+
+    setDropOffRegion(event) {
+      this.dropOffRegion = event.target.value;
     },
 
     ...mapActions({
