@@ -192,7 +192,7 @@
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-                @place_changed="setLocation($event, n + 1, 1)"
+                @place_changed="setLocation($event, i + 2, 1)"
                 @keyup="checkChangeEvents($event, (n = 1))"
                 @change="checkChangeEvents($event, n + 1)"
               />
@@ -222,7 +222,7 @@
               :class="activeRow === index ? 'homeview--input-suggestion-rows-active' : ''"
               @mouseover="activeRow = index"
               @mouseout="activeRow = ''"
-              @click="setLocation(suggestion, n + 1, 2)"
+              @click="setLocation(suggestion, i + 2, 2)"
             >
               <span class="homeview--input-suggestion-icon-holder">
                 <font-awesome-icon
@@ -833,7 +833,6 @@ export default {
     },
 
     setLocationInModel(index, name) {
-      console.log(index);
       this.locations[index] = name;
       const activeElement = this.activeEl;
       setTimeout(() => {
