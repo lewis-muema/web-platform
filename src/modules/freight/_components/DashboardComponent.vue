@@ -20,7 +20,7 @@
             v-if="index === 0"
             class="dashboard-name"
           >
-            {{ $t('dashboardComponent.recent_activity') }}
+            {{$t('dashboardComponent.recent_activity')}}
           </div>
           <div class="transporters-filters transporters-highlight">
             <div class="truck-add-info dashboard-align-inner">
@@ -35,7 +35,7 @@
               class="truck-add-info dashboard-align-inner view-document"
               @click="viewDocument(val.data.url, val.data.document_name)"
             >
-              {{ $t('dashboardComponent.view_document') }} >
+              {{$t('dashboardComponent.view_document')}} >
             </div>
           </div>
           <div
@@ -52,7 +52,7 @@
                 name="create_order_text"
                 @click="approveThisDocument(val)"
               >
-                {{ $t('dashboardComponent.approve') }}
+                {{$t('dashboardComponent.approve')}}
               </button>
               <button
                 type="button"
@@ -60,7 +60,7 @@
                 name="create_order_text"
                 @click="declineDialog(val)"
               >
-                {{ $t('dashboardComponent.decline') }}
+                {{$t('dashboardComponent.decline')}}
               </button>
             </div>
           </div>
@@ -83,7 +83,7 @@
         >
           <div class="">
             <div class="document-text-option ">
-              {{ $t('dashboardComponent.name_doc', {src_name: src_name}) }}
+              {{$t('dashboardComponent.name_doc', {src_name: src_name})}}
             </div>
             <div class="document-divider" />
             <div class="document-view-inner">
@@ -102,7 +102,7 @@
         >
           <div class="">
             <div class="decline-text-option decline-documemt-extend">
-              {{ $t('dashboardComponent.decline_document') }}
+              {{$t('dashboardComponent.decline_document')}}
             </div>
           </div>
           <div class="decline-documemt-extend decline-documemt-input">
@@ -121,7 +121,7 @@
               class="decline-action--slide-button"
               @click="declineDocument()"
             >
-              {{ $t('dashboardComponent.decline') }}
+              {{$t('dashboardComponent.decline')}}
             </button>
           </div>
         </el-dialog>
@@ -183,8 +183,8 @@ export default {
       if ('default' in session) {
         acc = session[session.default];
       }
-      const user_id = session.default === 'biz' ? acc.cop_id : acc.user_id;
-      const user_type = session.default === 'biz' ? 1 : 3;
+       const user_id = session.default === 'biz' ? acc.cop_id  : acc.user_id;
+       const user_type = session.default === 'biz' ? 1 : 3;
       const fullPayload = {
         app: 'FREIGHT_APP',
         endpoint: `activity_log/${user_id}/${user_type}`,

@@ -48,7 +48,7 @@
             "
             @click="add_department"
           >
-            {{ $t('addDepartment.add') }}
+            {{ $t('addDepartment.add')}}
           </button>
         </div>
       </div>

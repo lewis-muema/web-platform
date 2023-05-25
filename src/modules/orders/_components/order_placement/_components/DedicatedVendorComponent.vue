@@ -727,7 +727,7 @@ export default {
         }
         this.setScheduleTime(this.time_range_from);
         this.setScheduleEndTime(this.time_range_to);
-        this.sendGA4Events('add_delivery_date', { from_date: this.moment(this.schedule_time).format('DD-MM-YYYY') });
+        this.sendGA4Events('add_delivery_date', {from_date: this.moment(this.schedule_time).format('DD-MM-YYYY')});
       } else {
         this.setScheduleTime('');
         this.setScheduleEndTime('');
@@ -766,11 +766,11 @@ export default {
       const carrierName = this.vendorOptions(this.expandedActiveVendorTally[index].vendor_id).filter(
         data => data.value === option,
       );
-      this.sendGA4Events('select_carrier_type', { vendor_id: this.expandedActiveVendorTally[index].vendor_id, carrier_type: carrierName[0].label });
+      this.sendGA4Events('select_carrier_type', {vendor_id: this.expandedActiveVendorTally[index].vendor_id, carrier_type: carrierName[0].label});
     },
     setStartHours() {
       this.setScheduleTime(this.time_range_from);
-      this.sendGA4Events('add_delivery_time', { from_time: this.moment(this.time_range_from).format('HH:mm:ss') });
+      this.sendGA4Events('add_delivery_time', {from_time: this.moment(this.time_range_from).format('HH:mm:ss')});
     },
     setEndHours() {
       this.setScheduleEndTime(this.time_range_to);
@@ -891,7 +891,7 @@ export default {
 
     handleChangeInNumberOfLoaders(val) {
       this.setNOOfLoaders(val);
-      this.sendGA4Events('add_loaders', { add_loaders: val });
+      this.sendGA4Events('add_loaders', {add_loaders: val});
     },
 
     setActivePackageClassWrapper(name) {
@@ -1049,11 +1049,12 @@ export default {
           row.price_tiers[index].price_tiers_index = index;
         }
       });
-      this.sendGA4Events('select_vehicle_type', { vehicle_type: vendorObject.vendor_name });
-      this.sendGA4Events('add_number_vehicles', { vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally });
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
+      this.sendGA4Events('add_number_vehicles', {vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally});
       this.setOuterPriceRequestObject(this.getPriceRequestObject);
       this.setActivePackageClass('');
       this.setActivePackageClass(tier);
+
     },
     changeTally(vendorObject, index, value) {
       vendorObject.tally = value;
@@ -1065,8 +1066,8 @@ export default {
           row.price_tiers[index].price_tiers_index = index;
         }
       });
-      this.sendGA4Events('select_vehicle_type', { vehicle_type: vendorObject.vendor_name });
-      this.sendGA4Events('add_number_vehicles', { vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally });
+      this.sendGA4Events('select_vehicle_type', {vehicle_type: vendorObject.vendor_name});
+      this.sendGA4Events('add_number_vehicles', {vehicle_type: vendorObject.vendor_name, number_of_vehicles: vendorObject.tally})
       this.setOuterPriceRequestObject(this.getPriceRequestObject);
       this.setActivePackageClass('');
       this.setActivePackageClass(tier);
@@ -1136,7 +1137,7 @@ export default {
       if (vendorObject.vendor_id === 25) {
         return this.$t('general.from_eighteen_tonnes');
       }
-      const description = vendorObject.vendor_description.replace('<p>', '').replace('</p>', '');
+      const description = vendorObject.vendor_description.replace("<p>", "").replace("</p>", "");
       return description;
     },
     isTestAccount() {

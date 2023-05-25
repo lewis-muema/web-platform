@@ -19,8 +19,7 @@
             />
             <gmap-autocomplete
               id="homeview--pick-up-location-input"
-              :value="locations[0]"
-              @input="setLocationObject($event, 0)"
+              v-model="locations[0]"
               :options="map_options"
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
@@ -38,7 +37,7 @@
             />
           </no-ssr>
         </div>
-        <div
+          <div
           v-if="activeEl === 'homeview--pick-up-location-input' && hiddenSuggestionsStatus"
           class="homeview--input-suggestions"
           :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
@@ -46,7 +45,7 @@
           @mouseout="activeSuggestionList = false"
         >
           <div class="homeview--input-suggetions-title">
-            {{ $t('general.saved_and_frequently_used') }}
+            {{$t('general.saved_and_frequently_used')}}
           </div>
           <div
             v-for="(suggestion, index) in pickUpSuggestions"
@@ -86,7 +85,7 @@
             class="homeview--input-suggetions-link"
             @click="triggerLocationsManagementPopUp(true, 'PICKUP')"
           >
-            {{ $t('general.add_remove_saved_loc') }} >
+            {{$t('general.add_remove_saved_loc')}} >
           </div>
         </div>
         <div class="homeview--destinations">
@@ -100,8 +99,7 @@
               />
               <gmap-autocomplete
                 id="destination"
-                :value="dropOffRegion"
-                @input="setDropOffRegion($event)"
+                v-model="dropOffRegion"
                 :options="map_options"
                 :placeholder="$t('general.enter_region')"
                 :select-first-on-enter="true"
@@ -127,7 +125,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              {{ $t('general.saved_and_frequently_used') }}
+              {{$t('general.saved_and_frequently_used')}}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -167,7 +165,7 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{ $t('general.add_remove_saved_loc') }} >
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
@@ -176,8 +174,7 @@
             <no-ssr placeholder="">
               <gmap-autocomplete
                 id="return"
-                :value="locations[1]"
-                @input="setLocationObject($event, 1)"
+                v-model="locations[1]"
                 :options="map_options"
                 :placeholder="$t('general.return_location')"
                 :select-first-on-enter="true"
@@ -203,7 +200,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              {{ $t('general.saved_and_frequently_used') }}
+              {{$t('general.saved_and_frequently_used')}}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -243,19 +240,19 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{ $t('general.add_remove_saved_loc') }} >
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
         <div v-if="fileUploadStatus">
           <p class="home-view--upload-par">
-            {{ $t('general.or') }}
+            {{$t('general.or')}}
           </p>
           <p
             class="home-view--upload-button"
             @click="initiateUpload()"
           >
-            {{ $t('general.upload_file') }}
+           {{$t('general.upload_file')}}
           </p>
         </div>
       </div>
@@ -278,7 +275,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          {{ $t('general.continue') }}
+          {{$t('general.continue')}}
         </button>
       </div>
     </div>
@@ -509,15 +506,7 @@ export default {
       this.activeEl = '';
       this.trackLocationSelect(place.name, 2);
       this.attemptPriceRequest();
-      this.sendGA4Events('add_region', { drop_off_region: place.name });
-    },
-
-    setLocationObject(event, index) {
-      this.locations[index] = event.target.value;
-    },
-
-    setDropOffRegion(event) {
-      this.dropOffRegion = event.target.value;
+      this.sendGA4Events('add_region', {'drop_off_region': place.name});
     },
 
     ...mapActions({
@@ -529,7 +518,7 @@ export default {
       this.$root.$emit('Upload status', true);
     },
 
-    addFocusListener() {
+addFocusListener() {
       document.addEventListener('focus', this.focusedInput, true);
       document.addEventListener('blur', this.blurredInput, true);
       document.querySelector('.homeview--form__scrollable').addEventListener('scroll', this.scrollingDiv, true);
@@ -689,10 +678,10 @@ export default {
         },
       };
       if (index === 0) {
-        this.sendGA4Events('add_pick_up_location', { pick_up_location: place.name });
+        this.sendGA4Events('add_pick_up_location', {'pick_up_location': place.name});
       } else if (index === 1) {
         pathObj.waypoint_type = 'RETURN';
-        this.sendGA4Events('add_return_location', { return_location: place.name });
+        this.sendGA4Events('add_return_location', {'return_location': place.name});
       }
       if (type === 2) {
         this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);

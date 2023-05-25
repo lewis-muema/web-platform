@@ -19,7 +19,6 @@
             <gmap-autocomplete
               id="pickup"
               :value="locations[0]"
-              @input="setLocationObject($event, 0)"
               :options="map_options"
               :placeholder="$t('general.enter_pickup_location')"
               :select-first-on-enter="true"
@@ -37,7 +36,7 @@
             />
           </no-ssr>
         </div>
-        <div
+               <div
           v-if="activeEl === 'pickup' && hiddenSuggestionsStatus"
           class="homeview--input-suggestions"
           :style="{ marginTop: `${(scrollFromTop - 15)}px`, width: `${suggestionsWidth}px`, left: `${leftDisplacement}px` }"
@@ -45,7 +44,7 @@
           @mouseout="activeSuggestionList = false"
         >
           <div class="homeview--input-suggetions-title">
-            {{ $t('general.saved_and_frequently_used') }}
+            {{$t('general.saved_and_frequently_used')}}
           </div>
           <div
             v-for="(suggestion, index) in pickUpSuggestions"
@@ -85,7 +84,7 @@
             class="homeview--input-suggetions-link"
             @click="triggerLocationsManagementPopUp(true, 'PICKUP')"
           >
-            {{ $t('general.add_remove_saved_loc') }} >
+            {{$t('general.add_remove_saved_loc')}} >
           </div>
         </div>
         <div class="homeview--destinations">
@@ -100,7 +99,6 @@
               <gmap-autocomplete
                 id="destination"
                 :value="locations[1]"
-                @input="setLocationObject($event, 1)"
                 :options="map_options"
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
@@ -126,7 +124,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              {{ $t('general.saved_and_frequently_used') }}
+              {{$t('general.saved_and_frequently_used')}}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -166,12 +164,12 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{ $t('general.add_remove_saved_loc') }} >
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
         <div
-          v-for="(n, i) in get_extra_destinations"
+          v-for="n in get_extra_destinations"
           :key="n + 1"
           class="homeview--destinations"
           :data-index="n + 1"
@@ -186,13 +184,12 @@
               />
               <gmap-autocomplete
                 :id="`destination${n}`"
-                :value="locations[i + 2]"
-                @input="setLocationObject($event, i + 2)"
+                :value="locations[n + 1]"
                 :options="map_options"
                 :placeholder="$t('general.enter_destination_location')"
                 :select-first-on-enter="true"
                 class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input"
-                @place_changed="setLocation($event, i + 2, 1)"
+                @place_changed="setLocation($event, n + 1, 1)"
                 @keyup="checkChangeEvents($event, (n = 1))"
                 @change="checkChangeEvents($event, n + 1)"
               />
@@ -213,7 +210,7 @@
             @mouseout="activeSuggestionList = false"
           >
             <div class="homeview--input-suggetions-title">
-              {{ $t('general.saved_and_frequently_used') }}
+              {{$t('general.saved_and_frequently_used')}}
             </div>
             <div
               v-for="(suggestion, index) in destinationSuggestions"
@@ -222,7 +219,7 @@
               :class="activeRow === index ? 'homeview--input-suggestion-rows-active' : ''"
               @mouseover="activeRow = index"
               @mouseout="activeRow = ''"
-              @click="setLocation(suggestion, i + 2, 2)"
+              @click="setLocation(suggestion, n + 1, 2)"
             >
               <span class="homeview--input-suggestion-icon-holder">
                 <font-awesome-icon
@@ -253,7 +250,7 @@
               class="homeview--input-suggetions-link"
               @click="triggerLocationsManagementPopUp(true, 'DROPOFF')"
             >
-              {{ $t('general.add_remove_saved_loc') }} >
+              {{$t('general.add_remove_saved_loc')}} >
             </div>
           </div>
         </div>
@@ -273,7 +270,7 @@
           <a
             class="homeview--add"
             @click="addExtraDestinationWrapper()"
-          >{{ $t('general.add_destination') }}</a>
+          >{{$t('general.add_destination')}}</a>
         </div>
       </div>
       <div
@@ -301,18 +298,18 @@
               allow_add_destination ? '' : 'homeview-locations-options-multi-destination-inactive'
             "
             @click="addExtraDestinationWrapper()"
-          >{{ $t('general.add_destination') }}</a>
+          >{{$t('general.add_destination')}}</a>
         </div>
       </div>
       <div v-if="$route.path === '/orders/dedicated/multi-destination' && fileUploadStatus">
         <p class="home-view--upload-par">
-          {{ $t('general.or') }}
+          {{$t('general.or')}}
         </p>
         <p
           class="home-view--upload-button"
           @click="initiateUpload()"
         >
-          {{ $t('general.upload_file') }}
+          {{$t('general.upload_file')}}
         </p>
       </div>
       <div
@@ -333,7 +330,7 @@
           type="button"
           class="button--primary-inactive home-view--place-order"
         >
-          {{ $t('general.confirm_order') }}
+          {{$t('general.confirm_order')}}
         </button>
       </div>
     </div>
@@ -573,10 +570,6 @@ export default {
       this.$root.$emit('Upload status', true);
     },
 
-    setLocationObject(event, index) {
-      this.locations[index] = event.target.value;
-    },
-
     sendGA4Events(label, params) {
       const eventPayload = {
         name: label,
@@ -723,25 +716,25 @@ export default {
       };
       if (this.$route.path === '/orders/dedicated/multi-destination') {
         if (index === 0) {
-          this.sendGA4Events('add_pick_up_location', { multi_destination_pick_up: place.name });
+          this.sendGA4Events('add_pick_up_location', {multi_destination_pick_up: place.name});
         } else if (index === 1) {
-          this.sendGA4Events('add_drop_off_location', { multi_destination_drop_off: place.name });
+          this.sendGA4Events('add_drop_off_location', {multi_destination_drop_off: place.name});
         } else {
-          this.sendGA4Events('add_destination', { multi_destination_drop_off: place.name });
+          this.sendGA4Events('add_destination', {multi_destination_drop_off: place.name});
         }
       } else {
         if (type === 2) {
           this.trackMixpanelEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`, pathObj);
-          this.sendGA4Events('select_saved_location', { pick_up_location: place.name });
+          this.sendGA4Events('select_saved_location', {pick_up_location: place.name});
           this.fireGAEvent(`Populate ${index === 0 ? 'pickup' : 'destination'} input with location suggestion`);
         }
         if (index === 0) {
-          this.sendGA4Events('add_pickup', { pick_up_location: place.name });
+          this.sendGA4Events('add_pickup', {pick_up_location: place.name});
         } else if (index === 1) {
-          this.sendGA4Events('add_destination', { drop_off_location: place.name });
-          this.sendGA4Events('add_location', { drop_off_location: place.name });
+          this.sendGA4Events('add_destination', {drop_off_location: place.name});
+          this.sendGA4Events('add_location', {drop_off_location: place.name});
         } else {
-          this.sendGA4Events('add_extra_destination', { extra_destination: place.name });
+          this.sendGA4Events('add_extra_destination', {extra_destination: place.name});
         }
       }
       this.hiddenSuggestionsStatus = true;

@@ -461,11 +461,11 @@
         </div>
       </el-dialog>
       <map-component />
-      <FbuChildOrders v-if="$route.name === 'freight_order_placement'" />
+      <FbuChildOrders v-if="this.$route.name === 'freight_order_placement'" />
       <ongoing-component
         v-if="
-          $route.name !== 'freight_order_tracking' &&
-            $route.name !== 'freight_order_placement'
+          this.$route.name !== 'freight_order_tracking' &&
+            this.$route.name !== 'freight_order_placement'
         "
       />
       <NPSFooter v-if="!nps_status" />
@@ -931,7 +931,7 @@ export default {
         data => data.industry_id === this.industry_type,
       );
     },
-    businessCategory() {
+    businessCategory () {
       return this.businessCategories.filter(
         data => data.id === this.business_category_option,
       );
@@ -1608,9 +1608,9 @@ export default {
           this.displayNotification(notification);
           this.trackMixpanelEvent('Save location suggestion', data);
           if (this.waypoint_type === 'PICKUP') {
-            this.sendGA4Events('save_pick_up_location', { saved_pick_up_location: this.suggestion.name });
+            this.sendGA4Events('save_pick_up_location', {saved_pick_up_location : this.suggestion.name});
           } else {
-            this.sendGA4Events('save_destination_location', { saved_destination_location: this.suggestion.name });
+            this.sendGA4Events('save_destination_location', {saved_destination_location : this.suggestion.name});
           }
           this.triggerGAEvent('Save location suggestion', data);
           this.location = '';
@@ -1647,7 +1647,7 @@ export default {
           };
           this.displayNotification(notification);
           this.trackMixpanelEvent('Remove location suggestion', data);
-          this.sendGA4Events('remove_saved_location', { removed_location: suggestion.name });
+          this.sendGA4Events('remove_saved_location', {removed_location : suggestion.name});
           this.triggerGAEvent('Remove location suggestion', data);
           this.location = '';
           this.suggestion = '';
@@ -1760,7 +1760,7 @@ export default {
     selectCard(tab, code, type) {
       this.activeTab = tab;
       this.primary_business_unit = code;
-      this.sendGA4Events('select_delivery_options', { vehicle_type: type });
+      this.sendGA4Events('select_delivery_options', {vehicle_type : type});
     },
     getVendorIcon(id) {
       return `https://images.sendyit.com/web_platform/vendor_type/side/v2/${id}.svg`;

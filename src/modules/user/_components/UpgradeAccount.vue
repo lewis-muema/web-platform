@@ -11,11 +11,11 @@
         class="upgrade-account-inner"
       >
         <div class="upgrade-account-top">
-          {{ $t('general.manage_business_account') }}
+          {{$t('general.manage_business_account')}}
         </div>
 
         <div class="upgrade-account-text">
-          {{ $t('general.account_is_free') }}
+         {{$t('general.account_is_free')}}
         </div>
 
         <div class="">
@@ -24,10 +24,10 @@
             label="1"
             class="radio-options"
           >
-            {{ $t('general.use_current_login_details') }}
+            {{$t('general.use_current_login_details')}}
             <div class="upgrade-account-text--inner">
               <!-- Use your email {{ userData() }} and password to login -->
-              {{ $t('general.use_email_password_login', { userData : userData() }) }}
+              {{$t('general.use_email_password_login', { userData : userData() })}}
             </div>
           </el-radio>
           <el-radio
@@ -35,9 +35,9 @@
             label="2"
             class="radio-options"
           >
-            {{ $t('general.use_different_login_details') }}
+            {{$t('general.use_different_login_details')}}
             <div class="upgrade-account-text--inner">
-              {{ $t('general.use_different_email_password_login') }}
+             {{$t('general.use_different_email_password_login')}}
             </div>
           </el-radio>
         </div>
@@ -52,7 +52,7 @@
             class="hiddeny"
           >
           <span class="upgrade-account-text--inner deactivate-details">
-            {{ $t('general.deativate_personal_account') }}
+             {{$t('general.deativate_personal_account')}}
           </span>
         </div>
 
@@ -80,12 +80,12 @@
         <div
           class="upgrade-account-top upgrade-margin"
         >
-          {{ $t('general.create_business_account') }}
+          {{$t('general.create_business_account')}}
         </div>
 
         <div class="upgrade-input">
           <div class="sign-up-verification-holder dimen-sign-up2">
-            <label>{{ $t('general.your_business_name') }}</label>
+            <label>{{$t('general.your_business_name')}}</label>
             <input
               v-model="cop_name"
               class="input-control upgrade-form"
@@ -98,7 +98,7 @@
 
           <div v-if="radio === '2'">
             <div class="sign-up-verification-holder dimen-sign-up2">
-              <label>{{ $t('general.your_business_email_address') }}</label>
+              <label>{{$t('general.your_business_email_address')}}</label>
               <input
                 v-model="cop_email"
                 class="input-control upgrade-form"
@@ -110,7 +110,7 @@
             </div>
 
             <div class="sign-up-verification-holder dimen-sign-up2">
-              <label>{{ $t('general.biz_account_password') }}</label>
+              <label>{{$t('general.biz_account_password')}}</label>
               <input
                 v-model="cop_password"
                 class="input-control upgrade-form"
@@ -123,7 +123,7 @@
           </div>
 
           <div class="sign-up-verification-holder dimen-sign-up2">
-            <label>{{ $t('general.biz_vat_compliant') }}</label>
+            <label>{{$t('general.biz_vat_compliant')}}</label>
             <el-select
               v-model="tax_compliance"
               :placeholder="$t('general.select')"
@@ -142,7 +142,7 @@
             v-if="tax_compliance"
             class="sign-up-verification-holder dimen-sign-up2"
           >
-            <label>{{ $t('general.enter_biz_kra_pin') }}</label>
+            <label>{{$t('general.enter_biz_kra_pin')}}</label>
             <input
               v-model="kra_pin"
               class="input-control upgrade-form"
@@ -155,13 +155,13 @@
               v-show="!valid_kra_pin"
               class="invalid-pin"
             >
-              {{ $t('general.enter_valid_kra') }}
+              {{$t('general.enter_valid_kra')}}
             </span>
           </div>
           <div class="primary-vehicle-outline">
-            <label> {{ $t('general.select_primary_type_vehicle_use') }}</label>
+            <label> {{$t('general.select_primary_type_vehicle_use')}}</label>
             <p class="extra-info">
-              {{ $t('general.not_restrict_you') }}
+              {{$t('general.not_restrict_you')}}
             </p>
 
             <div class="vendors-outerline">
@@ -225,24 +225,24 @@
         <div
           class="upgrade-account-top upgrade-margin upgrade-details-header"
         >
-          {{ $t('general.confirm_biz_account') }}
+          {{$t('general.confirm_biz_account')}}
         </div>
 
         <div class="upgrade-input">
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">{{ $t('general.email_address') }}</label>
+            <label class="summary-ouline">{{$t('general.email_address')}}</label>
             <p class="user_details">
               {{ businessEmail() }}
             </p>
           </div>
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">{{ $t('general.business_name') }}</label>
+            <label class="summary-ouline">{{$t('general.business_name')}}</label>
             <p class="user_details">
               {{ cop_name }}
             </p>
           </div>
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">{{ $t('general.does_biz_file_vat') }}</label>
+            <label class="summary-ouline">{{$t('general.does_biz_file_vat')}}</label>
             <p class="user_details">
               {{ businessTaxCompliance() }}
             </p>
@@ -251,13 +251,13 @@
             v-if="tax_compliance"
             class="sign-up-verification-holder dimen-summary"
           >
-            <label class="summary-ouline">{{ $t('general.biz_kra_pin') }}</label>
+            <label class="summary-ouline">{{$t('general.biz_kra_pin')}}</label>
             <p class="user_details">
               {{ kra_pin }}
             </p>
           </div>
           <div class="sign-up-verification-holder dimen-summary">
-            <label class="summary-ouline">{{ $t('general.primary_vehicle') }}</label>
+            <label class="summary-ouline">{{$t('general.primary_vehicle')}}</label>
             <div
               class="primary-vehicle-wrapper"
             >
@@ -288,6 +288,7 @@
 import { mapActions } from 'vuex';
 import SessionMxn from '../../../mixins/session_mixin';
 import NotificationMxn from '../../../mixins/notification_mixin';
+
 
 export default {
   mixins: [SessionMxn, NotificationMxn],
@@ -417,7 +418,7 @@ export default {
       } else if (this.tax_compliance && this.kra_pin === '') {
         this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.enter_kra_pin'));
       } else if (this.tax_compliance && !this.valid_kra_pin) {
-        this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.enter_valid_kra'));
+        this.doNotification(2, this.$t('general.upgrade_account'),  this.$t('general.enter_valid_kra'));
       } else if (this.primary_business_unit === '') {
         this.doNotification(2, this.$t('general.upgrade_account'), this.$t('general.select_primary_type_vehicle'));
       } else {
@@ -498,7 +499,7 @@ export default {
                 'VAT Compliant': this.tax_compliance,
               });
             }
-            this.doNotification(1, this.$t('general.account_upgraded_successful'), this.$t('general.redirected_to_login'));
+            this.doNotification(1, this.$t('general.account_upgraded_successful'), this.$t('general.redirected_to_login'),);
             const baseUrl = window.location.origin;
             const loginUrl = `${baseUrl}/sign_in`;
 
@@ -540,7 +541,7 @@ export default {
             'VAT Compliant': this.tax_compliance,
             'Failure Reason': msg,
           });
-        },
+        }
       );
     },
     getVendorIcon(id) {

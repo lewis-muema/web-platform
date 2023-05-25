@@ -6,29 +6,17 @@
       </div>
       <div v-else>
         <div>
-          <transition
-            name="fade"
-            mode="out-in"
-          >
+          <transition name="fade" mode="out-in">
             <div v-if="!getTrackMoreInfo && tracking_data !== undefined">
-              <div
-                v-if="!loading"
-                class="infobar--outer"
-              >
+              <div v-if="!loading" class="infobar--outer">
                 <div class="infobar--content infobar--content-padded">
                   <div class="infobar--photo infobar--content infobar--item infobar--item-bordered">
-                    <img
-                      class="rimg"
-                      :src="tracking_data.rider.rider_photo"
-                    >
+                    <img class="rimg" :src="tracking_data.rider.rider_photo" />
                   </div>
                   <div
                     class="infobar--content infobar--item infobar--driver infobar--item-bordered"
                   >
-                    <div
-                      v-if="tracking_data.confirm_status > 0"
-                      class="infobar--driver-details"
-                    >
+                    <div v-if="tracking_data.confirm_status > 0" class="infobar--driver-details">
                       <div class="">
                         {{ tracking_data.rider.rider_name }} - {{ tracking_data.rider.rider_phone }}
                       </div>
@@ -37,14 +25,8 @@
                         {{ tracking_data.rider.number_plate }}
                       </div>
                     </div>
-                    <div
-                      v-else
-                      class="infobar--driver-details"
-                    >
-                      <div
-                        v-if="!tracking_data.eta_data.delayed"
-                        class=""
-                      >
+                    <div v-else class="infobar--driver-details">
+                      <div class="" v-if="!tracking_data.eta_data.delayed">
                         {{ tracking_data.description_head }}
                       </div>
                       <div class="marketing-message-align">
@@ -53,13 +35,10 @@
                     </div>
                   </div>
                   <div
-                    v-if="!externalTracking"
                     class="infobar--content infobar--item infobar--order infobar--item-bordered infobar--order-align"
+                    v-if="!externalTracking"
                   >
-                    <div
-                      v-if="getStatus === 'Pending'"
-                      class=""
-                    >
+                    <div v-if="getStatus === 'Pending'" class="">
                       <div
                         v-if="
                           [20, 25].includes(tracking_data.rider.vendor_id) &&
@@ -67,7 +46,7 @@
                             !tracking_data.fixed_cost
                         "
                       >
-                        {{ $t('general.minimum_amount') }} :
+                        {{$t('general.minimum_amount')}} :
                         {{
                           tracking_data.price_tier.currency
                             ? tracking_data.price_tier.currency
@@ -100,7 +79,7 @@
                   </div>
 
                   <div
-                    v-if="$route.name !== 'tracking_external'"
+                    v-if="this.$route.name !== 'tracking_external'"
                     class="infobar--content infobar--item infobar--actions"
                   >
                     <div v-if="false">
@@ -108,7 +87,7 @@
                         <i class="el-icon-sold-out" />
                       </div>
                       <div class="infobar--actions-text">
-                        {{ $t('general.free_delivery') }}
+                        {{$t('general.free_delivery')}}
                       </div>
                     </div>
                     <div v-if="false">
@@ -116,18 +95,15 @@
                         <i class="el-icon-share" />
                       </div>
                       <div class="infobar--actions-text">
-                        {{ $t('general.share_status') }}
+                        {{$t('general.share_status')}}
                       </div>
                     </div>
-                    <div
-                      class="infobar--actions-hover"
-                      @click="maximiseInfoDetails()"
-                    >
+                    <div class="infobar--actions-hover" @click="maximiseInfoDetails()">
                       <div class="infobar--actions-icon">
                         <i class="el-icon-circle-plus-outline" />
                       </div>
                       <div class="infobar--actions-text">
-                        {{ $t('general.expand_info') }}
+                       {{$t('general.expand_info')}}
                       </div>
                     </div>
                     <div
@@ -139,7 +115,7 @@
                         <i class="el-icon-circle-close-outline" />
                       </div>
                       <div class="infobar--actions-text">
-                        {{ $t('general.cancel_order') }}
+                       {{$t('general.cancel_order')}}
                       </div>
                     </div>
                   </div>
@@ -149,63 +125,39 @@
           </transition>
         </div>
 
-        <div
-          v-if="getTrackMoreInfo && tracking_data !== undefined"
-          class="truck-info-component"
-        >
-          <transition
-            name="fade"
-            mode="out-in"
-          >
-            <div
-              v-if="!loading"
-              class="infobar--outer"
-            >
-              <div
-                key="prime"
-                class="infobar-content infobar--content-padded"
-              >
+        <div v-if="getTrackMoreInfo && tracking_data !== undefined" class="truck-info-component">
+          <transition name="fade" mode="out-in">
+            <div v-if="!loading" class="infobar--outer">
+              <div key="prime" class="infobar-content infobar--content-padded">
                 <!-- Tracking more Info top bar -->
 
-                <HeaderSection :tracking-data="tracking_data" />
+                <HeaderSection :trackingData="tracking_data" />
 
                 <el-row
                   :gutter="20"
                   class="infobar-content infobar--truck-cont-item infobar--truck-cont-padding"
                 >
-                  <LocationsSection :tracking-data="tracking_data" />
-                  <InstructionsSection :tracking-data="tracking_data" />
-                  <OrderTimelineSection :tracking-data="tracking_data" />
+                  <LocationsSection :trackingData="tracking_data" />
+                  <InstructionsSection :trackingData="tracking_data" />
+                  <OrderTimelineSection :trackingData="tracking_data" />
                 </el-row>
 
-                <FooterSection
-                  v-if="getStatus !== 'Pending'"
-                  :tracking-data="tracking_data"
-                />
+                <FooterSection v-if="getStatus !== 'Pending'" :trackingData="tracking_data" />
               </div>
             </div>
           </transition>
         </div>
 
         <div>
-          <transition
-            name="fade"
-            mode="out-in"
-          >
+          <transition name="fade" mode="out-in">
             <div class="">
               <!-- Order Cancellation Dialog -->
 
-              <el-dialog
-                :visible.sync="cancelOption"
-                class="cancelOptions"
-              >
+              <el-dialog :visible.sync="cancelOption" class="cancelOptions">
                 <div class="cancelOptions--content-wrap">
-                  <div
-                    v-if="!cancellation_step"
-                    class=""
-                  >
+                  <div class="" v-if="!cancellation_step">
                     <div class="cancellation-title">
-                      {{ $t('general.cancel_order') }} ?
+                      {{$t('general.cancel_order')}} ?
                     </div>
                     <div class="cancellation-info--outer">
                       <div class="cancellation-info--inner">
@@ -217,46 +169,33 @@
                         />
                         <div
                           v-if="!cancellation_fee"
-                          id="cancel-reason-subtitle"
                           class="cancel-reason-subtitle-new"
+                          id="cancel-reason-subtitle"
                         >
-                          {{ $t('general.small_fee') }}
+                          {{$t('general.small_fee')}}
                         </div>
-                        <div
-                          v-else
-                          id="cancel-reason-subtitle"
-                          class="cancel-reason-subtitle-new"
-                        >
+                        <div v-else class="cancel-reason-subtitle-new" id="cancel-reason-subtitle">
                           {{ getCancellationInfo() }}
                         </div>
                       </div>
                     </div>
                     <div class="cancellation-subheading">
-                      {{ $t('general.before_you_cancel') }}
+                      {{$t('general.before_you_cancel')}}
                     </div>
                   </div>
                   <div v-if="!cancellation_step">
                     <div class="edit-information-outer">
-                      <div
-                        v-if="checkEditOption()"
-                        class="cancellation-edit-options align-inner-bar"
-                      >
+                      <div class="cancellation-edit-options align-inner-bar" v-if="checkEditOption()">
                         <i class="el-icon-location edit-location-icon" />
                         <div>
-                          {{ $t('general.entered_wrong_locations') }}
-                          <div
-                            class="cancellation-edit-inner"
-                            @click="showEditLocationsDialog()"
-                          >
-                            {{ $t('general.edit_locations') }}
+                          {{$t('general.entered_wrong_locations')}}
+                          <div class="cancellation-edit-inner" @click="showEditLocationsDialog()">
+                            {{$t('general.edit_locations')}}
                           </div>
                         </div>
                       </div>
 
-                      <div
-                        v-if="checkScheduleOption()"
-                        class="cancellation-edit-options align-inner-bar"
-                      >
+                      <div class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
                         <font-awesome-icon
                           icon="clock"
                           size="xs"
@@ -264,31 +203,23 @@
                           width="10px"
                         />
                         <div>
-                          {{ $t('general.not_available') }}
-                          <div
-                            class="cancellation-edit-inner"
-                            @click="showEditPickUpTime()"
-                          >
-                            {{ $t('general.schedule_order') }}
+                          {{$t('general.not_available')}}
+                          <div class="cancellation-edit-inner" @click="showEditPickUpTime()">
+                          {{$t('general.schedule_order')}}
                           </div>
                         </div>
                       </div>
 
-                      <div
-                        v-if="checkScheduleOption()"
-                        class="cancellation-edit-options align-inner-bar"
-                      >
+                      <div class="cancellation-edit-options align-inner-bar" v-if="checkScheduleOption()">
                         <i class="el-icon-question edit-location-icon" />
-                        <div>
-                          {{ $t('general.isssue_with_order') }}
-                          <div
-                            class="cancellation-edit-inner"
-                            @click="showFCWidget()"
-                          >
-                            {{ $t('general.contact_support') }}
+                          <div>
+                            {{$t('general.isssue_with_order')}}
+                            <div class="cancellation-edit-inner" @click="showFCWidget()">
+                            {{$t('general.contact_support')}}
+                            </div>
                           </div>
-                        </div>
                       </div>
+
                     </div>
                     <div class="">
                       <div class="action--slide-desc">
@@ -298,7 +229,7 @@
                           class="action--slide-button cancellation-submit accept-cancell-btn"
                           @click="cancelStep(true)"
                         >
-                          {{ $t('general.continue_cancel') }}
+                          {{$t('general.continue_cancel')}}
                         </button>
                         <button
                           type="button"
@@ -306,60 +237,50 @@
                           class="action--slide-button cancellation-submit"
                           @click="cancelStep(false)"
                         >
-                          {{ $t('general.no_cancel') }}
+                          {{$t('general.no_cancel')}}
                         </button>
                       </div>
                     </div>
+
                   </div>
                   <div v-if="cancellation_step">
-                    <div
-                      class="cancel_step_back"
-                      @click="cancellation_step = false"
-                    >
+                    <div class="cancel_step_back" @click="cancellation_step = false">
                       <font-awesome-icon
                         icon="arrow-left"
                       />
-                      {{ $t('general.back') }}
+                      {{$t('general.back')}}
                     </div>
                     <div class="cancel-reason-title-name">
-                      {{ $t('general.why_cancel') }}
+                      {{$t('general.why_cancel')}}
                     </div>
                     <div v-for="reasons in cancellation_reasons">
-                      <div
-                        id="cancel-reason-text"
-                        class="cancel-reason-text"
-                      >
+                      <div class="cancel-reason-text" id="cancel-reason-text">
                         <div class="">
-                          <el-radio
-                            v-model="cancel_reason"
-                            :label="reasons.cancellation_reason_id"
-                          >
+                          <el-radio v-model="cancel_reason" :label="reasons.cancellation_reason_id">
                             {{ reasons.cancellation_reason }}
                           </el-radio>
                         </div>
                       </div>
                     </div>
 
-                    <div
-                      v-if="cancel_reason === 0"
-                      class="cancel-reason-input"
-                    >
+                    <div class="cancel-reason-input" v-if="cancel_reason === 0">
                       <el-input
-                        v-model="cancel_desc"
                         type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4 }"
                         :placeholder="$t('general.tell_us_why_cancel')"
-                      />
+                        v-model="cancel_desc"
+                      >
+                      </el-input>
                     </div>
 
                     <div class="cancel-reason-input">
                       <input
-                        v-model="inputCancelReason"
                         type="text"
+                        v-model="inputCancelReason"
                         class="cancel-reason-text-input"
                         name=""
                         :placeholder="$t('general.enter_cancel_reason')"
-                      >
+                      />
                     </div>
 
                     <div class="action--slide-desc-confirm">
@@ -369,7 +290,7 @@
                         class="action--slide-button cancellation-submit submit-cancell-btn"
                         @click="cancelOrder()"
                       >
-                        {{ $t('general.submitCapital') }}
+                        {{$t('general.submitCapital')}}
                       </button>
                       <button
                         type="button"
@@ -377,48 +298,37 @@
                         class="action--slide-button cancellation-submit"
                         @click="cancelToggle(true)"
                       >
-                        {{ $t('general.dont_cancel') }}
+                        {{$t('general.dont_cancel')}}
                       </button>
                     </div>
+
                   </div>
+
                 </div>
               </el-dialog>
 
               <!-- driver allocation dialogue -->
-              <el-dialog
-                :visible.sync="driverAllocatedOptions"
-                class="driverOptions"
-              >
+              <el-dialog :visible.sync="driverAllocatedOptions" class="driverOptions">
                 <i class="el-icon-info cancelOptions--info-icon" />
                 <div class="cancelOptions--info-message">
                   {{ cancelMessage }}
                 </div>
                 <div>
-                  <p class="cancel-option-or-alt">
-                    {{ $t('general.or') }}
-                  </p>
-                  <p
-                    class="cancel-option-confirm-alt"
-                    @click="cancelOrder()"
-                  >
-                    {{ $t('general.cancel_order') }}
-                  </p>
+                  <p class="cancel-option-or-alt">{{ $t('general.or') }}</p>
+                  <p class="cancel-option-confirm-alt" @click="cancelOrder()">{{ $t('general.cancel_order') }}</p>
                 </div>
               </el-dialog>
 
               <!-- Share ETA Dialog -->
 
-              <el-dialog
-                :visible.sync="shareOption"
-                class="cancelOptions"
-              >
+              <el-dialog :visible.sync="shareOption" class="cancelOptions">
                 <div class="">
                   <div class="share-text-option share-order-option share-notification-extend">
-                    {{ $t('general.share_eta_via_sms') }}
+                    {{$t('general.share_eta_via_sms')}}
                   </div>
-                  <div class="share-eta-divider" />
+                  <div class="share-eta-divider"></div>
                   <div class="share-text-option share-notification-extend share-eta-input-header">
-                    {{ $t('general.recipient_phone_number') }}
+                    {{$t('general.recipient_phone_number')}}
                   </div>
                 </div>
                 <div class="share-notification-extend share-eta-input">
@@ -438,34 +348,22 @@
                     class="action--slide-button input-phone"
                     @click="shareETASms()"
                   >
-                    {{ $t('general.submit') }}
+                    {{$t('general.submit')}}
                   </button>
                 </div>
               </el-dialog>
 
               <!-- Edit Order Dialog -->
 
-              <el-dialog
-                :visible.sync="editLocationOption"
-                class="cancelOptions"
-              >
-                <div
-                  id="cancel-reason-title"
-                  class="cancel-reason-title"
-                >
-                  {{ $t('general.add_change_destination') }}
+              <el-dialog :visible.sync="editLocationOption" class="cancelOptions">
+                <div class="cancel-reason-title" id="cancel-reason-title">
+                  {{$t('general.add_change_destination')}}
                 </div>
-                <div
-                  v-if="cancelMessage && locationOptions"
-                  class="cancel-reason-description"
-                >
+                <div class="cancel-reason-description" v-if="cancelMessage && locationOptions">
                   {{ cancelMessage }}
                 </div>
-                <div
-                  v-else
-                  class="cancel-reason-description"
-                >
-                  {{ $t('general.incur_cost_updating_loc') }}
+                <div class="cancel-reason-description" v-else>
+                  {{$t('general.incur_cost_updating_loc')}}
                 </div>
                 <div
                   ref="scrollable_locations"
@@ -485,10 +383,10 @@
                         placeholder="Enter a pickup location"
                         :select-first-on-enter="true"
                         class="input-control homeview--input-bundler__input input-control homeview--input-bundler__destination-input disabled-location-input"
-                        disabled
                         @place_changed="setLocation($event, 0)"
                         @keyup="checkChangeEvents($event, 0)"
                         @change="checkChangeEvents($event, 0)"
+                        disabled
                       />
                       <font-awesome-icon
                         icon="times"
@@ -577,10 +475,9 @@
                       class="sendy-blue homeview--row__font-awesome"
                       width="10px"
                     />
-                    <a
-                      class="homeview--add"
-                      @click="addExtraDestinationWrapper()"
-                    >{{ $t('general.add_destination') }}</a>
+                    <a class="homeview--add" @click="addExtraDestinationWrapper()"
+                      >{{$t('general.add_destination')}}</a
+                    >
                   </div>
                 </div>
                 <div
@@ -590,17 +487,14 @@
                 />
 
                 <div
-                  v-if="!price_request_validity && !location_loading"
                   class="homeview--row homeview--row__more-destinations
                  homeview-locations-options location-notify"
+                  v-if="!price_request_validity && !location_loading"
                 >
                   <div class="cancellation-info--outer">
                     <div class="cancellation-info--inner">
-                      <div
-                        id="cancel-reason-subtitle"
-                        class="cancel-reason-subtitle"
-                      >
-                        {{ message }}
+                      <div class="cancel-reason-subtitle" id="cancel-reason-subtitle">
+                          {{message}}
                       </div>
                     </div>
                   </div>
@@ -609,7 +503,7 @@
                 <div v-if="show_price_split && price_request_validity && !location_loading">
                   <div class="price-split-separator">
                     <div class="price-estimate-header">
-                      <i class="el-icon-circle-check price-summary-icon" /> {{ $t('general.price_update') }}
+                      <i class="el-icon-circle-check price-summary-icon"></i> {{$t('general.price_update')}}
                     </div>
                   </div>
 
@@ -619,7 +513,7 @@
                     <div class="price-split-container">
                       <div class="price-split-info">
                         <div class="price-split-icon-container">
-                          {{ $t('general.total_order_cost') }}
+                          {{$t('general.total_order_cost')}}
                         </div>
                         <div class="price-split-estimate-value">
                           <p class="">
@@ -630,7 +524,7 @@
                       </div>
                       <div class="price-split-info">
                         <div class="price-split-icon-container">
-                          {{ $t('general.amount_paid') }}
+                          {{$t('general.amount_paid')}}
                         </div>
                         <div class="price-split-estimate-value">
                           <p class="">
@@ -643,7 +537,7 @@
                       </div>
                       <div class="price-split-info">
                         <div class="price-split-icon-container price-split-info-cost">
-                          {{ $t('general.amount_due') }}
+                          {{$t('general.amount_due')}}
                         </div>
                         <div class="price-split-estimate-value">
                           <p class="price-split-info-cost">
@@ -658,31 +552,18 @@
                   </div>
                   <div class="payment-methods-section">
                     <div class="">
-                      <div
-                        class="payments-cursor"
-                        @click="do_set_payment_option()"
-                      >
+                      <div class="payments-cursor" @click="do_set_payment_option()">
                         <a>
                           <span class="">
-                            {{ $t('general.payment_options') }}
+                            {{$t('general.payment_options')}}
                           </span>
-                          <font-awesome-icon
-                            icon="chevron-down"
-                            :class="revertIcon"
-                            width="15px"
-                          />
+                          <font-awesome-icon icon="chevron-down" :class="revertIcon" width="15px" />
                         </a>
                       </div>
-                      <div
-                        v-if="paymentStatusOption"
-                        class="home-view-actions--note"
-                      >
+                      <div v-if="paymentStatusOption" class="home-view-actions--note">
                         <div class="" />
                         <div class="home-view-notes-wrapper">
-                          <div
-                            v-if="show_payment"
-                            class=""
-                          >
+                          <div v-if="show_payment" class="">
                             <span v-if="getOrderPaymentMethod === 1">
                               <div
                                 v-for="method in payment_methods"
@@ -699,7 +580,7 @@
                                       :value="method.payment_method_id"
                                       name="paymentOptions"
                                       class="payment__radio-button"
-                                    >
+                                    />
                                     <span class="payment-options-alignment">
                                       <p class="no-margin">{{ method.name }}</p>
                                     </span>
@@ -708,32 +589,30 @@
                                 <div class="home-view-notes-wrapper--item__value" />
                               </div>
 
-                              <div
-                                v-if="display_cards"
-                                class="card-accounts-list"
-                              >
+
+                              <div v-if="display_cards" class="card-accounts-list">
                                 <div class="payment-options-cards-container">
                                   <div v-if="!addCardStatus && get_saved_cards.length > 0">
-                                    <AdditionalCardFields
-                                      v-if="showAdditionalCardFields"
-                                      :additional-data="additionalData"
-                                      :transaction_id="transaction_id"
+                                    <AdditionalCardFields 
+                                      :additionalData="additionalData" 
+                                      :transaction_id="transaction_id" 
+                                      v-if="showAdditionalCardFields" 
                                       @continue="handleContinue"
                                       @continue3DS="handleContinue3DS"
                                     />
                                     <div v-else>
                                       <button
-                                        v-if="is3DS"
                                         type="button"
                                         class="button-primary paymentbody--input-button"
                                         style="margin-top: auto;"
                                         @click="init3DS"
+                                        v-if="is3DS"
                                       >
                                         Kindly click  here to proceed >>
                                       </button>
                                       <div v-else>
                                         <div v-if="deletedCardIndex === ''">
-                                          <p class="payment-options-cards-title">{{ $t('general.saved_cards') }}</p>
+                                          <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
                                           <div
                                             v-for="(cards, index) in get_saved_cards"
                                             :key="index"
@@ -744,7 +623,7 @@
                                               :value="index"
                                               type="radio"
                                               class="payment-options-saved-card-radio"
-                                            >
+                                            />
                                             {{ formatCardNumber(cards.pay_method_details) }}
                                             <font-awesome-icon
                                               icon="trash-alt"
@@ -762,26 +641,26 @@
                                                 class="payment-options-add-card-icon"
                                               />
                                             </span>
-                                            <span class="payment-options-add-card">{{ $t('general.add_new_card') }}</span>
+                                            <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
                                           </div>
                                         </div>
-                                        <div
-                                          v-else
-                                          class="delete-saved-card-dialogue"
-                                        >
+                                        <div v-else class="delete-saved-card-dialogue">
                                           <p class="delete-saved-card-dialogue-label">
-                                            {{ $t('general.sure_delete_card') }}
-                                            <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong>?
+                                            {{$t('general.sure_delete_card')}}
+                                            <strong>{{ get_saved_cards[deletedCardIndex].card }}</strong
+                                            >?
                                           </p>
                                           <p class="delete-saved-card-dialogue-label">
                                             <span
                                               class="delete-saved-card-dialogue-buttons"
                                               @click="deleteSavedCard(deletedCardIndex)"
-                                            >{{ $t('general.yes') }}</span>
+                                              >{{$t('general.yes')}}</span
+                                            >
                                             <span
                                               class="delete-saved-card-dialogue-buttons"
                                               @click="deletedCardIndex = ''"
-                                            >{{ $t('general.no') }}</span>
+                                              >{{$t('general.no')}}</span
+                                            >
                                           </p>
                                         </div>
                                       </div>
@@ -792,20 +671,20 @@
                                     class="VGS-form"
                                     @submit.prevent="onSubmit"
                                   >
-                                    <AdditionalCardFields
-                                      v-if="!loading_payment && showAdditionalCardFields"
-                                      :additional-data="additionalData"
-                                      :transaction_id="transaction_id"
+                                    <AdditionalCardFields 
+                                      :additionalData="additionalData" 
+                                      :transaction_id="transaction_id" 
+                                      v-if="!loading_payment && showAdditionalCardFields" 
                                       @continue="handleContinue"
                                       @continue3DS="handleContinue3DS"
                                     />
                                     <div v-else>
                                       <button
-                                        v-if="is3DS"
                                         type="button"
                                         class="button-primary paymentbody--input-button"
                                         style="margin-top: auto;"
                                         @click="init3DS"
+                                        v-if="is3DS"
                                       >
                                         Kindly click  here to proceed >>
                                       </button>
@@ -820,9 +699,9 @@
                                             icon="arrow-left"
                                             class="payment-options-add-card-icon"
                                           />
-                                          {{ $t('general.back') }}
+                                          {{$t('general.back')}}
                                         </span>
-                                        <p class="payment-options-cards-title">{{ $t('general.add_new_card') }}</p>
+                                        <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
                                         <div
                                           id="cc-number"
                                           class="form-group"
@@ -860,7 +739,7 @@
                                             >
                                             <span
                                               class="fake-checkbox-label-1"
-                                            >{{ $t('general.save_card_for_future_orders') }}</span>
+                                            >{{$t('general.save_card_for_future_orders')}}</span>
                                           </div>
                                         </div>
                                       </div>
@@ -869,23 +748,24 @@
                                 </div>
                               </div>
                               <div
+                                class="loading-margin"
                                 v-if="loading_payment"
                                 v-loading="loading_payment"
-                                class="loading-margin"
                                 :element-loading-text="transactionText"
                                 element-loading-spinner="el-icon-loading"
-                              />
+                              >
+                              </div>
                             </span>
                           </div>
                           <span v-else-if="getOrderPaymentMethod === 2">
                             <div class="edit-locations-payments--postpay">
-                              <p>{{ $t('general.post_pay_account') }}</p>
-                              <p>{{ $t('general.delivery_cost_added_to_balance') }}</p>
+                              <p>{{$t('general.post_pay_account')}}</p>
+                              <p>{{$t('general.delivery_cost_added_to_balance')}}</p>
                             </div>
                           </span>
                           <span v-else>
                             <div class="edit-locations-payments--postpay">
-                              <p>{{ $t('general.delivery_cost_charged_from_balance') }}</p>
+                              <p>{{$t('general.delivery_cost_charged_from_balance')}}</p>
                             </div>
                           </span>
                         </div>
@@ -897,29 +777,20 @@
                         class="edit-payment-loading-container"
                       />
 
-                      <div
-                        v-if="show_price_split && price_request_validity
-                          && !location_loading && !loading_payment"
-                      >
+                      <div v-if="show_price_split && price_request_validity
+                        && !location_loading && !loading_payment">
                         <button
                           type="button"
                           class="button-primary edit-locations--place-order"
                           name="button"
                           @click="updateLocations()"
                         >
-                          {{ $t('general.update_locations') }}
+                          {{$t('general.update_locations')}}
                         </button>
                       </div>
                       <div v-if="locationOptions">
-                        <p class="cancel-option-or-alt">
-                          {{ $t('general.or') }}
-                        </p>
-                        <p
-                          class="cancel-option-confirm-alt"
-                          @click="cancelOrder()"
-                        >
-                          {{ $t('general.cancel_order') }}
-                        </p>
+                        <p class="cancel-option-or-alt">{{ $t('general.or') }}</p>
+                        <p class="cancel-option-confirm-alt" @click="cancelOrder()">{{ $t('general.cancel_order') }}</p>
                       </div>
                     </div>
                   </div>
@@ -927,7 +798,7 @@
               </el-dialog>
 
               <el-dialog
-                :visible.sync="editInstructionsOption"
+               :visible.sync="editInstructionsOption"
                 width="30%"
                 class="updateNotificationsDialog"
                 :modal-append-to-body="false"
@@ -955,7 +826,7 @@
                       </div>
                       <div class="">
                         <div class="add-instructions-setup-contact">
-                          {{ $t('general.contact_person') }}
+                         {{$t('general.contact_person')}}
                         </div>
                         <div class="" />
                         <div
@@ -977,13 +848,13 @@
                       </div>
                       <div class="notify_recipient">
                         <input
-                          v-model="send_sms"
                           type="checkbox"
                           name="u_terms"
                           class="send_sms-checkbox"
-                        >
+                          v-model="send_sms"
+                        />
                         <span>
-                          {{ $t('general.notify_them_of_pickup') }}
+                          {{$t('general.notify_them_of_pickup')}}
                         </span>
                       </div>
                     </div>
@@ -996,26 +867,23 @@
                         type="submit"
                         :value="$t('general.update_instructions')"
                         @click="saveUpdatedInstructions()"
-                      >
+                      />
                     </div>
                   </div>
                 </div>
               </el-dialog>
 
               <el-dialog
-                :visible.sync="editScheduledTimeOption"
+               :visible.sync="editScheduledTimeOption"
                 width="30%"
                 class="updateNotificationsDialog scheduleDialog"
                 :modal-append-to-body="false"
               >
                 <div class="add-instructions-outer">
                   <p class="add-instructions-setup schedule_time_outer-mod">
-                    {{ $t('general.reschedule_order') }}
+                    {{$t('general.reschedule_order')}}
                   </p>
-                  <p
-                    v-if="cancelMessage && rescheduleOptions"
-                    class="schedule_time_message"
-                  >
+                  <p class="schedule_time_message" v-if="cancelMessage && rescheduleOptions">
                     {{ cancelMessage }}
                   </p>
                   <div class="">
@@ -1050,22 +918,16 @@
                         type="submit"
                         :value="$t('general.schedule_order')"
                         @click="updateScheduledTime()"
-                      >
+                      />
                     </div>
                   </div>
                   <div v-if="rescheduleOptions">
-                    <p class="cancel-option-or-alt">
-                      {{ $t('general.or') }}
-                    </p>
-                    <p
-                      class="cancel-option-confirm-alt"
-                      @click="cancelOrder()"
-                    >
-                      {{ $t('general.cancel_order') }}
-                    </p>
+                    <p class="cancel-option-or-alt">{{ $t('general.or') }}</p>
+                    <p class="cancel-option-confirm-alt" @click="cancelOrder()">{{ $t('general.cancel_order') }}</p>
                   </div>
                 </div>
               </el-dialog>
+
             </div>
           </transition>
         </div>
@@ -1077,9 +939,22 @@
 <script>
 import _ from 'lodash';
 import NoSSR from 'vue-no-ssr';
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations ,mapActions} from 'vuex';
+import TimezoneMxn from '../../../../../mixins/timezone_mixin';
+import EventsMixin from '../../../../../mixins/events_mixin';
+import NotificationMxn from '../../../../../mixins/notification_mixin';
+import InterCountyWindow from './InterCountyWindow.vue';
+import Mcrypt from '../../../../../mixins/mcrypt_mixin';
+import PaymentMxn from '../../../../../mixins/payment_mixin';
+import WaypointMxn from '../../../../../mixins/waypoint_mixin';
+import FooterSection from './InfoBarSegments/InfoBarFooterComponent.vue';
+import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
+import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
+import InstructionsSection from './InfoBarSegments/InfoBarInstructionsComponent.vue';
+import OrderTimelineSection from './InfoBarSegments/InfoBarOrderTimelineComponent.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 import {
   faPlus,
   faMapMarkerAlt,
@@ -1093,20 +968,6 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { resolve } from 'path';
-import TimezoneMxn from '../../../../../mixins/timezone_mixin';
-import EventsMixin from '../../../../../mixins/events_mixin';
-import NotificationMxn from '../../../../../mixins/notification_mixin';
-import InterCountyWindow from './InterCountyWindow.vue';
-import Mcrypt from '../../../../../mixins/mcrypt_mixin';
-import PaymentMxn from '../../../../../mixins/payment_mixin';
-import WaypointMxn from '../../../../../mixins/waypoint_mixin';
-import FooterSection from './InfoBarSegments/InfoBarFooterComponent.vue';
-import HeaderSection from './InfoBarSegments/InfoBarHeaderComponent.vue';
-import LocationsSection from './InfoBarSegments/InfoBarLocationsComponent.vue';
-import InstructionsSection from './InfoBarSegments/InfoBarInstructionsComponent.vue';
-import OrderTimelineSection from './InfoBarSegments/InfoBarOrderTimelineComponent.vue';
-
-const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 library.add(
   faPlus,
@@ -1128,7 +989,7 @@ const moment = require('moment');
 export default {
   name: 'InfoWindow',
   components: {
-    'no-ssr': NoSSR,
+   'no-ssr': NoSSR,
     InterCountyWindow,
     FooterSection,
     HeaderSection,
@@ -1164,10 +1025,10 @@ export default {
       cancellation_fee: false,
       cancellation_amount: 0,
       cancellation_message: '',
-      editLocationOption: false,
-      editInstructionsOption: false,
-      editScheduledTimeOption: false,
-      storedNotes: {},
+      editLocationOption : false,
+      editInstructionsOption : false,
+      editScheduledTimeOption : false,
+      storedNotes : {},
       show_destinations: false,
       location_loading: false,
       locations: [],
@@ -1187,34 +1048,34 @@ export default {
       small_vendors: [1, 22, 21, 23, 28],
       medium_vendors: [2, 3],
       large_vendors: [6, 10, 13, 14, 17, 18, 19, 20, 25],
-      tier_group: '',
-      price_request_validity: true,
-      order_currency: '',
-      new_cost: '',
-      new_pricing_uuid: '',
-      show_price_split: false,
-      payment_check: '',
+      tier_group : '',
+      price_request_validity : true ,
+      order_currency : '',
+      new_cost : '',
+      new_pricing_uuid : '',
+      show_price_split : false ,
+      payment_check : '',
       payment_methods: [],
-      payment_method: '',
+      payment_method : '',
       addCardStatus: false,
       deletedCardIndex: '',
       activeSavedCard: '',
       vgs_valid_payment: false,
       saveCardState: false,
-      country: '',
+      country : '',
       form: {},
-      message: '',
-      loading_payment: false,
-      payment_type: '',
+      message : '',
+      loading_payment : false,
+      payment_type : '',
       mpesa_poll_timer_id: null,
       payment_state: 0,
       mpesa_valid: false,
       mpesa_payment: false,
       mpesa_payment_state: false,
       sendyPhoneProps: {
-        mode: 'international',
-        defaultCountry: 'ke',
-        preferredCountries: ['ke', 'ug', 'tz'],
+       mode: 'international',
+       defaultCountry: 'ke',
+       preferredCountries: ['ke', 'ug', 'tz'],
       },
       vueTelInputProps: {
         disabledFetchingCountry: false,
@@ -1234,20 +1095,20 @@ export default {
           showDialCode: false,
         },
       },
-      editedNotes: '',
-      editedContact: '',
+      editedNotes : '' ,
+      editedContact : '',
       cancelMessage: '',
       rescheduleOptions: false,
       locationOptions: false,
       driverAllocatedOptions: false,
-      send_sms: false,
+      send_sms : false,
       schedule_time: '',
       default_value: this.moment().format('HH:mm:ss'),
       dueDatePickerOptions: {
         disabledDate: this.disabledDueDate,
       },
-      cancellation_step: false,
-      price_request_object: {},
+      cancellation_step : false,
+      price_request_object : {},
       transaction_id: null,
       poll_count: 0,
       poll_limit: 6,
@@ -1257,7 +1118,7 @@ export default {
       is3DS: false,
       twoFACompleted: false,
       transactionStatus: null,
-      count: false,
+      count: false
     };
   },
   computed: {
@@ -1333,8 +1194,8 @@ export default {
       }
       return resp;
     },
-    getOrderPaymentMethod() {
-      return this.tracking_data.payment_option;
+    getOrderPaymentMethod(){
+      return this.tracking_data.payment_option ;
     },
     display_cards() {
       return this.payment_method === 2;
@@ -1374,12 +1235,13 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
+      } else {
+        return 4
       }
-      return 4;
     },
     getStatusCode() {
       if (!this.loading) {
@@ -1406,7 +1268,7 @@ export default {
       }
     },
     deliveryStatus(name) {
-      const status = this.tracking_data.delivery_status;
+      let status = this.tracking_data.delivery_status;
       let text = '';
       if (status < 3) {
         text = this.$t('general.package_on_the_way') + name;
@@ -1454,12 +1316,14 @@ export default {
         this.cancelMessage = '';
         this.locationOptions = false;
         this.setEditLocationDialog(false);
-        // should also clear stored locations
-      } else {
-        this.refreshAccountBalance();
-        setTimeout(() => {
-          this.handleLocationPath();
-        }, 800);
+        //should also clear stored locations
+      }
+      else {
+          this.refreshAccountBalance();
+          setTimeout(() => {
+            this.handleLocationPath();
+          }, 800);
+
       }
     },
     tracking_data(data) {
@@ -1498,8 +1362,8 @@ export default {
       this.editInstructionsOption = value;
       this.storedNotes = this.getNotesInStore;
       this.send_sms = this.getNotesInStore.notify;
-      this.editedNotes = this.getNotesInStore.notes === null ? '' : this.getNotesInStore.notes;
-      this.editedContact = this.getNotesInStore.recipient_phone === null ? '' : this.getNotesInStore.recipient_phone;
+      this.editedNotes = this.getNotesInStore.notes === null ? '' : this.getNotesInStore.notes ;
+      this.editedContact = this.getNotesInStore.recipient_phone === null ? '' : this.getNotesInStore.recipient_phone ;
     },
     getScheduleTimeDialog(value) {
       this.editScheduledTimeOption = value;
@@ -1511,7 +1375,7 @@ export default {
         this.showNotesDialog(false);
         this.updateNotesInStore({});
         this.storedNotes = {};
-        this.send_sms = false;
+        this.send_sms = false ;
         this.editedNotes = '';
         this.editedContact = '';
       }
@@ -1550,9 +1414,9 @@ export default {
       if (val !== 2) {
         this.addCardStatus = false;
       }
-      this.sendGA4Events('select_payment_option', { payment_option: this.payment_methods.filter(
+      this.sendGA4Events('select_payment_option', {payment_option: this.payment_methods.filter(
         data => data.payment_method_id === val,
-      )[0].name });
+      )[0].name});
     },
     savedCardsTally(val) {
       if (val === 0) {
@@ -1584,7 +1448,7 @@ export default {
     },
   },
   mounted() {
-    this.show_price_split = false;
+    this.show_price_split = false ;
     this.loading = true;
     this.$store.commit('$_orders/$_tracking/setTrackedOrder', this.$route.params.order_no);
     this.poll(this.$route.params.order_no);
@@ -1638,7 +1502,7 @@ export default {
       paymentAxiosGet: '$_payment/paymentAxiosGet',
       paymentAxiosPost: '$_payment/paymentAxiosPost',
     }),
-    dispatchScheduleTime() {
+    dispatchScheduleTime(){
       this.default_value = this.moment(this.schedule_time).format('HH:mm:ss');
       this.sendGA4Events('add_time');
     },
@@ -1791,15 +1655,16 @@ export default {
           && this.getRunningBalance - this.getAmountDue >= 0)
       );
     },
-    handleLocationPath() {
+    handleLocationPath(){
       if (this.tracking_data !== undefined) {
         if (Object.keys(this.tracking_data).length > 0) {
-          if (this.tracking_data.path.length > 1) {
-            this.setExtraDestination(this.tracking_data.path.length - 2);
-          }
+
+           if (this.tracking_data.path.length > 1) {
+             this.setExtraDestination(this.tracking_data.path.length - 2);
+           }
 
           for (let i = 0; i < this.tracking_data.path.length; i++) {
-            this.locations[i] = this.tracking_data.path[i].name;
+            this.locations[i] = this.tracking_data.path[i].name ;
             const pathObj = {
               waypoint_id: this.tracking_data.path[i].waypoint_id,
               name: this.tracking_data.path[i].name,
@@ -1819,7 +1684,7 @@ export default {
                 Address: 'Not Indicated',
               },
             };
-            const index = i;
+            let index = i ;
             const pathPayload = {
               index,
               path: pathObj,
@@ -1837,8 +1702,9 @@ export default {
               this.setPickUpFilledStatus(true);
             }
             this.attemptPriceRequest();
-          }
+         }
         }
+
       }
     },
     checkPreviousRoute() {
@@ -1997,13 +1863,13 @@ export default {
       this.computeCancellationFee(payload).then(
         (response) => {
           if (response.data.cancellation_fee) {
-            this.doNotification(2, this.$t('general.cancellation_fee'), this.$t('general.You_may_be_charged_a_cancellation_fee', { fee: `${response.data.currency} ${response.data.cancellation_fee}` }));
+            this.doNotification(2, this.$t('general.cancellation_fee'), this.$t('general.You_may_be_charged_a_cancellation_fee', {fee:`${response.data.currency} ${response.data.cancellation_fee}`}));
           }
-        },
+        }
       );
     },
-    getCancellationInfo() {
-      let text = `${this.$t('general.incur_cancellation_fee_of') + this.tracking_data.currency + this.cancellation_amount}, ${this.$t('general.ensure_order_details_ready')}`;
+    getCancellationInfo(){
+      let text = this.$t('general.incur_cancellation_fee_of') + this.tracking_data.currency + this.cancellation_amount + `, ${this.$t('general.ensure_order_details_ready')}`;
       if (this.getStatus === 'Confirmed') {
         text = `${this.$t('general.note_you_will_be_charged')} ${this.tracking_data.currency} ${this.cancellation_amount} ${this.$t('general.for_cancelling_order')}`;
       }
@@ -2022,24 +1888,28 @@ export default {
       const notification = { title, level, message };
       this.displayNotification(notification);
     },
-    cancelPromocode() {
+    cancelPromocode () {
       const session = this.$store.getters.getSession;
 
       const copID = session.default === 'biz' ? session[session.default].cop_id : 0;
       const individualID = session.default === 'biz' ? session[session.default].cop_id : session[session.default].user_id;
 
       const payload = {
-        cop_id: copID,
-        individual_id: individualID,
-        coupon_code: '',
-        coupon_amount: 0,
-        is_cancelled: true,
-        coupon_type: 0,
+          cop_id : copID,
+          individual_id : individualID,
+          coupon_code :"",
+          coupon_amount :0,
+          is_cancelled :true,
+          coupon_type :0
       };
 
       this.$store.dispatch('$_orders/$_tracking/cancelCoupon', payload).then(
-        (response) => response.status,
-        (error) => error,
+        (response) => {
+          return response.status;
+        },
+        (error) => {
+          return error;
+        },
       );
     },
     cancelOrder() {
@@ -2104,7 +1974,7 @@ export default {
                     that.doNotification(
                       2,
                       this.$t('general.order_cancellation_failed'),
-                      this.$t('general.not_cancel_order_contact_support'),
+                      this.$t('general.not_cancel_order_contact_support')
                     );
                   }
                 });
@@ -2168,7 +2038,7 @@ export default {
         },
         (error) => {
           this.doNotification(2, this.$t('general.save_details_error'), this.$t('general.check_internet_connection'));
-        },
+        }
       );
     },
     dateFormat(date) {
@@ -2230,7 +2100,7 @@ export default {
         (response) => {
           // decrypt response here
           if (response.status) {
-            const cards = response.saved_payment_methods.filter(el => el.pay_method_id === 2);
+            const cards = response.saved_payment_methods.filter(el => el.pay_method_id === 2)
             this.setSavedCards(cards);
           } else {
             this.setSavedCards([]);
@@ -2294,7 +2164,7 @@ export default {
       };
       this.displayNotification(notification);
     },
-
+    
     handleContinue3DS(val) {
       this.showAdditionalCardFields = false;
       const data = val.additionalData.filter(element => element.field_id === 'url');
@@ -2315,6 +2185,7 @@ export default {
           clearInterval(timer);
         }
 	  	}, 500);
+
     },
 
     init3dsPoll() {
@@ -2322,35 +2193,36 @@ export default {
       const payload = {
         transaction_id: this.transaction_id,
         tds: true,
-      };
+      }
 
       const fullPayload = {
         values: payload,
         app: 'AUTH',
-        endpoint: 'customers/submit_info',
-      };
+        endpoint: 'customers/submit_info'
+      }
 
       this.paymentAxiosPost(fullPayload).then((res) => {
         if (res.status) {
           switch (res.transaction_status) {
-            case 'pending':
-              this.transactionPoll();
-              this.count = true;
-              break;
-            case 'success':
-              this.poll_count = this.poll_limit;
-              this.clearInputs();
-              this.loading_payment = false;
-              const notification1 = {
-                title: res.transaction_status,
-                level: 1,
-                message: res.message,
-              };
-              this.displayNotification(notification1);
-              break;
-            default:
-              break;
-          }
+              case 'pending':
+                this.transactionPoll();
+                this.count = true;
+                break;
+              case 'success':
+                this.poll_count = this.poll_limit;
+                this.clearInputs();
+                this.loading_payment = false;
+                const notification1 = {
+                  title: res.transaction_status,
+                  level: 1,
+                  message: res.message,
+                };
+                this.displayNotification(notification1);
+                break;
+              default:
+                break;
+          };
+          return;
         }
       }).catch((error) => {
         this.transactionText = this.$t('general.failed_to_charge_card');
@@ -2386,7 +2258,7 @@ export default {
           paymethod: 2,
           bulk: false,
         };
-
+        
         this.loading_payment = true;
         this.transactionText = 'Initializing card payment...';
         this.form.submit(
@@ -2409,7 +2281,7 @@ export default {
                 if (res.status) {
                   this.transactionStatus = res.transaction_status;
 
-                  if (res.additional_data) {
+                  if(res.additional_data) {
                     this.additionalData = res.additional_data;
                     if (res.tds) {
                       this.loading_payment = false;
@@ -2439,15 +2311,16 @@ export default {
                     default:
                       break;
                   }
+
                 } else {
                   this.loading_payment = false;
                   this.clearInputs();
                   this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               }).catch(err => {
-                this.loading_payment = false;
-                this.clearInputs();
-                this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.failed_to_charge_card_text'));
+                  this.loading_payment = false;
+                  this.clearInputs();
+                  this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.failed_to_charge_card_text'));
               });
             } else {
               this.loading_payment = false;
@@ -2456,6 +2329,7 @@ export default {
             }
           },
         );
+        
       } else {
         this.loading_payment = false;
         this.doNotification(
@@ -2496,7 +2370,7 @@ export default {
           (response) => {
             this.transaction_id = response.transaction_id;
             if (response.status) {
-              if (response.additional_data) {
+              if(response.additional_data) {
                 this.additionalData = res.additional_data;
                 if (response.tds) {
                   this.loading_payment = false;
@@ -2526,6 +2400,7 @@ export default {
                 default:
                   break;
               }
+
             } else {
               this.loading_payment = false;
               this.transactionText = response.reason;
@@ -2551,7 +2426,7 @@ export default {
               return;
             }
 
-            that.updateTransactionStatus();
+            that.updateTransactionStatus(); 
             if (poll_count === (that.poll_limit - 1)) {
               that.transactionText = 'card payment Failed';
               that.loading_payment = false;
@@ -2561,6 +2436,7 @@ export default {
               };
               that.clearInputs();
               that.displayNotification(notification);
+              return;
             }
           }, 10000 * poll_count);
         }(poll_count));
@@ -2571,10 +2447,10 @@ export default {
       const fullPayload = {
         app: 'AUTH',
         endpoint: `customers/transaction_status?id=${this.transaction_id}`,
-      };
+      }
       this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
-        if (res.status) {
+        if (res.status) { 
           this.transactionText = res.message;
           switch (res.transaction_status) {
             case 'success':
@@ -2583,7 +2459,7 @@ export default {
               this.doCompleteOrder();
               const notification1 = {
                 title: res.transaction_status,
-                level,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification1);
@@ -2595,7 +2471,7 @@ export default {
               this.clearInput();
               const notification2 = {
                 title: res.transaction_status,
-                level,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification2);
@@ -2612,7 +2488,7 @@ export default {
         const notification = {
           title: this.$t('general.failed_to_charge_card'),
           level: 2,
-          message: res.message,
+          message: res.message
         };
         this.displayNotification(notification);
       }).catch(error => {
@@ -2621,12 +2497,13 @@ export default {
         const notification = {
           title: this.$t('general.failed_to_charge_card'),
           level: 2,
-          message: this.$t('general.failed_to_charge_card_text'),
+          message: this.$t('general.failed_to_charge_card_text')
         };
         this.clearInputs();
         this.displayNotification(notification);
-      });
+      }) 
     },
+
 
     clearInputs() {
       this.saveCardState = false;
@@ -2655,7 +2532,7 @@ export default {
           },
           (error) => {
             this.doNotification(2, this.$t('general.share_eta_error'), this.$t('general.check_internet_connetion'));
-          },
+          }
         );
       } else {
         this.doNotification(2, this.$t('general.share_eta_failed'), this.$t('general.enter_valid_phone_no'));
@@ -2906,30 +2783,33 @@ export default {
         (response) => {
           this.refreshAccountBalance();
           this.location_loading = false;
-          this.show_price_split = false;
+          this.show_price_split = false ;
           if (this.large_vendors.includes(this.tracking_data.rider.vendor_id)) {
             this.tier_group = 'large';
-          } else if (this.medium_vendors.includes(this.tracking_data.rider.vendor_id)) {
+          }
+          else if (this.medium_vendors.includes(this.tracking_data.rider.vendor_id)) {
             this.tier_group = 'medium';
-          } else {
+          }else {
             this.tier_group = 'small';
           }
-          const priceRequestObject = response.values.economy_price_tiers;
-          const checker = priceRequestObject.find(position => position.tier_group === this.tier_group);
+          let priceRequestObject = response.values.economy_price_tiers ;
+          let checker = priceRequestObject.find(position => position.tier_group === this.tier_group);
 
           if (checker === 'undefined' || checker === undefined) {
-            this.price_request_validity = false;
-            this.location_loading = false;
-            this.show_price_split = false;
-            this.message = this.$t('general.sorry_could_not_update_location', { vendor_name: this.tracking_data.rider.vendor_name });
-          } else {
-            const checkTrackingVendorId = checker.price_tiers.find(position => position.vendor_id === this.tracking_data.rider.vendor_id);
+             this.price_request_validity = false ;
+             this.location_loading = false;
+             this.show_price_split = false ;
+             this.message = this.$t('general.sorry_could_not_update_location', { vendor_name: this.tracking_data.rider.vendor_name})
+          }
+          else {
+            let checkTrackingVendorId = checker.price_tiers.find(position => position.vendor_id === this.tracking_data.rider.vendor_id);
             if (checkTrackingVendorId === 'undefined' || checkTrackingVendorId === undefined) {
-              this.price_request_validity = false;
+              this.price_request_validity = false ;
               this.location_loading = false;
-              this.show_price_split = false;
-              this.message = this.$t('general.sorry_could_not_update_location', { vendor_name: this.tracking_data.rider.vendor_name });
-            } else {
+              this.show_price_split = false ;
+              this.message = this.$t('general.sorry_could_not_update_location', { vendor_name: this.tracking_data.rider.vendor_name})
+            }
+            else {
               this.price_request_object = response.values;
               this.checkOrderValidityState(checkTrackingVendorId);
             }
@@ -2977,8 +2857,9 @@ export default {
         });
       }
     },
-    checkOrderValidityState(trackingVendorId) {
-      const value = {
+    checkOrderValidityState(trackingVendorId){
+
+      let value = {
         order_no: this.$route.params.order_no,
         pricing_uuid: trackingVendorId.id,
         client_type: 'corporate',
@@ -2993,29 +2874,31 @@ export default {
       this.$store.dispatch('$_orders/$_tracking/requestEditOrder', payload).then(
         (response) => {
           if (response.status) {
-            this.price_request_validity = true;
-            this.show_price_split = true;
+            this.price_request_validity = true ;
+            this.show_price_split = true ;
             this.order_currency = trackingVendorId.currency;
             this.new_cost = trackingVendorId.cost;
             this.new_pricing_uuid = trackingVendorId.id;
-            this.setAmountDue(trackingVendorId.cost - this.tracking_data.amount);
+            this.setAmountDue(trackingVendorId.cost - this.tracking_data.amount)
             this.setDefaultPaymentOptions(trackingVendorId);
-          } else {
-            this.price_request_validity = false;
+          }
+          else {
+            this.price_request_validity = false ;
             this.location_loading = false;
-            this.show_price_split = false;
-            this.message = `${this.$t('general.edit_location_failure')}: ${response.reason}`;
+            this.show_price_split = false ;
+            this.message = `${this.$t('general.edit_location_failure')}: ${response.reason}` ;
           }
         },
         (error) => {
-          this.price_request_validity = false;
+          this.price_request_validity = false ;
           this.location_loading = false;
-          this.show_price_split = false;
+          this.show_price_split = false ;
           this.message = `${this.$t('general.edit_location_failure')} : ${error.response.data.reason}`;
         },
       );
+
     },
-    setDefaultPaymentOptions(val) {
+    setDefaultPaymentOptions(val){
       const accountType = 'Individual';
       const payload = {
         currency: val.currency,
@@ -3032,7 +2915,7 @@ export default {
 
       this.$store.dispatch('$_orders/$_tracking/requestPaymentOptions', fullPayload).then(
         (response) => {
-          this.determinePaymentOptions(response);
+             this.determinePaymentOptions(response);
         },
         (error) => {
           console.log('error', error);
@@ -3040,24 +2923,29 @@ export default {
       );
     },
     determinePaymentOptions(data) {
+
       this.payment_methods = [];
 
       const exist = data.payment_methods.find(available => available.payment_method_id === this.tracking_data.payment_method);
 
+
       if (exist === undefined || exist === null) {
         this.payment_methods = data.payment_methods;
-      } else if (this.tracking_data.payment_method === 5) {
-        this.payment_methods.push(exist);
       } else {
-        let payment = [];
-        payment = data.payment_methods;
+        if (this.tracking_data.payment_method === 5) {
+          this.payment_methods.push(exist);
+        }
+        else {
+          let payment = [];
+          payment = data.payment_methods;
 
-        const cashIndex = data.payment_methods.findIndex(
-          index => index.payment_method_id === 5,
-        );
-        payment = data.payment_methods.splice(cashIndex, 1);
+          const cashIndex = data.payment_methods.findIndex(
+            index => index.payment_method_id === 5,
+          );
+          payment = data.payment_methods.splice(cashIndex, 1);
 
-        this.payment_methods = data.payment_methods;
+          this.payment_methods = data.payment_methods;
+        }
       }
 
       this.payment_methods.forEach((row) => {
@@ -3167,13 +3055,13 @@ export default {
         }
       }
       if (index === 1) {
-        this.sendGA4Events('edit_destination', { new_destination: place.name });
+        this.sendGA4Events('edit_destination', {new_destination: place.name});
       } else if (index > 1) {
         this.sendGA4Events('add_destination');
       }
       this.attemptPriceRequest();
     },
-    updateLocations() {
+    updateLocations(){
       this.loading_payment = true;
       if (this.tracking_data.payment_option === 2) {
         this.payment_type = 'postpay';
@@ -3188,16 +3076,17 @@ export default {
       this.payment_type = 'postpay';
       this.doCompleteOrder();
     },
-    doCompleteOrder() {
-      const value = {
+    doCompleteOrder(){
+
+      let value = {
         order_no: this.$route.params.order_no,
         pricing_uuid: this.new_pricing_uuid,
         client_type: 'corporate',
-        update: true,
+        update : true
       };
 
       if (this.paymentStatusOption && this.show_payment && this.getOrderPaymentMethod === 1) {
-        value.payment_method = parseInt(this.payment_method, 10);
+        value.payment_method = parseInt(this.payment_method , 10);
       }
 
       const payload = {
@@ -3210,15 +3099,16 @@ export default {
         (response) => {
           this.loading_payment = false;
           if (response.status) {
-            this.editLocationOption = false;
-            this.show_price_split = false;
+            this.editLocationOption = false ;
+            this.show_price_split = false ;
             this.poll(this.$route.params.order_no);
             this.doNotification(
               1,
               this.$t('general.location_updated_successfully'),
               '',
             );
-          } else {
+          }
+          else {
             this.doNotification(
               2,
               this.$t('general.locations_update_failed'),
@@ -3235,8 +3125,10 @@ export default {
           this.loading_payment = false;
         },
       );
+
     },
     checkPaymentDetails() {
+
       if (this.payment_method === '') {
         if (this.checkAccountPaymentOption()) {
           this.handlePostPaidPayments();
@@ -3244,29 +3136,33 @@ export default {
           this.doNotification(
             '2',
             this.$t('general.choose_payment_method'),
-            this.$t('general.select_payment_method_and_try_again'),
+           this.$t('general.select_payment_method_and_try_again'),
           );
           this.loading_payment = false;
           return false;
         }
-      } else if (Number(this.payment_method) === 1) {
-        this.handleMpesaPayments();
-      } else if (Number(this.payment_method) === 5) {
-        this.handleCashPayments();
-      } else if (Number(this.payment_method) === 3) {
-        this.handlePromoCodePayments();
-      } else if (Number(this.payment_method) === 11) {
-        this.handleRunningBalancePayments();
-      } else if (Number(this.payment_method) === 12) {
-        this.handlePostPaidPayments();
-      } else if (Number(this.payment_method) === 2) {
-        if (this.addCardStatus) {
-          this.onSubmit();
-        } else {
-          this.chargeSavedCard();
-        }
       } else {
-        // console.log('not handled payment method', this.payment_method);
+        if (Number(this.payment_method) === 1) {
+          this.handleMpesaPayments();
+        } else if (Number(this.payment_method) === 5) {
+          this.handleCashPayments();
+        } else if (Number(this.payment_method) === 3) {
+          this.handlePromoCodePayments();
+        } else if (Number(this.payment_method) === 11) {
+          this.handleRunningBalancePayments();
+        }
+        else if (Number(this.payment_method) === 12) {
+         this.handlePostPaidPayments();
+       }
+        else if (Number(this.payment_method) === 2) {
+          if (this.addCardStatus) {
+            this.onSubmit();
+          } else {
+            this.chargeSavedCard();
+          }
+        } else {
+          // console.log('not handled payment method', this.payment_method);
+        }
       }
 
       return true;
@@ -3344,14 +3240,14 @@ export default {
           }
 
           if (response.status === 200 && response.data.status) {
-            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payment_sent', { userPhone }));
+            this.doNotification('0', this.$t('general.mpesa_payment'),this.$t('general.request_for_payment_sent', {userPhone: userPhone}));
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshAccountBalance();
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
-              this.$t('general.mpesa_request_failed', { userPhone, referenceNumber }) + this.pending_amount,
+              this.$t('general.mpesa_request_failed', {userPhone: userPhone, referenceNumber: referenceNumber }) + this.pending_amount,
               // `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
               //   this.pending_amount
               // }.`,
@@ -3365,7 +3261,7 @@ export default {
           this.doNotification(
             '0',
             this.$t('general.mpesa_payment'),
-            this.$t('general.mpesa_request_failed', { userPhone, referenceNumber }) + this.getAmountDue,
+            this.$t('general.mpesa_request_failed', {userPhone: userPhone, referenceNumber: referenceNumber }) + this.getAmountDue,
             // `M-Pesa request to ${userPhone} failed. Use paybill 848450 account number ${referenceNumber} amount KES ${
             //    this.getAmountDue
             // }.`,
@@ -3504,8 +3400,8 @@ export default {
 
       return name;
     },
-    saveUpdatedInstructions() {
-      let phoneValid = true;
+    saveUpdatedInstructions(){
+      let phoneValid = true ;
       if (this.editedContact !== '') {
         phoneValid = phoneUtil.isValidNumber(phoneUtil.parse(this.editedContact));
       }
@@ -3513,51 +3409,54 @@ export default {
       if (phoneValid) {
         if (this.editedContact === '' && this.send_sms) {
           this.doNotification(
-            2,
-            this.$t('general.edit_instructions_error'),
-            this.$t('general.kindly_provide_valid_phone_number_notify_recipient'),
+             2,
+             this.$t('general.edit_instructions_error'),
+             this.$t('general.kindly_provide_valid_phone_number_notify_recipient')
           );
-        } else {
+        }
+        else {
           this.initiateSaveInstructionsRequest();
         }
-      } else {
+      }
+      else {
         this.doNotification(
-          2,
+           2,
           this.$t('general.edit_instructions_error'),
           this.$t('general.provide_valid_phone_no'),
         );
       }
       this.sendGA4Events('select_update_instruction');
     },
-    initiateSaveInstructionsRequest() {
-      const newData = [
-        {
-          waypoint_id: this.storedNotes.waypoint_id,
-          coordinates: this.storedNotes.coordinates,
-          name: this.storedNotes.name,
-          notes: this.editedNotes === '' ? null : this.editedNotes,
-          recipient_phone: this.editedContact === '' ? null : this.editedContact,
-          notify: this.send_sms,
+    initiateSaveInstructionsRequest(){
 
-        },
+      let newData = [
+        {
+           waypoint_id : this.storedNotes.waypoint_id,
+           coordinates : this.storedNotes.coordinates,
+           name : this.storedNotes.name,
+           notes : this.editedNotes === '' ? null : this.editedNotes ,
+           recipient_phone : this.editedContact === '' ? null : this.editedContact ,
+           notify : this.send_sms,
+
+        }
       ];
       for (let i = 0; i < this.tracking_data.path.length; i++) {
         if (this.tracking_data.path[i].name !== this.storedNotes.name) {
           newData.push({
-            waypoint_id: this.tracking_data.path[i].waypoint_id,
-            coordinates: this.tracking_data.path[i].coordinates,
+            waypoint_id : this.tracking_data.path[i].waypoint_id,
+            coordinates : this.tracking_data.path[i].coordinates,
             name: this.tracking_data.path[i].name,
-            notes: this.tracking_data.path[i].notes === '' ? null : this.tracking_data.path[i].notes,
-            recipient_phone: this.tracking_data.path[i].recipient_phone === '' ? null : this.tracking_data.path[i].recipient_phone,
-            notify: this.tracking_data.path[i].notify,
-          });
+            notes : this.tracking_data.path[i].notes === '' ? null : this.tracking_data.path[i].notes,
+            recipient_phone : this.tracking_data.path[i].recipient_phone === "" ? null : this.tracking_data.path[i].recipient_phone,
+            notify : this.tracking_data.path[i].notify,
+          })
         }
       }
 
-      const value = {
+      let value = {
         order_no: this.$route.params.order_no,
         client_type: 'corporate',
-        waypoint_instructions: newData,
+        waypoint_instructions : newData
       };
 
       const payload = {
@@ -3573,7 +3472,7 @@ export default {
             this.showNotesDialog(false);
             this.updateNotesInStore({});
             this.storedNotes = {};
-            this.send_sms = false;
+            this.send_sms = false ;
             this.editedNotes = '';
             this.editedContact = '';
 
@@ -3582,7 +3481,8 @@ export default {
               this.$t('general.additional_instructions_updated_successfully'),
               '',
             );
-          } else {
+          }
+          else {
             this.doNotification(
               2,
               this.$t('general.additonal_instructions_update_failed'),
@@ -3602,18 +3502,19 @@ export default {
     disabledDueDate(date) {
       return date.getTime() < Date.now() - 8.64e7 || date.getTime() > Date.now() + 8.64e7 * 31;
     },
-    updateScheduledTime() {
+    updateScheduledTime(){
       if (this.schedule_time !== '') {
-        const time = this.order_is_scheduled
+
+        let time = this.order_is_scheduled
           ? this.convertToUTC(this.scheduled_time)
           : this.convertToUTC(this.current_time);
 
-        const scheduleTime = this.moment(time).utc().format('YYYY-MM-DD HH:mm:ss');
+        let scheduleTime = this.moment(time).utc().format('YYYY-MM-DD HH:mm:ss') ;
 
-        const value = {
+        let value = {
           order_no: this.$route.params.order_no,
           client_type: 'corporate',
-          date_time: scheduleTime,
+          date_time : scheduleTime,
         };
 
         const payload = {
@@ -3635,7 +3536,8 @@ export default {
                 this.$t('general.pickup_time_updated'),
                 '',
               );
-            } else {
+            }
+            else {
               this.doNotification(
                 2,
                 this.$t('general.pickup_time_update_failed'),
@@ -3646,7 +3548,8 @@ export default {
           (error) => {
             if (Object.prototype.hasOwnProperty.call(error.response.data, 'reason')) {
               this.doNotification(2, this.$t('general.pickup_time_update_failed'), error.response.data.reason);
-            } else {
+            }
+            else {
               this.doNotification(
                 2,
                 this.$t('general.pickup_time_update_failed'),
@@ -3655,7 +3558,8 @@ export default {
             }
           },
         );
-      } else {
+      }
+      else {
         this.doNotification(
           2,
           this.$t('general.edit_pickup_time'),
@@ -3664,8 +3568,8 @@ export default {
       }
       this.sendGA4Events('select_schedule_order');
     },
-    cancelStep(val) {
-      this.cancellation_step = val;
+    cancelStep(val){
+      this.cancellation_step = val ;
       if (!val) {
         this.cancelOption = val;
       }

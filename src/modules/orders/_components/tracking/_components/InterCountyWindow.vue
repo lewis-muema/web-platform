@@ -29,7 +29,7 @@
                     class="infobar-truck-img"
                   >
                   <span class="infor-top-bar-text">
-                    {{ $t('general.order_number') }} :
+                    {{$t('general.order_number')}} :
                   </span>
                   <span>
                     {{ tracking_data.order_no }}
@@ -46,7 +46,7 @@
                     alt=""
                     class="top-bar-img infobar-truck-img"
                   >
-                  <span class="infor-top-bar-text"> {{ $t('general.status') }} :</span>
+                  <span class="infor-top-bar-text"> {{$t('general.status')}} :</span>
                   <span> {{ getStatus }} </span>
                 </div>
               </el-col>
@@ -59,7 +59,7 @@
                     />
                     <span>
                       <span class="infor-top-bar-text">
-                        {{ $t('general.cost') }} :
+                        {{$t('general.cost')}} :
                       </span>
                       <span>
                         {{
@@ -76,7 +76,7 @@
               <el-col :span="5">
                 <div class="info-text-transform">
                   <div class="topbar-text infor-top-bar-text">
-                    {{ $t('general.order_timeline') }}
+                    {{$t('general.order_timeline')}}
                   </div>
                 </div>
               </el-col>
@@ -110,7 +110,7 @@
                   <ul class="timeline inforbar_route_timeline">
                     <li>
                       <p class="info-text-transform infor-top-bar-text">
-                        {{ $t('general.pickup_location') }}
+                        {{$t('general.pickup_location')}}
                       </p>
                       <p>{{ tracking_data.path[0].name }}</p>
                     </li>
@@ -138,7 +138,7 @@
                         v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes"
                         class="infor-top-bar-text-notes"
                       >
-                        {{ $t('general.notes') }}: {{ val.notes }}
+                        {{$t('general.notes')}}: {{ val.notes }}
                       </p>
                     </li>
                   </ul>
@@ -157,7 +157,7 @@
                         class="infobar-truck-img"
                       >
                       <span class="info-text-transform infor-top-bar-text">
-                        {{ $t('general.type_of_order') }}
+                       {{$t('general.type_of_order')}}
                       </span>
                     </div>
                     <div class="tracking-loader-inner">
@@ -182,7 +182,7 @@
                         class="infobar-truck-img"
                       >
                       <span class="info-text-transform infor-top-bar-text">
-                        {{ $t('general.schedule_pickup_time') }}
+                        {{$t('general.schedule_pickup_time')}}
                       </span>
                     </div>
                     <div class="tracking-loader-inner">
@@ -200,7 +200,7 @@
               >
                 <div class="tracking-notes">
                   <div class="info-text-transform infor-top-bar-text">
-                    {{ $t('general.recipient_contact_info') }}
+                    {{$t('general.recipient_contact_info')}}
                   </div>
                   <div class="tracking-notes-inner">
                     <div class="additional-instructions-content additional-instructions-wrapper">
@@ -325,7 +325,7 @@
               </div>
 
               <div
-                v-if="$route.name !== 'tracking_external'"
+                v-if="this.$route.name !== 'tracking_external'"
                 class="infobar--content infobar--item infobar--actions"
               >
                 <div
@@ -336,7 +336,7 @@
                     <i class="el-icon-circle-plus-outline" />
                   </div>
                   <div class="infobar--actions-text">
-                    {{ $t('general.expand_info') }}
+                    {{$t('general.expand_info')}}
                   </div>
                 </div>
                 <div
@@ -348,7 +348,7 @@
                     <i class="el-icon-circle-close-outline" />
                   </div>
                   <div class="infobar--actions-text">
-                    {{ $t('general.cancel_order') }}
+                    {{$t('general.cancel_order')}}
                   </div>
                 </div>
               </div>
@@ -376,13 +376,13 @@
                   id="cancel-reason-title"
                   class="cancel-reason-title"
                 >
-                  {{ $t('general.sure_to_cancel') }}
+                 {{$t('general.sure_to_cancel')}}
                 </div>
                 <div
                   id="cancel-reason-subtitle"
                   class="cancel-reason-subtitle cancel-reason-subtitle-mod"
                 >
-                  {{ $t('general.incur_cancelation_cost') }}
+                 {{$t('general.incur_cancelation_cost')}}
                 </div>
               </div>
               <div v-for="reasons in cancellation_reasons">
@@ -427,7 +427,7 @@
                   class="action--slide-button cancellation-submit accept-cancell-btn"
                   @click="cancelOrder()"
                 >
-                  {{ $t('general.yes_cancel') }}
+                  {{$t('general.yes_cancel')}}
                 </button>
                 <button
                   type="button"
@@ -435,7 +435,7 @@
                   class="action--slide-button cancellation-submit"
                   @click="cancelToggle(true)"
                 >
-                  {{ $t('general.no_cancel') }}
+                  {{$t('general.no_cancel')}}
                 </button>
               </div>
             </div>
@@ -444,7 +444,7 @@
               class="cancelOptions--content-wrap"
             >
               <div class="cancelOptions--content-message">
-                {{ $t('general.call_rider_and_right_destination') }}
+                {{$t('general.call_rider_and_right_destination')}}
               </div>
               <div class="cancelOptions--content-buttons">
                 <button
@@ -453,7 +453,7 @@
                   class="action--slide-button"
                   @click="cancelToggle(cancel_reason)"
                 >
-                  {{ $t('general.ok_call_rider') }}
+                  {{$t('general.ok_call_rider')}}
                 </button>
                 <button
                   type="button"
@@ -461,7 +461,7 @@
                   class="default action--slide-button"
                   @click="cancelOrder()"
                 >
-                  {{ $t('general.cancel_order') }}
+                  {{$t('general.cancel_order')}}
                 </button>
               </div>
             </div>
@@ -473,7 +473,7 @@
                 <i class="el-icon-warning warning-icon" />
               </div>
               <div class="cancelOptions--content-message pop-message">
-                {{ $t('general.infuture_ensure_order_ready') }}
+                {{$t('general.infuture_ensure_order_ready')}}
               </div>
               <div class="cancelOptions--content-buttons">
                 <button
@@ -482,7 +482,7 @@
                   class="action--slide-button pop_btn"
                   @click="disablePop()"
                 >
-                  {{ $t('general.ok') }}
+                  {{$t('general.ok')}}
                 </button>
               </div>
             </div>
@@ -494,7 +494,7 @@
                 <i class="el-icon-warning warning-icon" />
               </div>
               <div class="cancelOptions--content-message pop-message">
-                {{ $t('general.preffered_rider_offline') }}
+                {{$t('general.preffered_rider_offline')}}
               </div>
               <div class="cancelOptions--content-buttons">
                 <button
@@ -503,7 +503,7 @@
                   class="action--slide-button pop_btn"
                   @click="disablePop()"
                 >
-                  {{ $t('general.ok') }}
+                  {{$t('general.ok')}}
                 </button>
               </div>
             </div>
@@ -515,11 +515,11 @@
           >
             <div class="cancelOptions--content-wrap payments-wrap">
               <div class="cancelOptions--content-message payments-headline">
-                {{ $t('general.awaiting_payment') }}
+                {{$t('general.awaiting_payment')}}
               </div>
 
               <div class="cancelOptions--content-message">
-                {{ $t('general.cost_of_cross_county_order') }}
+                {{$t('general.cost_of_cross_county_order')}}
                 <span class="payments-headline">{{
                   tracking_data.inter_county_order_details.total_cost
                 }}</span>
@@ -532,7 +532,7 @@
                   >
                     <a>
                       <span class="">
-                        {{ $t('general.payment_options') }}
+                        {{$t('general.payment_options')}}
                       </span>
                       <font-awesome-icon
                         icon="chevron-down"
@@ -550,7 +550,7 @@
                         v-model="paymentOption"
                         label="1"
                       >
-                        {{ $t('general.mpesa') }}
+                       {{$t('general.mpesa')}}
                       </el-radio>
                     </div>
                   </div>
@@ -569,7 +569,7 @@
                     class="action--slide-button"
                     @click="initiatePayment()"
                   >
-                    {{ $t('general.make_payment') }}
+                    {{$t('general.make_payment')}}
                   </button>
                 </div>
                 <div
@@ -582,7 +582,7 @@
                     name="button"
                     @click="cancelMpesaPaymentRequest()"
                   >
-                    {{ $t('general.cancel_payment') }}
+                    {{$t('general.cancel_payment')}}
                   </button>
                 </div>
               </div>
@@ -595,11 +595,11 @@
           >
             <div class="">
               <div class="share-text-option share-order-option share-notification-extend">
-                {{ $t('general.share_eta_via_sms') }}
+                {{$t('general.share_eta_via_sms')}}
               </div>
               <div class="share-eta-divider" />
               <div class="share-text-option share-notification-extend share-eta-input-header">
-                {{ $t('general.recipient_phone_number') }}
+                {{$t('general.recipient_phone_number')}}
               </div>
             </div>
             <div class="share-notification-extend share-eta-input">
@@ -619,7 +619,7 @@
                 class="action--slide-button input-phone"
                 @click="shareETASms()"
               >
-                {{ $t('general.submit') }}
+                {{$t('general.submit')}}
               </button>
             </div>
           </el-dialog>
@@ -639,10 +639,10 @@ import {
   faArrowLeft,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { resolve } from 'path';
 import TimezoneMxn from '../../../../../mixins/timezone_mixin';
 import EventsMixin from '../../../../../mixins/events_mixin';
 import NotificationMxn from '../../../../../mixins/notification_mixin';
+import { resolve } from 'path';
 
 library.add(faChevronDown, faPlusCircle, faArrowLeft, faTrashAlt);
 
@@ -751,12 +751,13 @@ export default {
       });
       if (this.tracking_data.confirm_status === 0 && this.tracking_data.delivery_status === 0) {
         return 1;
-      } if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] !== 10) {
         return 2;
-      } if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
+      } else if (this.tracking_data.confirm_status === 1 && this.tracking_data.delivery_status === 0 && logTypes[logTypes.length - 1] === 10) {
         return 3;
+      } else {
+        return 4;
       }
-      return 4;
     },
     getStatusCode() {
       if (!this.loading) {
@@ -1048,7 +1049,7 @@ export default {
           }
         } else if (this.tracking_data.rider.vendor_name === 'Economy Bike') {
           this.vendorName = this.$t('general.standard');
-          this.partnerName = this.$t('general.rider');
+          this.partnerName = this.$t('general.rider')
           this.packageName = this.$t('general.package');
         } else {
           this.vendorName = this.tracking_data.rider.vendor_name;
@@ -1598,8 +1599,8 @@ export default {
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
-              this.$t('general.mpesa_request_failed', { userPhone }) + this.tracking_data.amount,
-
+              this.$t('general.mpesa_request_failed', {userPhone: userPhone}) + this.tracking_data.amount,
+              
             );
             this.payment_state = 0;
             this.loading_payment = false;
@@ -1609,8 +1610,8 @@ export default {
           this.doNotification(
             '0',
             this.$t('general.mpesa_payment'),
-            this.$t('general.mpesa_request', { userPhone, referenceNumber }) + this.pending_amount,
-
+            this.$t('general.mpesa_request', {userPhone: userPhone, referenceNumber: referenceNumber}) + this.pending_amount,
+            
           );
           this.payment_state = 0;
           this.loading_payment = false;
@@ -1623,7 +1624,7 @@ export default {
       this.doNotification(
         '2',
         this.$t('general.mpesa_payment_cancelled'),
-        this.$t('general.mpesa_payment_cancelled_text'),
+        this.$t('general.mpesa_payment_cancelled_text')
       );
       this.requestMpesaPaymentPoll(60);
     },
@@ -1664,7 +1665,7 @@ export default {
                 that.doNotification(
                   '0',
                   that.$t('general.payment_not_recieved'),
-                  that.$t('general.will_keep_trying_checking_payment'),
+                  that.$t('general.will_keep_trying_checking_payment')
                 );
                 that.payment_state = 0;
                 that.loading_payment = false;

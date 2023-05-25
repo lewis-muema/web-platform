@@ -1,5 +1,8 @@
-/* global describe,beforeEach,it */
 /* eslint no-undef: "error" */
+/* eslint-disable no-unused-vars */
+/* eslint-disable-next-line no-undef */
+/* global describe,beforeEach,it */
+
 import Vue from 'vue';
 // import sinon from 'sinon';
 import { expect } from 'chai';
@@ -20,6 +23,13 @@ describe('HeaderComponent.vue', () => {
       getters,
     });
   });
+
+  // it('calculates progress_width from the store getter', () => {
+  //   const wrapper = mount(HeaderComponent, {
+  //     store,
+  //   });
+  //   expect(wrapper.vm.progress_width.width).equal('50%');
+  // });
   // it('Check text', () => {
   //   const wrapper = mount(HeaderComponent, {
   //     store,

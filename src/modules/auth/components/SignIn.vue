@@ -57,7 +57,10 @@
         </div>
         <div class="sign-holder sign-sign-up sign-smaller">
           {{ $t('signIn.have_account') }}
-          <a href="https://fulfillment.sendyit.com/auth/sign-up" class="sign-holder__link">{{ $t('signIn.sign_up') }}</a>
+          <a
+            href="https://fulfillment.sendyit.com/auth/sign-up"
+            class="sign-holder__link"
+          >{{ $t('signIn.sign_up') }}</a>
         </div>
       </div>
     </div>

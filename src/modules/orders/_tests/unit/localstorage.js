@@ -26,7 +26,7 @@ library.add(
   faCalendarWeek,
 );
 
-Vue.component('FontAwesomeIcon', FontAwesomeIcon);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 global.localStorage = {
   getItem(key) {

@@ -38,7 +38,7 @@
         "
         @click="requestMpesaPayment"
       >
-        {{ $t('general.pay') }}
+        {{$t('general.pay')}}
       </button>
     </div>
   </div>
@@ -55,8 +55,8 @@ const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 export default {
   name: 'MpesaComponent',
-  components: { paymentLoading, paymentSuccess, paymentFail },
   mixins: [EventsMixin],
+  components: { paymentLoading, paymentSuccess, paymentFail },
   data() {
     return {
       mpesa_payment_data: {

@@ -12,7 +12,7 @@
             class="infobar-truck-img"
           >
           <span class="infor-top-bar-text">
-            {{ $t('general.order_number') }}:
+          {{$t('general.order_number')}}:
           </span>
           <span>
             {{ trackingData.order_no }}
@@ -29,7 +29,7 @@
             alt=""
             class="top-bar-img infobar-truck-img"
           >
-          <span class="infor-top-bar-text"> {{ $t('general.status') }} :</span>
+          <span class="infor-top-bar-text"> {{$t('general.status')}} :</span>
           <span> {{ getStatus }} </span>
         </div>
       </el-col>
@@ -47,7 +47,7 @@
                 "
               >
                 <span class="infor-top-bar-text">
-                  {{ $t('general.minimum_cost') }} :
+                  {{$t('general.minimum_cost')}} :
                 </span>
                 <span>
                   {{
@@ -60,7 +60,7 @@
               </span>
               <span v-else>
                 <span class="infor-top-bar-text">
-                  {{ $t('general.cost') }} :
+                   {{$t('general.cost')}} :
                 </span>
                 <span>
                   {{
@@ -74,7 +74,7 @@
             </span>
             <span v-else>
               <span class="infor-top-bar-text">
-                {{ $t('general.cost') }} :
+                {{$t('general.cost')}} :
               </span>
               <span>
                 {{
@@ -91,7 +91,7 @@
       <el-col :span="5">
         <div class="info-text-transform">
           <div class="topbar-text infor-top-bar-text">
-            {{ $t('general.order_timeline') }}
+            {{$t('general.order_timeline')}}
           </div>
         </div>
       </el-col>

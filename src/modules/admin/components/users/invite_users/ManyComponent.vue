@@ -10,7 +10,7 @@
               class="inviteMany--textareabox"
             />
             <div class="active inviteMany--text">
-              {{ $t('linkComponent.multipe_email') }}
+              {{$t('linkComponent.multipe_email')}}
             </div>
           </div>
         </div>
@@ -20,7 +20,7 @@
           <a
             class="show-link-justify"
             @click="get_inv"
-          > {{ $t('linkComponent.cancel') }}</a>
+          > {{$t('linkComponent.cancel')}}</a>
         </div>
         <div class="column-flex">
           <button
@@ -29,7 +29,7 @@
             name="action"
             @click="inv_many"
           >
-            {{ $t('linkComponent.add_invitees') }}
+             {{$t('linkComponent.add_invitees')}}
           </button>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default {
         const notification = {
           title: '',
           level,
-          message: this.$t('linkComponent.valid_email'),
+          message:  this.$t('linkComponent.valid_email'),
         }; // notification object
         this.displayNotification(notification);
       }

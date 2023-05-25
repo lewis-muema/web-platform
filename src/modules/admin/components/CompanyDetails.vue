@@ -5,12 +5,12 @@
   >
     <div class="cop-edit-inner">
       <div class="company-edit2-details">
-        {{ $t('companyDetails.edit') }}
+        {{ $t('companyDetails.edit')}}
       </div>
       <div class="edit-cop-info-position">
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>{{ $t('companyDetails.company_name') }}</span>
+            <span>{{ $t('companyDetails.company_name')}}</span>
           </label>
           <input
             v-model="cop_name"
@@ -22,7 +22,7 @@
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>{{ $t('companyDetails.contact_person') }}</span>
+            <span>{{ $t('companyDetails.contact_person')}}</span>
           </label>
           <input
             v-model="contact_name"
@@ -33,7 +33,7 @@
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>{{ $t('companyDetails.email_contact_person') }}</span>
+            <span>{{ $t('companyDetails.email_contact_person')}}</span>
           </label>
           <input
             v-model="contact_email"
@@ -49,7 +49,7 @@
 
         <div class="cop-edit-holder">
           <label class="cop-input-descript">
-            <span>{{ $t('companyDetails.phone_contact_person') }}</span>
+            <span>{{ $t('companyDetails.phone_contact_person')}}</span>
           </label>
           <vue-tel-input
             v-model.trim="phone"
@@ -70,7 +70,7 @@
             type="submit"
             @click="save_cop"
           >
-            {{ $t('companyDetails.save') }}
+            {{ $t('companyDetails.save')}}
           </button>
         </div>
       </div>
@@ -182,7 +182,7 @@ export default {
                 this.setSession(newSession);
 
                 const level = 1; // success
-                this.message = this.$t('companyDetails.detail_saved');
+                this.message =  this.$t('companyDetails.detail_saved');
                 const notification = {
                   title: '',
                   level,
@@ -192,7 +192,7 @@ export default {
                 this.displayNotification(notification);
               } else {
                 const level = 3;
-                this.message = this.$t('companyDetails.somthing_went_wrong'); // 'Something went wrong.';
+                this.message = this.$t('companyDetails.somthing_went_wrong') //'Something went wrong.';
                 const notification = {
                   title: '',
                   level,

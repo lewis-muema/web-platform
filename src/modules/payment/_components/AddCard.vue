@@ -12,7 +12,7 @@
         v-model="add_card_payment_data.card_no"
         type="text"
         name="card_payment_card_no"
-        :placeholder="$t('general.card_number')"
+        :placeholder = "$t('general.card_number')"
         class="input-control paymentbody--input"
         @change="creditCardMask()"
         @keyup="creditCardMask()"
@@ -54,10 +54,10 @@
           class="payment--cvv-info-wrap"
         >
           <div class="sendy_payments_form_cvv_title">
-            {{ $t('general.cvv') }}
+            {{$t('general.cvv')}}
           </div>
           <div class="sendy_payments_form_cvv_description">
-            {{ $t('general.three_or_four_card_digit_code') }}
+            {{$t('general.three_or_four_card_digit_code')}}
           </div>
           <div class="sendy_payments_form_cvv_body">
             <img
@@ -80,7 +80,7 @@
         "
         @click="handleAddCard"
       >
-        {{ $t('general.add_card') }}
+      {{$t('general.add_card')}}
       </button>
     </div>
   </div>

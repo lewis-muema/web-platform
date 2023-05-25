@@ -58,17 +58,17 @@
             type="primary"
             size="mini"
           >
-            {{ $t('general.download') }}<i class="el-icon-arrow-down el-icon--right" />
+            {{$t('general.download')}}<i class="el-icon-arrow-down el-icon--right" />
           </el-button>
           <el-dropdown-menu
             slot="dropdown"
             class="export_dropdown"
           >
             <el-dropdown-item command="a">
-              {{ $t('general.excel') }}
+              {{$t('general.excel')}}
             </el-dropdown-item>
             <el-dropdown-item command="b">
-              {{ $t('general.pdf') }}
+              {{$t('general.pdf')}}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

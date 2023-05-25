@@ -1,5 +1,7 @@
 FROM sendy-docker-local.jfrog.io/node:14.18.1 AS build-stage
 WORKDIR /opt/sendy/
+ARG DOCKER_ENV
+ENV DOCKER_ENV=$DOCKER_ENV
 
 COPY package*.json ./
 

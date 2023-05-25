@@ -13,21 +13,21 @@
       id="rate-rider-content"
       class="rate-rider-content"
     >
-      <div class="rate-rider-please">{{ $t('general.please_rate_drivername', {driver_name: driver_name}) }}</div>
+      <div class="rate-rider-please">{{$t('general.please_rate_drivername', {driver_name: driver_name})}}</div>
 
       <div class="rate-rider-star">
         <div class="submit-stars">
           <span class="submit-stars-container">
-            <p class="rate-text rate-text-right">{{ $t('general.very_bad') }}</p>
+            <p class="rate-text rate-text-right">{{$t('general.very_bad')}}</p>
             <el-rate
               v-model="rated_score"
               :colors="['#99A9BF', '#F57f20', '#1782C5']"
             />
-            <p class="rate-text rate-text-left">{{ $t('general.very_good') }}</p>
+            <p class="rate-text rate-text-left">{{$t('general.very_good')}}</p>
           </span>
           <textarea
             v-model="rating_comment"
-            :placeholder="$t('general.please_share_your_experience')"
+            :placeholder="$t('general.please_share_your_experience')" 
             class="rate-comment--textareabox"
           />
           <div class="rate-buttons-container">
@@ -35,20 +35,17 @@
               class="rate-rider-primary"
               @click="postRating"
             >
-              {{ $t('general.submitCapital') }}
+              {{$t('general.submitCapital')}}
             </button>
-            <button
-              class="skip-rider-primary"
-              @click="skipRating"
-            >
-              {{ $t('general.skip') }}
+            <button class="skip-rider-primary" @click="skipRating">
+              {{$t('general.skip')}}
             </button>
           </div>
         </div>
       </div>
 
       <div class="rate-rider-desc">
-        {{ $t('general.will_use_your_rating_to_match') }}
+       {{$t('general.will_use_your_rating_to_match')}}
       </div>
     </div>
   </span>

@@ -42,13 +42,13 @@
           <a
             class="add-anchor"
             @click="addElement"
-          ><i class="el-icon-circle-plus-outline" />&nbsp;{{ $t('inviteComponent.add_another') }}</a>
+          ><i class="el-icon-circle-plus-outline" />&nbsp;{{ $t('inviteComponent.add_another')}}</a>
           <span> or </span>
           <a
             class="add-anchor"
             href="#"
             @click="invite_many"
-          >{{ $t('inviteComponent.add_many') }}</a>
+          >{{$t('inviteComponent.add_many')}}</a>
         </div>
       </div>
       <div class="addUser--submit">
@@ -69,7 +69,7 @@
           <a
             class="add-anchor inviteMany--anchor"
             @click="getInviteLink"
-          ><i class="el-icon-share" /><span>&nbsp;{{ $t('inviteComponent.get_invite_link') }}</span></a>
+          ><i class="el-icon-share" /><span>&nbsp;{{$t('inviteComponent.get_invite_link')}}</span></a>
         </div>
       </div>
     </div>
@@ -172,6 +172,7 @@ export default {
             cop_id = session[session.default].cop_id;
           }
 
+
           if (this.elements[i].email !== '' && this.elements[i].department !== '') {
             const { email } = this.elements[i];
             const { name } = this.elements[i];
@@ -199,7 +200,7 @@ export default {
                   const notification = {
                     title: this.$t('inviteComponent.add_user'),
                     level,
-                    invitations_sent_succesful: 'Invitations sent successfully',
+  invitations_sent_succesful: 'Invitations sent successfully',
                     message: this.$t('inviteComponent.invitations_sent_succesful'),
                   };
                   this.inviteLog(payload);

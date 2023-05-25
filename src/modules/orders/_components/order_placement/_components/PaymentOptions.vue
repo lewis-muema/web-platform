@@ -90,25 +90,25 @@
             <div
               v-if="display_cards"
               class="card-accounts-list"
-            >
+            > 
               <div
                 class="payment-options-cards-container"
               >
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
-                  <AdditionalCardFields
-                    v-if="showAdditionalCardFields"
-                    :additional-data="additionalData"
-                    :transaction_id="transaction_id"
+                  <AdditionalCardFields 
+                    :additionalData="additionalData" 
+                    :transaction_id="transaction_id" 
+                    v-if="showAdditionalCardFields" 
                     @continue="handleContinue"
                     @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
                     <button
-                      v-if="is3DS"
                       type="button"
                       class="button-primary paymentbody--input-button"
                       style="margin-top: auto;"
                       @click="init3DS"
+                      v-if="is3DS"
                     >
                       Kindly click  here to proceed >>
                     </button>
@@ -173,21 +173,21 @@
                   class="VGS-form"
                   @submit.prevent="onSubmit"
                 >
-                  <AdditionalCardFields
-                    v-if="!loading && showAdditionalCardFields"
-                    :additional-data="additionalData"
-                    :transaction_id="transaction_id"
+                  <AdditionalCardFields 
+                    :additionalData="additionalData" 
+                    :transaction_id="transaction_id" 
+                    v-if="!loading && showAdditionalCardFields" 
                     @continue="handleContinue"
                     @continue3DS="handleContinue3DS"
                   />
 
                   <div v-else>
                     <button
-                      v-if="is3DS"
                       type="button"
                       class="button-primary paymentbody--input-button"
                       style="margin-top: auto;"
                       @click="init3DS"
+                      v-if="is3DS"
                     >
                       Kindly click  here to proceed >>
                     </button>
@@ -251,12 +251,13 @@
               </div>
             </div>
             <div
+              class="loading-margin"
               v-if="loading"
               v-loading="loading"
-              class="loading-margin"
               :element-loading-text="transactionText"
               element-loading-spinner="el-icon-loading"
-            />
+            > 
+            </div>
             <div v-if="!getCardPaymentStatus">
               <p
                 v-if="country === 'KE'"
@@ -613,10 +614,10 @@ const TRUCK_VENDORS = [20, 25];
 
 export default {
   name: 'OrderOptions',
-  components: {
+  components: { 
     PromoCodesComponent,
     AdditionalCardFields: () => import('../../../../payment/_components/AdditionalCardFields.vue'),
-  },
+   },
   mixins: [Mcrypt, PaymentMxn, TimezoneMxn, EventsMixin, NotificationMxn, PromocodesMixin],
   data() {
     return {
@@ -1105,7 +1106,7 @@ export default {
         };
         this.loading = true;
         this.transactionText = 'Initializing card payment...';
-
+        
         this.form.submit(
           '/customers/collect_card_details',
           {
@@ -1126,7 +1127,7 @@ export default {
                 if (res.status) {
                   this.transactionStatus = res.transaction_status;
 
-                  if (res.additional_data) {
+                  if(res.additional_data) {
                     this.additionalData = res.additional_data;
                     if (res.tds) {
                       this.loading = false;
@@ -1156,15 +1157,16 @@ export default {
                     default:
                       break;
                   }
+
                 } else {
                   this.loading = false;
                   this.clearInputs();
                   this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               }).catch(err => {
-                this.loading = false;
-                this.clearInputs();
-                this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.failed_to_charge_card_text'));
+                  this.loading = false;
+                  this.clearInputs();
+                  this.doNotification(2, this.$t('general.failed_to_charge_card'), this.$t('general.failed_to_charge_card_text'));
               });
             } else {
               this.loading = false;
@@ -1173,6 +1175,7 @@ export default {
             }
           },
         );
+      
       } else {
         this.loading = false;
         this.clearInputs();
@@ -1216,7 +1219,8 @@ export default {
           (response) => {
             this.transaction_id = response.transaction_id;
             if (response.status) {
-              if (response.additional_data) {
+
+              if(response.additional_data) {
                 this.additionalData = response.additional_data;
                 this.is3DS = response.tds;
                 if (response.tds) {
@@ -1247,6 +1251,7 @@ export default {
                 default:
                   break;
               }
+
             } else {
               this.loading = false;
               this.transactionText = response.reason;
@@ -1264,7 +1269,7 @@ export default {
         );
       }
     },
-
+    
     transactionPoll() {
       this.poll_count = 0;
       for (let poll_count = 0; poll_count < this.poll_limit; poll_count++) {
@@ -1276,7 +1281,7 @@ export default {
               return;
             }
 
-            that.updateTransactionStatus();
+            that.updateTransactionStatus(); 
             if (poll_count === (that.poll_limit - 1)) {
               that.transactionText = 'card payment Failed';
               that.loading = false;
@@ -1286,6 +1291,7 @@ export default {
               };
               that.clearInputs();
               that.displayNotification(notification);
+              return;
             }
           }, 10000 * poll_count);
         }(poll_count));
@@ -1296,10 +1302,10 @@ export default {
       const fullPayload = {
         app: 'AUTH',
         endpoint: `customers/transaction_status?id=${this.transaction_id}`,
-      };
+      }
       this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
-        if (res.status) {
+        if (res.status) { 
           this.showAdditionalCardFields = false;
           this.transactionText = res.message;
           switch (res.transaction_status) {
@@ -1309,7 +1315,7 @@ export default {
               this.doCompleteOrder();
               const notification1 = {
                 title: res.transaction_status,
-                level,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification1);
@@ -1321,7 +1327,7 @@ export default {
               this.clearInput();
               const notification2 = {
                 title: res.transaction_status,
-                level,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification2);
@@ -1338,7 +1344,7 @@ export default {
         const notification = {
           title: this.$t('general.failed_to_charge_card'),
           level: 2,
-          message: res.message,
+          message: res.message
         };
         this.displayNotification(notification);
       }).catch(error => {
@@ -1347,11 +1353,11 @@ export default {
         const notification = {
           title: this.$t('general.failed_to_charge_card'),
           level: 2,
-          message: this.$t('general.failed_to_charge_card_text'),
+          message: this.$t('general.failed_to_charge_card_text')
         };
         this.clearInputs();
         this.displayNotification(notification);
-      });
+      }) 
     },
 
     handleContinue(val) {
@@ -1391,50 +1397,52 @@ export default {
           clearInterval(timer);
         }
 	  	}, 500);
+
     },
     init3dsPoll() {
       this.loading = true;
       const payload = {
         transaction_id: this.transaction_id,
         tds: true,
-      };
+      }
 
       const fullPayload = {
         values: payload,
         app: 'AUTH',
-        endpoint: 'customers/submit_info',
-      };
+        endpoint: 'customers/submit_info'
+      }
 
       this.paymentAxiosPost(fullPayload).then((res) => {
         if (res.status) {
           switch (res.transaction_status) {
-            case 'pending':
-              this.transactionPoll();
-              this.count = true;
-              break;
-            case 'success':
-              this.poll_count = this.poll_limit;
-              this.clearInputs();
-              this.loading = false;
-              const notification1 = {
-                title: res.transaction_status,
-                level: 1,
-                message: res.message,
-              };
-              this.displayNotification(notification1);
-              break;
-            default:
-              break;
-          }
+              case 'pending':
+                this.transactionPoll();
+                this.count = true;
+                break;
+              case 'success':
+                this.poll_count = this.poll_limit;
+                this.clearInputs();
+                this.loading = false;
+                const notification1 = {
+                  title: res.transaction_status,
+                  level: 1,
+                  message: res.message,
+                };
+                this.displayNotification(notification1);
+                break;
+              default:
+                break;
+          };
+          return;
         }
       }).catch((error) => {
         this.transactionText = this.$t('general.failed_to_charge_card');
         this.loading = false;
         this.clearInputs();
         const notification = {
-          title: this.$t('general.failed_to_charge_card'),
-          level: 2,
-          message: res.message,
+        title: this.$t('general.failed_to_charge_card'),
+        level: 2,
+        message: res.message,
         };
         this.displayNotification(notification);
       });
@@ -2568,7 +2576,7 @@ export default {
         (response) => {
           // decrypt response here
           if (response.status) {
-            const cards = response.saved_payment_methods.filter(el => el.pay_method_id === 2);
+            const cards = response.saved_payment_methods.filter(el => el.pay_method_id === 2)
             this.setSavedCards(cards);
           } else {
             this.setSavedCards([]);

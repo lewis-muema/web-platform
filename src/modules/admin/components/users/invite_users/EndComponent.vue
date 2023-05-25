@@ -3,6 +3,7 @@
     <div class="inv-container">
       <div class="end-header">
         {{ $t('endComponent.invite_sent') }}
+        
       </div>
       <div class="end-text">
         {{ $t('endComponent.invite_sent_successful') }}

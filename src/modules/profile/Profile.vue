@@ -1,25 +1,16 @@
 <template lang="html">
-  <div
-    id="auth_container"
-    class=""
-  >
+  <div id="auth_container" class="">
     <main-header />
     <div class="container">
       <div class="new-card new-card__inner">
         <a class="my-profile__adj">
-          <router-link
-            class="profile--link"
-            to="/profile/personal_information"
-          >
-            {{ $t('general.personal_info') }}
+          <router-link class="profile--link" to="/profile/personal_information">
+            {{$t('general.personal_info')}}
           </router-link>
         </a>
         <div class="my-profile__adj">
-          <router-link
-            class="profile--link"
-            to="/profile/change_password"
-          >
-            {{ $t('general.change_password') }}
+          <router-link class="profile--link" to="/profile/change_password">
+            {{$t('general.change_password')}}
           </router-link>
         </div>
       </div>
@@ -110,6 +101,7 @@ export default {
   /* font-weight: bold !important; */
   font-weight: 500 !important;
   border-bottom: none!important;
+
 
   background-color: #4186c2;
   color: #fff;

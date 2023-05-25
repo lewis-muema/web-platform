@@ -1,30 +1,18 @@
 <template lang="html">
   <div class="new-card2">
-    <div
-      class="help-card"
-      style="width:400px;margin-left:30%;margin-top:30px;"
-    >
-      <p> {{ $t('general.choose_preffered_language') }}</p>
-      <el-select
-        v-model="locale"
-        placeholder="Select"
-        class="select"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+    <div class="help-card" style="width:400px;margin-left:30%;margin-top:30px;">
+        <p> {{$t('general.choose_preffered_language')}}</p>
+        <el-select v-model="locale" placeholder="Select" class="select">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
 
-      <button
-        type="primary"
-        class="button-primary home-view--place-order btn"
-        @click="changeLanguage"
-      >
-        {{ $t('general.save') }}
-      </button>
+        <button type="primary" class="button-primary home-view--place-order btn" @click="changeLanguage" >{{$t('general.save')}}</button>
+
     </div>
   </div>
 </template>
@@ -35,25 +23,25 @@ import NotificationMxn from '../../../mixins/notification_mixin';
 import EventsMixin from '../../../mixins/events_mixin';
 
 export default {
-  name: 'ChangeLanguage',
+  name: 'changeLanguage',
   mixins: [NotificationMxn, EventsMixin],
   data() {
     return {
       options: [
         {
           value: 'en',
-          label: 'English (EN)',
+          label: 'English (EN)'
         },
         {
-          value: 'fr',
-          label: 'Francais (FR)',
+        value: 'fr',
+        label: 'Francais (FR)'
         },
       ],
       locale: 'en',
-    };
+    }
   },
   computed: {
-    ...mapGetters(['getSession', 'getENV']),
+    ...mapGetters(['getSession', 'getENV'])
   },
   watch: {
     locale(val) {
@@ -63,7 +51,7 @@ export default {
       localStorage.setItem('timeLocale', val);
       localStorage.setItem('language', acceptLanguage);
       this.setLanguage(val);
-      this.sendGA4Events('select_language', { language_name: this.options.filter(data => data.value === val)[0].label });
+      this.sendGA4Events('select_language', {language_name: this.options.filter(data => data.value === val)[0].label});
     },
   },
   mounted() {
@@ -86,17 +74,18 @@ export default {
       const session = this.getSession;
       const payload = {
         preferred_language: this.locale,
-      };
+      }
       switch (session.default) {
         case 'biz': {
           if (session[session.default].user_type === 2) {
             payload.cop_user_id = session[session.default].user_id;
-          } else {
+          }
+          else {
             payload.user_id = session[session.default].user_id;
           }
           break;
         }
-        default: {
+        default:{
           payload.user_id = session[session.default].user_id;
           break;
         }
@@ -108,25 +97,23 @@ export default {
         endpoint: 'user-preferences',
       };
 
-      this.requestChangeLanguage(fullPayload).then(
-        (response) => {
-          const level = response.status ? 1 : 3;
-          this.message = response.status ? this.$t('general.language_changed') : this.$t('general.something_went_wrong');
-          const notification = { title: '', level, message: this.message };
-          this.displayNotification(notification);
-        },
-        (error) => {
-          const level = 3;
-          this.message = this.$t('general.something_went_wrong');
-          const notification = { title: '', level, message: this.message };
-          this.displayNotification(notification);
-        },
-      );
-    },
+      this.requestChangeLanguage(fullPayload).then((response) => {
+        const level = response.status ? 1 : 3 ;
+        this.message = response.status ? this.$t('general.language_changed') : this.$t('general.something_went_wrong');
+        const notification = { title: '', level, message: this.message };
+        this.displayNotification(notification);
+      },
+      (error) => {
+        const level = 3;
+        this.message = this.$t('general.something_went_wrong');
+        const notification = { title: '', level, message: this.message };
+        this.displayNotification(notification);
+      });
+    }
 
-  },
+  }
 
-};
+}
 </script>
 
 <style scoped>

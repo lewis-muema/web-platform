@@ -1,16 +1,16 @@
 {
   "presets": [
+    ["env", { "modules": false }],
     [
-      "@babel/preset-env",
+      "es2015",
       {
-        "loose": true,
         "modules": false
       }
     ]
   ],
   "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-    "@babel/plugin-proposal-object-rest-spread",
+    "syntax-dynamic-import",
+    "transform-object-rest-spread",
     [
       "component",
       {

@@ -13,6 +13,7 @@ import Vuex from 'vuex';
 // import Payments from '../../_components/Payments.vue';
 // import Statement from '../../_components/Statement.vue';
 
+
 Vue.use(Vuex);
 
 describe('Transactions.vue', () => {

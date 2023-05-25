@@ -102,13 +102,13 @@
       <div class="api--help-content">
         <p>
           <span class="content--bold">
-            {{ $t('api.ready_to_start') }}
+            {{$t('api.ready_to_start')}}
           </span>
-          {{ $t('api.head_over') }}
+          {{$t('api.head_over')}}
           <a
             href="https://api.sendyit.com/v2/documentation"
             target="_blank"
-          > {{ $t('api.developer_site') }} </a>&nbsp;{{ $t('api.complete_doc') }}
+          > {{$t('api.developer_site')}} </a>&nbsp;{{$t('api.complete_doc')}}
         </p>
       </div>
       <el-dialog

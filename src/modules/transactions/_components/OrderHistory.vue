@@ -79,7 +79,7 @@
             type="primary"
             size="mini"
           >
-            {{ $t('general.download') }}<i class="el-icon-arrow-down el-icon--right" />
+            {{$t('general.download')}}<i class="el-icon-arrow-down el-icon--right" />
           </el-button>
           <el-dropdown-menu
             id="order_hist"
@@ -87,10 +87,10 @@
             class="export_dropdown"
           >
             <el-dropdown-item command="a">
-              {{ $t('general.excel') }}
+              {{$t('general.excel')}}
             </el-dropdown-item>
             <el-dropdown-item command="b">
-              {{ $t('general.pdf') }}
+              {{$t('general.pdf')}}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -228,6 +228,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import numeral from 'numeral';
 import TimezoneMxn from '../../../mixins/timezone_mixin';
 import EventsMixin from '../../../mixins/events_mixin';
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -509,7 +510,7 @@ export default {
           params: { id: row.order_id },
         });
       }
-      this.sendGA4Events('select_order', { order_number: row.order_no });
+      this.sendGA4Events('select_order', {order_number: row.order_no});
     },
     handleRowExpand(row) {
       // check if expand keys contains the same order_id
@@ -550,7 +551,7 @@ export default {
           this.order_history_text = this.$t('general.search');
 
           if (Object.prototype.hasOwnProperty.call(error.response.data, 'data')) {
-            this.empty_orders_state = this.$t('general.no_order_history_for_user');
+            this.empty_orders_state = this.$t('general.no_order_history_for_user')
           } else {
             this.empty_orders_state = this.$t('general.order_history_failed');
           }

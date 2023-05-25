@@ -785,7 +785,7 @@ button.default.action--slide-button {
 }
 .cancel-reason-subtitle-mod {
   margin-left: 8% !important;
-  margin-right: 8%;
+  margin-right: 8%; 
 }
 #cancel-reason-text > div > label > span.el-radio__label{
   line-height: 23px;
@@ -1007,7 +1007,7 @@ button.default.action--slide-button {
   width: 42%;
 }
 .price-split-estimate-value{
-  display: block;
+  display: block; */
   width: 50%;
   text-align: center;
   margin-top: -3%;

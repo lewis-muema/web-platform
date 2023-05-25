@@ -40,7 +40,7 @@
           class="button-primary section--filter-action btn-payment"
           @click="take_to_payment"
         >
-          {{ $t('general.pay') }}
+          {{$t('general.pay')}}
         </button>
       </div>
     </div>

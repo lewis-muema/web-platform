@@ -13,7 +13,7 @@
     </div>
     <div class="payinfo-container">
       <div class="paytitle">
-        {{ $t('general.top_up_your_sendy_account') }}
+       {{$t('general.top_up_your_sendy_account')}}
       </div>
       <div class="payinfo">
         <div class="payinfo-icon-container">
@@ -24,7 +24,7 @@
         </div>
         <div class="payinfo--balance">
           <p class="account-balance-info-title">
-            {{ $t('general.account_balance') }}
+            {{$t('general.account_balance')}}
           </p>
           <p class="account-balance-info-body">
             {{ getActiveCurrency }}<span class="payinfo--balance-el">{{ running_balance }}</span>
@@ -113,7 +113,7 @@ export default {
         (response) => {
           if (response.status) {
             this.currencies = response.data.currencies;
-          }
+          }          
         },
         (error) => {
           // ...

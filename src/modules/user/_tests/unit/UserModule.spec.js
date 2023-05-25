@@ -11,6 +11,7 @@ import Vuex from 'vuex';
 // import PersonalInfo from '../../_components/PersonalInfo.vue';
 // import Profile from '../../_components/Profile.vue';
 
+
 Vue.use(Vuex);
 
 describe('User.vue', () => {

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <a
-      v-if="$route.name === 'freight_order_tracking'"
+      v-if="this.$route.name === 'freight_order_tracking'"
       class="back--button"
       @click="$router.push('/orders/freight');"
     >
@@ -22,18 +22,12 @@
           >
             <div class="">
               <div class="cancel-reason-title-name">
-                {{ $t('general.why_cancel') }}
+                {{$t('general.why_cancel')}}
               </div>
             </div>
             <div class="cancel-reason-text">
-              <div
-                v-for="reason in cancellation_reasons"
-                :key="reason.id"
-              >
-                <div
-                  id="cancel-reason-text"
-                  class="cancel-reason-text"
-                >
+              <div v-for="reason in cancellation_reasons" :key="reason.id">
+                <div class="cancel-reason-text" id="cancel-reason-text">
                   <div class="">
                     <el-radio
                       v-model="cancel_reason"
@@ -61,7 +55,7 @@
                 class="action--slide-button cancellation-submit submit-cancell-btn"
                 @click="cancelOrder()"
               >
-                {{ $t('general.submitCapital') }}
+                {{$t('general.submitCapital')}}
               </button>
               <button
                 type="button"
@@ -69,7 +63,7 @@
                 class="action--slide-button cancellation-submit"
                 @click="cancelToggle()"
               >
-                {{ $t('general.dont_cancel') }}
+                {{$t('general.dont_cancel')}}
               </button>
             </div>
           </div>
@@ -78,7 +72,7 @@
             class="cancelOptions--content-wrap"
           >
             <div class="cancelOptions--content-message">
-              {{ $t('general.call_rider_and_right_destination') }}
+              {{$t('general.call_rider_and_right_destination')}}
             </div>
             <div class="cancelOptions--content-buttons">
               <button
@@ -87,7 +81,7 @@
                 class="action--slide-button cancellation-submit submit-cancell-btn"
                 @click="cancelToggle(cancel_reason)"
               >
-                {{ $t('general.ok_call_rider') }}
+                {{$t('general.ok_call_rider')}}
               </button>
               <button
                 type="button"
@@ -95,17 +89,14 @@
                 class="action--slide-button cancellation-submit"
                 @click="cancelOrder()"
               >
-                {{ $t('general.cancel_order') }}
+               {{$t('general.cancel_order')}}
               </button>
             </div>
           </div>
         </el-dialog>
       </div>
     </transition>
-    <FbuTrackBar
-      @fetchreasons="retrieveCancellationReasons()"
-      @clicked="cancelOption = true"
-    />
+    <FbuTrackBar @fetchreasons="retrieveCancellationReasons()" @clicked="cancelOption = true" />
   </div>
 </template>
 
@@ -316,14 +307,14 @@ export default {
                 that.doNotification(
                   2,
                   this.$t('general.order_cancellation_failed'),
-                  this.$t('general.not_cancel_order_contact_support'),
+                  this.$t('general.not_cancel_order_contact_support')
                 );
               }
             });
           }
         });
       } else {
-        this.doNotification(3, this.$t('general.order_cancellation_failed'), this.$t('general.select_cancellation_reason'));
+        this.doNotification(3,  this.$t('general.order_cancellation_failed'),  this.$t('general.select_cancellation_reason'));
       }
     },
     doNotification(level, title, message) {

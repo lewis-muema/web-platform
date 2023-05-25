@@ -1,5 +1,7 @@
-/* global describe,beforeEach,it */
 /* eslint no-undef: "error" */
+/* eslint-disable no-unused-vars */
+/* global describe,beforeEach,it */
+
 import Vue from 'vue';
 
 import { expect } from 'chai';
@@ -21,4 +23,10 @@ describe('HeaderComponent.vue', () => {
     });
   });
 
+  // it('calculates progress_width from the store getter', () => {
+  //   const wrapper = mount(HeaderComponent, {
+  //     store,
+  //   });
+  //   expect(wrapper.vm.progress_width.width).equal('50%');
+  // });
 });

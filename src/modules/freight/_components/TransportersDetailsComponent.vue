@@ -1066,12 +1066,12 @@ export default {
               clientMode: session.default === 'peer' ? 'Peer' : 'Cop',
               device: 'Desktop',
             });
-            const eventPayload = {
-              eventCategory: 'Form submission',
-              eventAction: 'Submit shipment request',
-              eventLabel: 'Shipment request order',
-            };
-            this.fireGAEvent(eventPayload);
+             const eventPayload = {
+        eventCategory: 'Form submission',
+        eventAction: 'Submit shipment request',
+        eventLabel : 'Shipment request order',
+      };
+      this.fireGAEvent(eventPayload);
           } else {
             this.doNotification(
               2,

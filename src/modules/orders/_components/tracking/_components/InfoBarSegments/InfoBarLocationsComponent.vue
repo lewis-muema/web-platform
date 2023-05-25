@@ -8,7 +8,7 @@
         <ul class="timeline inforbar_route_timeline">
           <li>
             <p class="info-text-transform infor-top-bar-text">
-              {{ $t('general.pickup_location') }}
+              {{$t('general.pickup_location')}}
             </p>
             <p>{{ trackingData.path[0].name }}</p>
             <p
@@ -17,7 +17,7 @@
               @click="showEditLocationsDialog()"
             >
               <i class="el-icon-edit-outline" />
-              {{ $t('general.add_change_locations') }}
+              {{$t('general.add_change_locations')}}
             </p>
           </li>
 
@@ -44,7 +44,7 @@
               v-if="Object.prototype.hasOwnProperty.call(val, 'notes') && val.notes"
               class="infor-top-bar-text-notes"
             >
-              {{ $t('general.notes') }}: {{ val.notes }}
+              {{$t('general.notes')}}: {{ val.notes }}
             </p>
           </li>
         </ul>

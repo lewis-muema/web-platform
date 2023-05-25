@@ -31,10 +31,10 @@
             >
               <div class="">
                 <p class="infor-top-bar-text stagePassed">
-                  {{ $t('general.your_order_has_been_scheduled') }}
+                  {{$t('general.your_order_has_been_scheduled')}}
                 </p>
                 <p v-if="getScheduleStatus">
-                  {{ $t('general.scheduled_by_1_hour') }}
+                  {{$t('general.scheduled_by_1_hour')}}
                 </p>
                 <p class="eta_data">
                   {{ convertToUTCToLocal(trackingData.date_time) | moment }}
@@ -53,7 +53,7 @@
                   class="infor-top-bar-text"
                   :class="{ payedActive: setPayed }"
                 >
-                  {{ $t('general.price_confirmation') }}
+                  {{$t('general.price_confirmation')}}
                 </p>
                 <div
                   v-if="getStatus === 'Pending'"
@@ -66,7 +66,7 @@
                       class=""
                     >
                       <p>
-                        {{ $t('general.price_has_been_confirmed_to_be') }}
+                        {{$t('general.price_has_been_confirmed_to_be')}}
                         {{
                           trackingData.price_tier.currency
                             ? trackingData.price_tier.currency
@@ -81,7 +81,7 @@
                     >
                       <div v-if="myRb <= 0">
                         <p>
-                          {{ $t('general.price_has_been_confirmed_to_be') }}
+                          {{$t('general.price_has_been_confirmed_to_be')}}
                           {{
                             trackingData.price_tier.currency
                               ? trackingData.price_tier.currency
@@ -92,20 +92,20 @@
                       </div>
                       <div v-else>
                         <p>
-                          {{ $t('general.price_has_been_confirmed_to_be') }}
+                          {{$t('general.price_has_been_confirmed_to_be')}}
                           {{
                             trackingData.price_tier.currency
                               ? trackingData.price_tier.currency
                               : trackingData.currency
                           }}
-                          {{ trackingData.amount }}.{{ $t('general.choose_payment_option_below') }}
+                          {{ trackingData.amount }}.{{$t('general.choose_payment_option_below')}}
                         </p>
                         <div class="">
                           <el-radio
                             v-model="paymentOption"
                             label="1"
                           >
-                            {{ $t('general.mpesa') }}
+                            {{$t('general.mpesa')}}
                           </el-radio>
                         </div>
                         <div class="">
@@ -113,7 +113,7 @@
                             v-model="paymentOption"
                             label="2"
                           >
-                            {{ $t('general.card') }}
+                            {{$t('general.card')}}
                           </el-radio>
                         </div>
                         <div class="info-payment-button">
@@ -146,13 +146,13 @@
               >
                 <span v-if="trackingData.confirm_status > 0">
                   <p class="stagePassed">
-                    {{ $t('general.matched_parter_to_package', {getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName }) }}
+                    {{$t('general.matched_parter_to_package', {getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName })}}
                   </p>
                   <p class="eta_data">{{ getConfirmEta }}</p>
                 </span>
                 <span v-else>
                   <p class="stagePending">
-                    {{ $t('general.finding_partner_to_package',{getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName }) }}
+                    {{$t('general.finding_partner_to_package',{getTrackPartnerName: getTrackPartnerName, getTrackPackageName: getTrackPackageName })}}
                   </p>
                   <p
                     class="eta_data"
@@ -178,15 +178,15 @@
               >
                 <span v-if="trackingData.delivery_status > 0">
                   <p class="stagePassed">
-                    {{ $t('general.your') }} {{ getTrackPartnerName }} {{ trackingData.rider.rider_name }} {{ $t('general.has_picked_your') }}
-
+                    {{$t('general.your')}} {{ getTrackPartnerName }} {{ trackingData.rider.rider_name }} {{$t('general.has_picked_your')}}
+                    
                     {{ getTrackPackageName }}
                   </p>
                   <p class="eta_data">{{ getPickUpEta }}</p>
                 </span>
                 <span v-else>
                   <p class="stagePending">
-                    {{ $t('general.your') }}  {{ getTrackPartnerName }} {{ $t('general.is_on_the_way_to_pick') }}
+                    {{$t('general.your')}}  {{ getTrackPartnerName }} {{$t('general.is_on_the_way_to_pick')}} 
                     {{ getTrackPackageName }}
                   </p>
                   <p class="eta_data">{{ getPickUpEta }}</p>
@@ -215,25 +215,25 @@
                 >
                   <span v-if="trackingData.delivery_status < 3 && !val.visited">
                     <p class="stagePending">
-                      {{ $t('general.your') }}  {{ getTrackPartnerName }} {{ $t('general.is_on_the_way_to_pick') }}
-                      {{ getTrackPackageName }} {{ $t('general.at') }}
+                      {{$t('general.your')}}  {{ getTrackPartnerName }} {{$t('general.is_on_the_way_to_pick')}} 
+                      {{ getTrackPackageName }} {{$t('general.at')}} 
                     </p>
                   </span>
                   <span v-else>
                     <p class="stagePassed">
-                      {{ $t('general.your') }}  {{ getTrackPackageName }} {{ $t('general.at') }}  {{ val.name }} {{ $t('general.has_been_picked') }}
+                      {{$t('general.your')}}  {{ getTrackPackageName }} {{$t('general.at')}}  {{ val.name }} {{$t('general.has_been_picked')}}
                     </p>
                   </span>
                 </span>
                 <span v-else>
                   <span v-if="trackingData.delivery_status < 3 && !val.visited">
                     <p class="stagePending">
-                      {{ $t('general.your') }} {{ getTrackPackageName }} {{ $t('general.is_on_the_way_to') }} {{ val.name }}
+                      {{$t('general.your')}} {{ getTrackPackageName }} {{$t('general.is_on_the_way_to')}} {{ val.name }}
                     </p>
                   </span>
                   <span v-else>
                     <p class="stagePassed">
-                      {{ $t('general.your') }} {{ getTrackPackageName }} {{ $t('general.has_been_delivered_to') }}{{ val.name }}
+                      {{$t('general.your')}} {{ getTrackPackageName }} {{$t('general.has_been_delivered_to')}}{{ val.name }}
                     </p>
                   </span>
                 </span>
@@ -253,7 +253,7 @@
               >
                 <span>
                   <p :class="{ stagePassed: setComplete }">
-                    {{ $t('general.delivery_complete') }}
+                    {{$t('general.delivery_complete')}}
                   </p>
                 </span>
               </div>

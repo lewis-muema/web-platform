@@ -16,11 +16,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title .center-align">
-                  {{ $t('general.timeliness') }}
+                  {{$t('general.timeliness')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.delivery_late') }}</p>
+                <p>{{$t('general.delivery_late')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -30,7 +30,7 @@
                   class="fancybox"
                   @click="selectReason(1)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -39,12 +39,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.politeness') }}
+                  {{$t('general.politeness')}}
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p> {{ $t('general.rider_not_polite') }}</p>
+                <p> {{$t('general.rider_not_polite')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -54,7 +54,7 @@
                   class="fancybox"
                   @click="selectReason(5)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -63,13 +63,13 @@
             <div class="card ">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.pricing') }}
+                  {{$t('general.pricing')}}
                 </span>
               </div>
               <div class="card-content grey-text">
                 <p>
-                  {{ $t('general.pricing_not_fair') }}
-                </p>
+                  {{$t('general.pricing_not_fair')}}
+                  </p>
               </div>
               <div class="card-action">
                 <a
@@ -79,7 +79,7 @@
                   class="fancybox"
                   @click="selectReason(6)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -88,12 +88,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.payment') }}
+                  {{$t('general.payment')}}
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p>{{ $t('general.payment_process_was_complex') }}</p>
+                <p>{{$t('general.payment_process_was_complex')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -103,7 +103,7 @@
                   class="fancybox"
                   @click="selectReason(2)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -112,11 +112,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.app') }}
+                  {{$t('general.app')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.app_not_easy_to_use') }}</p>
+                <p>{{$t('general.app_not_easy_to_use')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -126,7 +126,7 @@
                   class="fancybox"
                   @click="selectReason(7)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -135,11 +135,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.directions') }}
+                  {{$t('general.directions')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.rider_was_lost') }}</p>
+                <p>{{$t('general.rider_was_lost')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -149,7 +149,7 @@
                   class="fancybox"
                   @click="selectReason(3)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -160,11 +160,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title .center-align">
-                  {{ $t('general.timeliness') }}
+                  {{$t('general.timeliness')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.deliver_on_time') }}</p>
+                <p>{{$t('general.deliver_on_time')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -174,7 +174,7 @@
                   class="fancybox"
                   @click="selectReason(1)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -183,12 +183,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.payment') }}
+                  {{$t('general.payment')}}
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p>{{ $t('general.make_payment_process_easier') }}</p>
+                <p>{{$t('general.make_payment_process_easier')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -198,7 +198,7 @@
                   class="fancybox"
                   @click="selectReason(2)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -207,11 +207,11 @@
             <div class="card ">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.directions') }}
+                  {{$t('general.directions')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.send_rider_farmiliar_with_the_location') }}</p>
+                <p>{{$t('general.send_rider_farmiliar_with_the_location')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -221,7 +221,7 @@
                   class="fancybox"
                   @click="selectReason(3)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -232,11 +232,11 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title .center-align">
-                  {{ $t('general.timeliness') }}
+                  {{$t('general.timeliness')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.speedy_delivery') }}</p>
+                <p>{{$t('general.speedy_delivery')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -245,7 +245,7 @@
                   class="fancybox"
                   @click="selectReason(1)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -254,12 +254,12 @@
             <div class="card">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.politeness') }}
+                  {{$t('general.politeness')}}
                 </span>
               </div>
               <div class="card-content grey-text">
                 <span class="card-title" />
-                <p>{{ $t('general.polite_riders') }}</p>
+                <p>{{$t('general.polite_riders')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -268,7 +268,7 @@
                   class="fancybox"
                   @click="selectReason(5)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -277,11 +277,11 @@
             <div class="card ">
               <div class="card-image">
                 <img :src="cards_background"><span class="card-title">
-                  {{ $t('general.directions') }}
+                  {{$t('general.directions')}}
                 </span>
               </div>
               <div class="card-content grey-text">
-                <p>{{ $t('general.clear_directions') }}</p>
+                <p>{{$t('general.clear_directions')}}</p>
               </div>
               <div class="card-action">
                 <a
@@ -290,7 +290,7 @@
                   class="fancybox"
                   @click="selectReason(3)"
                 >
-                  {{ $t('general.comment') }}
+                  {{$t('general.comment')}}
                 </a>
               </div>
             </div>
@@ -302,14 +302,14 @@
           style="display:none"
         >
           <div class="rate-rider-thank">
-            {{ $t('general.thank_you') }}
+            {{$t('general.thank_you')}}
           </div>
           <div
             id="rated1"
             class="rider3-rate"
           />
           <div class="rate-rider-tell">
-            {{ $t('general.please_share_your_experience') }}
+            {{$t('general.please_share_your_experience')}}
           </div>
           <form
             action=""
@@ -378,14 +378,14 @@
         <span class="rider-spaceless" />
         <div id="writecomment">
           <div class="rate-rider-thank">
-            {{ $t('general.thank_you') }}
+            {{$t('general.thank_you')}}
           </div>
           <div
             id="rated1"
             class="rider3-rate"
           />
           <div class="rate-rider-tell">
-            {{ $t('general.please_share_your_experience') }}
+            {{$t('general.please_share_your_experience')}}
           </div>
           <form
             action=""

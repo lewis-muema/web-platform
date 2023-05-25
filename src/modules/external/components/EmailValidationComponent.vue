@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="screen-two">
     <div class="onboarding-user-header">
-      {{ $t('emailValidation.connect') }}
+      {{$t('emailValidation.connect')}}
     </div>
     <p class="onboard-error">
       {{ message }}
@@ -10,7 +10,7 @@
       <div class="row">
         <div class="input-field2">
           <label class="input-descript">
-            <span>{{ $t('emailValidation.personal_email') }}</span>
+            <span>{{$t('emailValidation.personal_email')}}</span>
           </label>
           <input
             v-model="peerEmail"
@@ -34,7 +34,7 @@
         class="waves-effect waves-teal btn-flat"
         @click="last_view"
       >
-        {{ $t('emailValidation.back') }}
+        {{$t('emailValidation.back')}}
       </a>
       <button
         id="nextBtn"

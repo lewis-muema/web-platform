@@ -6,7 +6,7 @@
     >
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>{{ $t('general.old_password') }}</span>
+          <span>{{$t('general.old_password')}}</span>
         </label>
         <input
           v-model="old_password"
@@ -18,7 +18,7 @@
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>{{ $t('general.new_password') }}</span>
+          <span>{{$t('general.new_password')}}</span>
         </label>
         <input
           v-model="new_password"
@@ -30,7 +30,7 @@
       </p>
       <p style="margin-bottom: 20px;">
         <label class="input-descript">
-          <span>{{ $t('general.confirm_password') }}</span>
+          <span>{{$t('general.confirm_password')}}</span>
         </label>
         <input
           v-model="confirm_password"
@@ -133,7 +133,7 @@ export default {
               (response) => {
                 if (response.status) {
                   this.trackMixpanelEvent('Change Password');
-
+                  
                   const level = 1; // success
                   this.message = this.$t('general.password_changed_redirected');
                   const notification = { title: this.$t('general.password_change'), level, message: this.message }; // notification object

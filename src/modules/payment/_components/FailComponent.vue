@@ -12,14 +12,14 @@
         class="button-primary align-left"
         @click="backToPaymentRequest"
       >
-        {{ $t('general.help') }}
+        {{$t('general.help')}}
       </button>
       <button
         type="button"
         class="button-primary align-right"
         @click="backToPaymentRequest"
       >
-        {{ $t('general.ok') }}
+        {{$t('general.ok')}}
       </button>
     </div>
   </div>

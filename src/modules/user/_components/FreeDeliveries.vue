@@ -6,7 +6,7 @@
           class="section__link"
           to="/user/free-deliveries"
         >
-          {{ $t('general.free_delivery') }}
+         {{ $t('general.free_delivery') }}
         </router-link>
       </div>
       <div class="free-deliveries--background">
@@ -18,11 +18,11 @@
             <p>
               {{ $t('general.send_a_friend_free_delivery') }}
               <a href="">
-                {{ $t('general.more_details') }}
+               {{ $t('general.more_details') }}
               </a>
             </p>
             <p class="free-text--hidden">
-              {{ $t('general.invite_a_friend') }}
+             {{ $t('general.invite_a_friend') }}
             </p>
             <p>{{ $t('general.share_link_below') }}</p>
           </div>
@@ -92,7 +92,7 @@
             </span>
             <span>
               1 <br>
-              {{ $t('general.friends_joined') }}
+               {{ $t('general.friends_joined') }}
             </span>
           </div>
         </div>

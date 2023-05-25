@@ -3,34 +3,25 @@
     <div class="payment--loading-title">
       {{ payment_loading_title }}
     </div>
-    <div class="payment--mpesa-loader" />
+    <div class="payment--mpesa-loader"/>
 
-    <div
-      v-if="count"
-      class="text-center timer"
-    >
+    <div v-if="count" class="text-center timer"> 
       <span>
         {{ formatedCountdown }}
-      </span>
+      </span> 
     </div>
-    <div
-      v-if="transactionText"
-      class="text-center"
-    >
+    <div v-if="transactionText" class="text-center"> 
       <span>
-        {{ transactionText }}
-      </span>
+        {{ transactionText}}
+      </span> 
     </div>
-    <div
-      v-if="payMethod !== 'card'"
-      class="paymemt--mpesa-loader-actions"
-    >
+    <div class="paymemt--mpesa-loader-actions" v-if="payMethod !== 'card'">
       <button
         type="button"
         class="button-primary paymentbody--input-button"
         @click="cancelPaymentRequest"
       >
-        {{ $t('general.cancel') }}
+        {{$t('general.cancel')}}
       </button>
     </div>
   </div>
@@ -38,8 +29,8 @@
 
 <script>
 import { mapActions } from 'vuex';
-import * as moment from 'moment';
-import 'moment-duration-format';
+import * as moment from "moment";
+import "moment-duration-format";
 
 export default {
   name: 'PaymentLoading',
@@ -73,7 +64,7 @@ export default {
       }
     },
     formatedCountdown() {
-      return moment.duration(this.countdown, 'seconds').format('mm:ss');
+        return moment.duration(this.countdown, "seconds").format("mm:ss");
     },
   },
   watch: {
@@ -81,7 +72,7 @@ export default {
       if (val) {
         this.startCount();
       }
-    },
+    }
   },
   mounted() {
     if (this.count) {
@@ -103,14 +94,15 @@ export default {
       }
     },
     startCount() {
-      const stopCountdown = setInterval(() => {
+        const stopCountdown = setInterval(() => {
         this.countdown -= 1;
         if (!this.countdown) {
           clearInterval(stopCountdown);
           this.$emit('close');
-        }
+        } 
       }, 1000);
-    },
+
+    }
   },
 };
 </script>

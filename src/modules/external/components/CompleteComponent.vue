@@ -1,13 +1,13 @@
 <template lang="html">
   <div class="complete-outer">
     <div class="complete-header">
-      {{ $t('completeComponent.congrats') }}
+      {{$t('completeComponent.congrats')}}
     </div>
     <div class="complete-contents">
       <div class="complete-pair">
-        <p>{{ $t('completeComponent.enjoy_services') }}</p>
+        <p>{{$t('completeComponent.enjoy_services')}}</p>
         <p v-if="getPerEmail !== ''">
-          {{ $t('completeComponent.double_convinience') }}
+          {{$t('completeComponent.double_convinience')}}
         </p>
       </div>
       <div
@@ -15,23 +15,23 @@
         class="complete-pair"
       >
         <p>
-          {{ $t('completeComponent.account_connected') }}
+          {{$t('completeComponent.account_connected')}}
         </p>
-        <p>{{ $t('completeComponent.login_account') }}</p>
+        <p>{{$t('completeComponent.login_account')}}</p>
       </div>
       <div
         v-else
         class="complete-pair"
       >
         <p>
-          {{ $t('completeComponent.account_created') }}
+          {{$t('completeComponent.account_created')}}
         </p>
-        <p>{{ $t('completeComponent.login_any_time') }}</p>
+        <p>{{$t('completeComponent.login_any_time')}}</p>
       </div>
       <div class="complete-pair">
         <p>{{ getBizName }}: {{ getBizEmail }}</p>
         <p v-if="getPerEmail !== ''">
-          {{ $t('completeComponent.personal') }}: {{ getPerEmail }}
+          {{$t('completeComponent.personal')}}: {{ getPerEmail }}
         </p>
       </div>
     </div>

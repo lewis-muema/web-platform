@@ -41,7 +41,7 @@
           >
             <div class="home-view-payments-wrapper--left">
               <div class="home-view-payments-wrapper--left__amount-label">
-                {{ $t('general.total_payment') }}
+                {{$t('general.total_payment')}}
               </div>
               <div class="home-view-payments-wrapper--left__amount-figure">
                 {{ rb_currency }} {{ pending_amount }}
@@ -84,26 +84,26 @@
             >
               <div class="payment-options-cards-container">
                 <div v-if="!addCardStatus && get_saved_cards.length > 0">
-                  <AdditionalCardFields
-                    v-if="showAdditionalCardFields"
-                    :additional-data="additionalData"
-                    :transaction_id="transaction_id"
+                  <AdditionalCardFields 
+                    :additionalData="additionalData" 
+                    :transaction_id="transaction_id" 
+                    v-if="showAdditionalCardFields" 
                     @continue="handleContinue"
                     @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
                     <button
-                      v-if="is3DS"
                       type="button"
                       class="button-primary paymentbody--input-button"
                       style="margin-top: auto;"
                       @click="init3DS"
+                      v-if="is3DS"
                     >
                       Kindly click  here to proceed >>
                     </button>
                     <div v-else>
                       <div v-if="deletedCardIndex === ''">
-                        <p class="payment-options-cards-title">{{ $t('general.saved_cards') }}</p>
+                        <p class="payment-options-cards-title">{{$t('general.saved_cards')}}</p>
                         <div
                           v-for="(cards, index) in get_saved_cards"
                           :key="index"
@@ -132,7 +132,7 @@
                               class="payment-options-add-card-icon"
                             />
                           </span>
-                          <span class="payment-options-add-card">{{ $t('general.add_new_card') }}</span>
+                          <span class="payment-options-add-card">{{$t('general.add_new_card')}}</span>
                         </div>
                       </div>
                       <div
@@ -140,18 +140,18 @@
                         class="delete-saved-card-dialogue"
                       >
                         <p class="delete-saved-card-dialogue-label">
-                          {{ $t('general.sure_delete_card') }}
+                          {{$t('general.sure_delete_card')}}
                           <strong>{{ get_saved_cards[deletedCardIndex].pay_method_details }}</strong>?
                         </p>
                         <p class="delete-saved-card-dialogue-label">
                           <span
                             class="delete-saved-card-dialogue-buttons"
                             @click="deleteSavedCard(deletedCardIndex)"
-                          >{{ $t('general.yes') }}</span>
+                          >{{$t('general.yes')}}</span>
                           <span
                             class="delete-saved-card-dialogue-buttons"
                             @click="deletedCardIndex = ''"
-                          >{{ $t('general.no') }}</span>
+                          >{{$t('general.no')}}</span>
                         </p>
                       </div>
                     </div>
@@ -162,36 +162,36 @@
                   class="VGS-form"
                   @submit.prevent="onSubmit"
                 >
-                  <AdditionalCardFields
-                    v-if="!loading && showAdditionalCardFields"
-                    :additional-data="additionalData"
-                    :transaction_id="transaction_id"
+                  <AdditionalCardFields 
+                    :additionalData="additionalData" 
+                    :transaction_id="transaction_id" 
+                    v-if="!loading && showAdditionalCardFields" 
                     @continue="handleContinue"
                     @continue3DS="handleContinue3DS"
                   />
                   <div v-else>
                     <button
-                      v-if="is3DS"
                       type="button"
                       class="button-primary paymentbody--input-button"
                       style="margin-top: auto;"
                       @click="init3DS"
+                      v-if="is3DS"
                     >
                       Kindly click  here to proceed >>
                     </button>
                     <div v-else>
                       <span
-                        v-if="get_saved_cards.length > 0"
-                        class="payment-options-cards-title back-option"
-                        @click="addCardStatus = !addCardStatus"
-                      >
-                        <font-awesome-icon
-                          icon="arrow-left"
-                          class="payment-options-add-card-icon"
-                        />
-                        {{ $t('general.back') }}
+                      v-if="get_saved_cards.length > 0"
+                      class="payment-options-cards-title back-option"
+                      @click="addCardStatus = !addCardStatus"
+                    >
+                      <font-awesome-icon
+                        icon="arrow-left"
+                        class="payment-options-add-card-icon"
+                      />
+                      {{$t('general.back')}}
                       </span>
-                      <p class="payment-options-cards-title">{{ $t('general.add_new_card') }}</p>
+                      <p class="payment-options-cards-title">{{$t('general.add_new_card')}}</p>
                       <div
                         id="cc-number"
                         class="form-group"
@@ -219,18 +219,18 @@
                         </div>
                       </div>
                       <div
-                        id="cc-save-card-1"
-                        class="form-group"
-                      >
-                        <div class="form-control-static">
-                          <input
-                            v-model="saveCardState"
-                            type="checkbox"
-                          >
-                          <span
-                            class="fake-checkbox-label-1"
-                          >{{ $t('general.save_card_for_future_orders') }}</span>
-                        </div>
+                      id="cc-save-card-1"
+                      class="form-group"
+                    >
+                      <div class="form-control-static">
+                        <input
+                          v-model="saveCardState"
+                          type="checkbox"
+                        >
+                        <span
+                          class="fake-checkbox-label-1"
+                        >{{$t('general.save_card_for_future_orders')}}</span>
+                      </div>
                       </div>
                     </div>
                   </div>
@@ -238,12 +238,13 @@
               </div>
             </div>
             <div
+              class="loading-margin"
               v-if="loading"
               v-loading="loading"
-              class="loading-margin"
               :element-loading-text="transactionText"
               element-loading-spinner="el-icon-loading"
-            />
+            > 
+            </div>
             <div v-if="!getCardPaymentStatus">
               <p
                 v-if="country === 'KE'"
@@ -269,13 +270,13 @@
         </div>
         <span v-else-if="getPriceRequestObject.payment_option === 2">
           <div class="home-view-payments--postpay">
-            <p>{{ $t('general.post_pay_account') }}</p>
-            <p>{{ $t( 'general.delivery_cost_added_to_balance' ) }}</p>
+            <p>{{$t('general.post_pay_account')}}</p>
+            <p>{{$t( 'general.delivery_cost_added_to_balance' )}}</p>
           </div>
         </span>
         <span v-else>
           <div class="home-view-payments--postpay">
-            <p>{{ $t( 'general.delivery_cost_charged_from_balance' ) }}</p>
+            <p>{{$t( 'general.delivery_cost_charged_from_balance' )}}</p>
           </div>
         </span>
       </div>
@@ -310,7 +311,7 @@
           name="button"
           @click="cancelMpesaPaymentRequest()"
         >
-          {{ $t('general.cancel_payment' ) }}
+          {{$t('general.cancel_payment' )}}
         </button>
       </div>
     </div>
@@ -367,7 +368,7 @@ export default {
       },
       price_request_response_received: false,
       vendors_without_return: [this.$t('general.standard'), this.$t('general.runner')],
-      vendors_with_fixed_carrier_type: [this.$t('general.standard'), this.$t('general.runner'), this.$t('general.van')],
+      vendors_with_fixed_carrier_type: [this.$t('general.standard'), this.$t('general.runner') , this.$t('general.van') ],
       return_status: false,
       showing: 1,
       country_code: 'KE',
@@ -400,7 +401,7 @@ export default {
       is3DS: false,
       twoFACompleted: false,
       transactionStatus: null,
-      count: false,
+      count: false
     };
   },
 
@@ -824,7 +825,7 @@ export default {
                 if (res.status) {
                   this.transactionStatus = res.transaction_status;
 
-                  if (res.additional_data) {
+                  if(res.additional_data) {
                     this.additionalData = res.additional_data;
                     if (res.tds) {
                       this.loading = false;
@@ -854,15 +855,16 @@ export default {
                     default:
                       break;
                   }
+
                 } else {
                   this.loading = false;
                   this.clearInputs();
                   this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
                 }
               }).catch(err => {
-                this.loading = false;
-                this.clearInputs();
-                this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
+                  this.loading = false;
+                  this.clearInputs();
+                  this.doNotification(2, this.$t('general.failed_to_charge_card'), res.message);
               });
             } else {
               this.loading = false;
@@ -886,7 +888,7 @@ export default {
       if (this.valid_vgs_saved_card) {
         const session = this.$store.getters.getSession;
         const accData = session[session.default];
-
+       
         const payload = {
           txref: `${Date.now()}`,
           cardno:
@@ -910,10 +912,12 @@ export default {
         this.requestSavedCards(savedCardPayload).then(
           (response) => {
             if (response.status) {
+
               this.transaction_id = response.transaction_id;
 
               if (response.status) {
-                if (response.additional_data) {
+
+                if(response.additional_data) {
                   this.additionalData = response.additional_data;
                   if (response.tds) {
                     this.loading = false;
@@ -943,6 +947,7 @@ export default {
                   default:
                     break;
                 }
+
               } else {
                 this.loading = false;
                 this.transactionText = response.reason;
@@ -972,7 +977,7 @@ export default {
               return;
             }
 
-            that.updateTransactionStatus();
+            that.updateTransactionStatus(); 
             if (poll_count === (that.poll_limit - 1)) {
               that.transactionText = 'card payment Failed';
               that.loading = false;
@@ -982,6 +987,7 @@ export default {
               };
               that.clearInputs();
               that.displayNotification(notification);
+              return;
             }
           }, 10000 * poll_count);
         }(poll_count));
@@ -989,13 +995,14 @@ export default {
     },
 
     updateTransactionStatus() {
+     
       const fullPayload = {
         app: 'AUTH',
         endpoint: `customers/transaction_status?id=${this.transaction_id}`,
-      };
+      }
       this.paymentAxiosGet(fullPayload).then((res) => {
         let level = 1;
-        if (res.status) {
+        if (res.status) { 
           this.transactionText = res.message;
           this.showAdditionalCardFields = false;
           switch (res.transaction_status) {
@@ -1005,7 +1012,7 @@ export default {
               this.doCompleteOrder();
               const notification1 = {
                 title: res.transaction_status,
-                level,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification1);
@@ -1017,7 +1024,7 @@ export default {
               this.clearInput();
               const notification2 = {
                 title: res.transaction_status,
-                level,
+                level: level,
                 message: res.message,
               };
               this.displayNotification(notification2);
@@ -1034,7 +1041,7 @@ export default {
         const notification = {
           title: this.$t('general.failed_to_charge_card'),
           level: 2,
-          message: res.message,
+          message: res.message
         };
         this.displayNotification(notification);
       }).catch(error => {
@@ -1043,11 +1050,12 @@ export default {
         const notification = {
           title: this.$t('general.failed_to_charge_card'),
           level: 2,
-          message: this.$t('general.failed_to_charge_card_text'),
+          message: this.$t('general.failed_to_charge_card_text')
         };
         this.clearInputs();
         this.displayNotification(notification);
-      });
+      })
+        
     },
 
     handleContinue(val) {
@@ -1074,7 +1082,7 @@ export default {
       this.loading = false;
       this.is3DS = true;
     },
-
+    
     init3DS() {
       const res = this.additionalData[0];
       const url = res.field;
@@ -1086,50 +1094,52 @@ export default {
           clearInterval(timer);
         }
 	  	}, 500);
+
     },
     init3dsPoll() {
       this.loading = true;
       const payload = {
         transaction_id: this.transaction_id,
         tds: true,
-      };
+      }
 
       const fullPayload = {
         values: payload,
         app: 'AUTH',
-        endpoint: 'customers/submit_info',
-      };
+        endpoint: 'customers/submit_info'
+      }
 
       this.paymentAxiosPost(fullPayload).then((res) => {
         if (res.status) {
           switch (res.transaction_status) {
-            case 'pending':
-              this.transactionPoll();
-              this.count = true;
-              break;
-            case 'success':
-              this.poll_count = this.poll_limit;
-              this.clearInputs();
-              this.loading = false;
-              const notification1 = {
-                title: res.transaction_status,
-                level: 1,
-                message: res.message,
-              };
-              this.displayNotification(notification1);
-              break;
-            default:
-              break;
-          }
+              case 'pending':
+                this.transactionPoll();
+                this.count = true;
+                break;
+              case 'success':
+                this.poll_count = this.poll_limit;
+                this.clearInputs();
+                this.loading = false;
+                const notification1 = {
+                  title: res.transaction_status,
+                  level: 1,
+                  message: res.message,
+                };
+                this.displayNotification(notification1);
+                break;
+              default:
+                break;
+          };
+          return;
         }
       }).catch((error) => {
         this.transactionText = this.$t('general.failed_to_charge_card');
         this.loading = false;
         this.clearInputs();
         const notification = {
-          title: this.$t('general.failed_to_charge_card'),
-          level: 2,
-          message: res.message,
+        title: this.$t('general.failed_to_charge_card'),
+        level: 2,
+        message: res.message,
         };
         this.displayNotification(notification);
       });
@@ -1164,6 +1174,7 @@ export default {
     },
 
     clearInputs() {
+      
       setTimeout(() => {
         this.form.reset();
       }, 100);
@@ -1264,7 +1275,7 @@ export default {
         this.doNotification(
           '2',
           this.$t('general.select_vehicle_type'),
-          this.$t('general.vehicle_type_not_set_please_try_again'),
+          this.$t('general.vehicle_type_not_set_please_try_again'),     
         );
         return false;
       }
@@ -1761,14 +1772,14 @@ export default {
           }
 
           if (response.status === 200 && response.data.status) {
-            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payement_sent', { userPhone }));
+            this.doNotification('0', this.$t('general.mpesa_payment'), this.$t('general.request_for_payement_sent', {userPhone: userPhone }) );
             this.requestMpesaPaymentPoll();
           } else {
             this.refreshRunningBalance();
             this.doNotification(
               '0',
               this.$t('general.mpesa_payment'),
-              this.$t('general.mpesa_request_failed', { userphone: userPhone, referenceNumber }) + this.pending_amount,
+              this.$t('general.mpesa_request_failed', {userphone: userPhone, referenceNumber: referenceNumber }) + this.pending_amount
             );
             this.payment_state = 0;
             this.loading = false;
@@ -1779,7 +1790,7 @@ export default {
           this.doNotification(
             '0',
             this.$t('general.mpesa_payment'),
-            this.$t('general.mpesa_request_failed', { userphone: userPhone, referenceNumber }) + this.pending_amount,
+            this.$t('general.mpesa_request_failed', {userphone: userPhone, referenceNumber: referenceNumber }) + this.pending_amount
           );
           this.payment_state = 0;
           this.loading = false;
@@ -1851,8 +1862,8 @@ export default {
                 that.doNotification(
                   '0',
                   that.$t('general.payment_not_recieved'),
-                  that.$t('general.will_keep_trying_checking_payment'),
-                );
+                  that.$t('general.will_keep_trying_checking_payment')
+                  );
                 that.payment_state = 0;
                 that.loading = false;
                 that.requestMpesaPaymentPoll(60);

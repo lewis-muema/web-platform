@@ -99,13 +99,13 @@
       <div class="api--help-content">
         <p>
           <span class="content--bold">
-            {{ $t('api.ready_to_start') }}
+            {{$t('api.ready_to_start')}}
           </span>
-          {{ $t('api.head_over') }}
+          {{$t('api.head_over')}}
           <a
             href="http://docs.sendypublicapi.apiary.io/#"
             target="_blank"
-          > {{ $t('api.developer_site') }} </a>&nbsp;{{ $t('api.complete_doc') }}
+          > {{$t('api.developer_site')}} </a>&nbsp;{{$t('api.complete_doc')}}
         </p>
       </div>
     </div>
@@ -163,7 +163,7 @@ export default {
     updateApiKey() {
       const session = this.$store.getters.getSession;
       let cop_id = 0;
-      this.update_api_text = this.$t('api.updating');
+      this.update_api_text =  this.$t('api.updating');
       if (String(session.default) === 'biz') {
         cop_id = session[session.default].cop_id;
       }
